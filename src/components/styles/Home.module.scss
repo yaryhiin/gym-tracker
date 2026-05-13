@@ -1,0 +1,36 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+  color: var(--text);
+}
+
+.container {
+    min-height: 100vh;
+  max-width: 430px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  margin: auto;
+  padding: 25px;
+  border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+}
+
+.history {
+    background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px;
+  width: 100%;
+}
+
+.workouts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}

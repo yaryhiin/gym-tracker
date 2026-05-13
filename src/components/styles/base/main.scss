@@ -1,0 +1,16 @@
+@use './variables';
+@use './global';
+
+* {
+  box-sizing: border-box;
+}
+
+.App {
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+body, html {
+    margin: 0;
+}

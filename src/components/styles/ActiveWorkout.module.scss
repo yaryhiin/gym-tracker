@@ -1,0 +1,135 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+  color: var(--text);
+}
+
+.workoutContainer {
+  min-height: 100vh;
+  max-width: 430px;
+  margin: auto;
+  padding: 25px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.stopwatch {
+  color: var(--accent);
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.exerciseContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.exerciseCard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px;
+}
+
+.exerciseName {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.exercisePrev,
+.exerciseSuggest {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 2px;
+}
+
+.exerciseSuggest {
+  color: var(--accent);
+}
+
+.sets {
+    margin-top: 25px;
+}
+
+.exerciseContainer {
+  display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+input {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 8px;
+  width: 70px;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--input-focus);
+}
+
+.buttonContainer {
+  margin: 20px;
+  z-index: 1000;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+button {
+  border: none;
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.addExercise {
+  background: var(--button-bg);
+  color: var(--button-text);
+  margin-top: 15px;
+  margin-bottom: 60px;
+}
+
+.button:hover,
+.addExercise:hover {
+  background: var(--button-hover);
+}
+
+.addSet {
+  margin-top: 12px;
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--border);
+}
+
+.finishBtn {
+  background: var(--button-bg);
+  color: var(--button-text);
+}
+
+.backBtn {
+  background-color: var(--bg--secondary);
+  color: var(--text);
+  border: 1px solid var(--border)
+}
