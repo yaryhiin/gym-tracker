@@ -1,0 +1,37 @@
+.buttonContainer {
+  z-index: 1000;
+  margin-top: auto;
+  position: fixed;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  width: 100%;
+  border: 1px solid var(--border);
+  background-color: var(--card);
+}
+
+.navButton {
+    background-color: var(--card);
+    color: var(--text);
+    width: 100%;
+    height: 60px;
+    font-size: 16px;
+    border-left: 1px solid var(--border);
+    border-radius: 0;
+}
+
+.home {}
+
+.progress {}
+
+.history {}
+
+@media (min-width: 430px) {
+  .buttonContainer {
+    border-radius: 20px;
+    border-radius: 0 0 18px 18px;
+  }
+  .navButton {
+    border-radius: 18px;
+  }
+}

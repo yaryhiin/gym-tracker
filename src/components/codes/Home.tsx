@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import styles from '../styles/Home.module.scss'
+import NavButtons from "./NavButtons"
 
 type homeProps = {
     userName: string
@@ -28,6 +29,7 @@ const Home = ({userName}: homeProps) => {
                 <p>Bench Press: 70kg x 6</p>
             </div>
         </div>
+        <NavButtons />
     </div>
   )
 }
