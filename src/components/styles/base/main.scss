@@ -1,5 +1,5 @@
-@use './variables';
-@use './global';
+@use "./variables";
+@use "./global";
 
 * {
   box-sizing: border-box;
@@ -11,6 +11,7 @@
   min-height: 100vh;
 }
 
-body, html {
-    margin: 0;
+body,
+html {
+  margin: 0;
 }

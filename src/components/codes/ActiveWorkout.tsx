@@ -1,69 +1,91 @@
-import { useEffect, useState } from 'react';
-import Modal from './Modal'
-import styles from '../styles/ActiveWorkout.module.scss'
-import cn from 'classnames'
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import Modal from "./Modal";
+import styles from "../styles/ActiveWorkout.module.scss";
+import cn from "classnames";
+import { useNavigate } from "react-router-dom";
+import MessageModal from "./MessageModal";
 
 type WorkoutSet = {
-  number: number,
-  weight: number,
-  reps: number,
-  done: boolean
-}
+  set_number: number;
+  weight: number;
+  reps: number;
+  rest_seconds: number;
+  done: boolean;
+};
 
 type Exercise = {
-  id: string,
-  name: string,
-  sets: WorkoutSet[]
-}
+  id: string;
+  exercise_name: string;
+  category: string;
+  order_index: number;
+  notes: string;
+  sets: WorkoutSet[];
+};
 
 type Workout = {
-  id: string,
-  name: string,
-  exercises: Exercise[]
-}
+  name: string;
+  started_at: string;
+  finished_at: string;
+  duration_seconds: number;
+  exercises: Exercise[];
+};
 
-const ActiveWorkout = () => {
-  const [seconds, setSeconds]= useState(0);
+type ActiveWorkoutProps = {
+  addWorkout: (workout: Workout) => Promise<void>;
+};
+
+const ActiveWorkout = ({ addWorkout }: ActiveWorkoutProps) => {
+  const [seconds, setSeconds] = useState(0);
   const [isRunning, setIsRunning] = useState(true);
 
   const [showModal, setShowModal] = useState(false);
+  const [showBackModal, setShowBackModal] = useState(false);
+  const [showFinishModal, setShowFinishModal] = useState(false);
+
+  const title = "Confirm Action";
+  const textBack = `Are you sure you want to exit workout? \n The data will be lost`;
+  const textFinish = `Are you sure you want to finish this workout?`;
 
   const navigate = useNavigate();
 
-  function home () {
-    navigate('/');
+  function home() {
+    navigate("/");
   }
 
   const [workout, setWorkout] = useState<Workout>(() => ({
-    id: Date.now().toString(),
-    name: 'Push Day',
-    exercises: 
-    [
+    name: "Push Day",
+    started_at: Date.now().toString(),
+    finished_at: "",
+    duration_seconds: 0,
+    exercises: [
       {
         id: `${Date.now().toString()}-bench`,
-        name: 'Bench Press',
+        exercise_name: "Bench Press",
+        category: "chest",
+        order_index: 1,
+        notes: "",
         sets: [
           {
-            number: 1,
+            set_number: 1,
             weight: 0,
             reps: 0,
-            done: false
+            rest_seconds: 0,
+            done: false,
           },
-        ]
-      }
-    ]
-  }))
+        ],
+      },
+    ],
+  }));
 
   useEffect(() => {
-    if(!isRunning) return;
+    if (!isRunning) return;
 
     const interval = setInterval(() => {
-      setSeconds(prev => prev+1);
+      setSeconds((prev) => prev + 1);
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isRunning])
+  }, [isRunning]);
 
   function formatTime(totalSeconds: number): string {
     const hours = Math.floor(totalSeconds / 3600);
@@ -76,185 +98,253 @@ const ActiveWorkout = () => {
   function addSet(exerciseId: string) {
     setWorkout((prev) => ({
       ...prev,
-      exercises: prev.exercises.map((exercise) => 
+      exercises: prev.exercises.map((exercise) =>
         exercise.id === exerciseId
-      ? {
-        ...exercise,
-        sets: [
-          ...exercise.sets,
-          {
-            number: exercise.sets.length + 1,
-            weight: 0,
-            reps: 0,
-            done: false
-          }
-        ]
-      }
-      : exercise
-      )
-    }))
+          ? {
+              ...exercise,
+              sets: [
+                ...exercise.sets,
+                {
+                  set_number: exercise.sets.length + 1,
+                  weight: 0,
+                  reps: 0,
+                  rest_seconds: 0,
+                  done: false,
+                },
+              ],
+            }
+          : exercise,
+      ),
+    }));
   }
 
   function updateSet(
     exerciseId: string,
     setNumber: number,
     field: keyof WorkoutSet,
-    value: number | boolean
+    value: number | boolean,
   ) {
     setWorkout((prev) => ({
-        ...prev,
-        exercises: prev.exercises.map((exercise) => 
-          exercise.id === exerciseId
-        ? {
-          ...exercise,
-          sets: exercise.sets.map((set) =>
-          set.number === setNumber
-          ? { ...set, [field]: value}
-          : set
-        )
-        }
-        : exercise
+      ...prev,
+      exercises: prev.exercises.map((exercise) =>
+        exercise.id === exerciseId
+          ? {
+              ...exercise,
+              sets: exercise.sets.map((set) =>
+                set.set_number === setNumber ? { ...set, [field]: value } : set,
+              ),
+            }
+          : exercise,
       ),
-    }))
+    }));
   }
 
-  function addExercise(
-    exerciseName: string
-  ) {
+  function addExercise(exerciseName: string) {
     setWorkout((prev) => ({
       ...prev,
       exercises: [
         ...prev.exercises,
         {
           id: `${Date.now().toString()}-${exerciseName}`,
-          name: exerciseName,
+          exercise_name: exerciseName,
+          category: "",
+          order_index: prev.exercises.length + 1,
+          notes: "",
           sets: [
             {
-              number: 1,
+              set_number: 1,
               weight: 0,
               reps: 0,
-              done: false
-            }
-          ]
-        }
-      ]
-  }))
+              rest_seconds: 0,
+              done: false,
+            },
+          ],
+        },
+      ],
+    }));
+  }
+
+  async function finishWorkout() {
+    setShowFinishModal(false);
+    setIsRunning(false);
+
+    const finishedWorkout: Workout = {
+      ...workout,
+      finished_at: Date.now().toString(),
+      duration_seconds: seconds,
+    };
+
+    setWorkout(finishedWorkout);
+
+    await addWorkout(finishedWorkout);
+    home();
   }
 
   return (
-  <div className={styles.workoutContainer}>
-    <h3 className={styles.title}>Push Day</h3>
-    <p className={styles.stopwatch}>{formatTime(seconds)}</p>
+    <div className={styles.workoutContainer}>
+      <h3 className={styles.title}>Push Day</h3>
+      <p className={styles.stopwatch}>{formatTime(seconds)}</p>
 
-    <div className={styles.exerciseContainer}>
-      {workout.exercises.map((exercise) => (
-        <div className={styles.exerciseCard} key={exercise.id}>
-          <h2 className={styles.exerciseName}>{exercise.name}</h2>
-          <p className={styles.exercisePrev}>Last time: 60kg x 8</p>
-          <p className={styles.exerciseSuggest}>Suggested: 52.5kg x 6-8</p>
+      <div className={styles.exerciseContainer}>
+        {workout.exercises.map((exercise) => (
+          <div className={styles.exerciseCard} key={exercise.id}>
+            <h2 className={styles.exerciseName}>{exercise.exercise_name}</h2>
+            <p className={styles.exercisePrev}>Last time: 60kg x 8</p>
+            <p className={styles.exerciseSuggest}>Suggested: 52.5kg x 6-8</p>
 
-          <div className={styles.sets}>
-            <table className={styles.set}>
-              <thead>
-                <tr>
-                  <th>Set</th>
-                  <th>Weight</th>
-                  <th>Reps</th>
-                  <th>Done</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {exercise.sets.map((set) => (
-                  <tr key={set.number}>
-                    <td>{set.number}</td>
-                    <td>
-                      <input
-                        type="number"
-                        onChange={(e) =>
-                          updateSet(
-                            exercise.id,
-                            set.number,
-                            "weight",
-                            Number(e.target.value)
-                          )
-                        }
-                        value={set.weight}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        onChange={(e) =>
-                          updateSet(
-                            exercise.id,
-                            set.number,
-                            "reps",
-                            Number(e.target.value)
-                          )
-                        }
-                        value={set.reps}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="checkbox"
-                        onChange={(e) =>
-                          updateSet(
-                            exercise.id,
-                            set.number,
-                            "done",
-                            e.target.checked
-                          )
-                        }
-                        checked={set.done}
-                      />
-                    </td>
+            <div className={styles.sets}>
+              <table className={styles.set}>
+                <thead>
+                  <tr>
+                    <th>Set</th>
+                    <th>Weight</th>
+                    <th>Reps</th>
+                    <th>Done</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
 
-            <button
-              className={styles.addSet}
-              onClick={() => addSet(exercise.id)}
-            >
-              Add Set
-            </button>
+                <tbody>
+                  {exercise.sets.map((set) => (
+                    <tr key={set.set_number}>
+                      <td>{set.set_number}</td>
+                      <td>
+                        <input
+                          disabled={!isRunning}
+                          type="number"
+                          placeholder="Enter weight"
+                          onChange={(e) =>
+                            updateSet(
+                              exercise.id,
+                              set.set_number,
+                              "weight",
+                              Number(e.target.value),
+                            )
+                          }
+                          value={set.weight === 0 ? "" : set.weight}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          disabled={!isRunning}
+                          type="number"
+                          placeholder="Enter reps"
+                          onChange={(e) =>
+                            updateSet(
+                              exercise.id,
+                              set.set_number,
+                              "reps",
+                              Number(e.target.value),
+                            )
+                          }
+                          value={set.reps === 0 ? "" : set.reps}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          disabled={!isRunning}
+                          type="checkbox"
+                          onChange={(e) =>
+                            updateSet(
+                              exercise.id,
+                              set.set_number,
+                              "done",
+                              e.target.checked,
+                            )
+                          }
+                          checked={set.done}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              <button
+                disabled={!isRunning}
+                className={styles.addSet}
+                onClick={() => addSet(exercise.id)}
+              >
+                Add Set
+              </button>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
 
-      <button
-        className={styles.addExercise}
-        onClick={() => setShowModal(true)}
-      >
-        Add Exercise
-      </button>
+        <button
+          className={styles.addExercise}
+          onClick={() => setShowModal(true)}
+          disabled={!isRunning}
+        >
+          Add Exercise
+        </button>
 
-      {showModal && (
-        <Modal
-          onClose={() => setShowModal(false)}
-          onAddExercise={addExercise}
-        />
-      )}
+        {showModal && (
+          <Modal
+            onClose={() => setShowModal(false)}
+            onAddExercise={addExercise}
+          />
+        )}
+        {showBackModal && (
+          <MessageModal
+            title={title}
+            text={textBack}
+            onDelete={() => {
+              setShowBackModal(false);
+              home();
+            }}
+            onClose={() => {
+              setShowBackModal(false);
+            }}
+            twoButton={true}
+            btnText="Exit"
+          />
+        )}
+        {showFinishModal && (
+          <MessageModal
+            title={title}
+            text={textFinish}
+            onDelete={finishWorkout}
+            onClose={() => {
+              setShowFinishModal(false);
+            }}
+            twoButton={true}
+            btnText="Finish"
+          />
+        )}
+      </div>
+
+      <div className={styles.buttonContainer}>
+        <button
+          className={styles.backBtn}
+          onClick={() => setShowBackModal(true)}
+        >
+          Back
+        </button>
+        {!isRunning ? (
+          <button
+            className={styles.pauseBtn}
+            onClick={() => setIsRunning(true)}
+          >
+            Resume Workout
+          </button>
+        ) : (
+          <button
+            className={styles.pauseBtn}
+            onClick={() => setIsRunning(false)}
+          >
+            Pause Workout
+          </button>
+        )}
+
+        <button
+          className={cn(styles.button, styles.finishBtn)}
+          onClick={() => setShowFinishModal(true)}
+        >
+          Finish Workout
+        </button>
+      </div>
     </div>
+  );
+};
 
-<div className={styles.buttonContainer}>
-  <button className={styles.backBtn} onClick={() => home()}>Back</button>
-    <button
-      className={cn(styles.button, styles.finishBtn)}
-      onClick={() => {
-        setIsRunning(false);
-        console.log(workout, seconds);
-        home()
-      }}
-    >
-      Finish Workout
-    </button>
-    </ div>
-  </div>
-);
-}
-
-export default ActiveWorkout
+export default ActiveWorkout;
