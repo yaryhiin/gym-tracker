@@ -35,7 +35,15 @@ type ActiveWorkoutProps = {
 };
 
 const ActiveWorkout = ({ addWorkout }: ActiveWorkoutProps) => {
-  const [seconds, setSeconds] = useState(0);
+  const [seconds, setSeconds] = useState(() => {
+    const savedSeconds = localStorage.getItem("activeWorkoutSeconds");
+
+    if (!savedSeconds) return 0;
+
+    const parsedSeconds = Number(savedSeconds);
+
+    return Number.isNaN(parsedSeconds) ? 0 : parsedSeconds;
+  });
   const [isRunning, setIsRunning] = useState(true);
 
   const [showModal, setShowModal] = useState(false);
@@ -52,30 +60,36 @@ const ActiveWorkout = ({ addWorkout }: ActiveWorkoutProps) => {
     navigate("/");
   }
 
-  const [workout, setWorkout] = useState<Workout>(() => ({
-    name: "Push Day",
-    started_at: Date.now().toString(),
-    finished_at: "",
-    duration_seconds: 0,
-    exercises: [
-      {
-        id: `${Date.now().toString()}-bench`,
-        exercise_name: "Bench Press",
-        category: "chest",
-        order_index: 1,
-        notes: "",
-        sets: [
-          {
-            set_number: 1,
-            weight: 0,
-            reps: 0,
-            rest_seconds: 0,
-            done: false,
-          },
-        ],
-      },
-    ],
-  }));
+  const [workout, setWorkout] = useState<Workout>(() => {
+    const savedWorkout = localStorage.getItem("activeWorkout");
+    if (savedWorkout) {
+      return JSON.parse(savedWorkout);
+    }
+    return {
+      name: "Push Day",
+      started_at: Date.now().toString(),
+      finished_at: "",
+      duration_seconds: 0,
+      exercises: [
+        {
+          id: `${Date.now().toString()}-bench`,
+          exercise_name: "Bench Press",
+          category: "chest",
+          order_index: 1,
+          notes: "",
+          sets: [
+            {
+              set_number: 1,
+              weight: 0,
+              reps: 0,
+              rest_seconds: 0,
+              done: false,
+            },
+          ],
+        },
+      ],
+    };
+  });
 
   useEffect(() => {
     if (!isRunning) return;
@@ -94,6 +108,14 @@ const ActiveWorkout = ({ addWorkout }: ActiveWorkoutProps) => {
 
     return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
   }
+
+  useEffect(() => {
+    localStorage.setItem("activeWorkout", JSON.stringify(workout));
+  }, [workout]);
+
+  useEffect(() => {
+    localStorage.setItem("activeWorkoutSeconds", String(seconds));
+  }, [seconds]);
 
   function addSet(exerciseId: string) {
     setWorkout((prev) => ({
@@ -177,6 +199,9 @@ const ActiveWorkout = ({ addWorkout }: ActiveWorkoutProps) => {
     setWorkout(finishedWorkout);
 
     await addWorkout(finishedWorkout);
+    localStorage.removeItem("activeWorkout");
+    localStorage.removeItem("activeWorkoutSeconds");
+    setSeconds(0);
     home();
   }
 
