@@ -1,14 +1,19 @@
-import styles from "./components/styles/Header.module.scss";
-import cn from "classnames";
 import { supabase } from "./supabase";
-import { useNavigate, Outlet } from "react-router-dom";
+import { useNavigate, Outlet, useLocation } from "react-router-dom";
+
+import Header from "./components/codes/Header";
+import NavButtons from "./components/codes/NavButtons";
 
 type LayoutProps = {
   toggleTheme: () => void;
   theme: string;
+  session: boolean;
 };
 
-export default function Layout({ toggleTheme, theme }: LayoutProps) {
+export default function Layout({ toggleTheme, theme, session }: LayoutProps) {
+  const location = useLocation();
+
+  const isActiveWorkout = location.pathname === "/workout";
   const navigate = useNavigate();
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -21,28 +26,19 @@ export default function Layout({ toggleTheme, theme }: LayoutProps) {
     navigate("/");
   };
   return (
-    <>
-      <header className="header">
-        <button className={cn("button", styles.logOut)} onClick={handleLogout}>
-          Log Out
-        </button>
-        <div>
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className={styles.themeSwitch}
-            aria-pressed={theme === "dark"}
-            title={theme === "dark" ? "Switch to light" : "Switch to dark"}
-          >
-            {theme === "dark" ? "🌙 Dark" : "☀️ Light"}
-          </button>
-        </div>
-      </header>
-      <main className="body">
-        <div className="container">
-          <Outlet />
-        </div>
+    <div className={"appShell"}>
+      {!isActiveWorkout && (
+        <Header
+          toggleTheme={toggleTheme}
+          theme={theme}
+          handleLogout={handleLogout}
+          session={session}
+        />
+      )}
+      <main className="container">
+        <Outlet />
       </main>
-    </>
+      {!isActiveWorkout && session && <NavButtons />}
+    </div>
   );
 }

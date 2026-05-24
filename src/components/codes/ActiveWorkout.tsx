@@ -207,9 +207,16 @@ const ActiveWorkout = ({ addWorkout }: ActiveWorkoutProps) => {
 
   return (
     <div className={styles.workoutContainer}>
-      <h3 className={styles.title}>Push Day</h3>
-      <p className={styles.stopwatch}>{formatTime(seconds)}</p>
-
+      <div className={styles.header}>
+        <h3 className={styles.title}>Push Day</h3>
+        <p className={styles.stopwatch}>{formatTime(seconds)}</p>
+        <button
+          className={styles.backBtn}
+          onClick={() => setShowBackModal(true)}
+        >
+          Back
+        </button>
+      </div>
       <div className={styles.exerciseContainer}>
         {workout.exercises.map((exercise) => (
           <div className={styles.exerciseCard} key={exercise.id}>
@@ -315,6 +322,8 @@ const ActiveWorkout = ({ addWorkout }: ActiveWorkoutProps) => {
             text={textBack}
             onDelete={() => {
               setShowBackModal(false);
+              localStorage.removeItem("activeWorkout");
+              localStorage.removeItem("activeWorkoutSeconds");
               home();
             }}
             onClose={() => {
@@ -339,12 +348,6 @@ const ActiveWorkout = ({ addWorkout }: ActiveWorkoutProps) => {
       </div>
 
       <div className={styles.buttonContainer}>
-        <button
-          className={styles.backBtn}
-          onClick={() => setShowBackModal(true)}
-        >
-          Back
-        </button>
         {!isRunning ? (
           <button
             className={styles.pauseBtn}

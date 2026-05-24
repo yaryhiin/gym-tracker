@@ -116,38 +116,41 @@ function App() {
   if (session && dataLoading) return <div>Loading...</div>;
   return (
     <Router>
-      <div className="App">
-        <Routes>
-          {!session ? (
-            <>
-              <Route path="/" element={<WelcomeScreen />} />
+      <Routes>
+        {!session ? (
+          <Route
+            element={
+              <Layout toggleTheme={toggleTheme} theme={theme} session={false} />
+            }
+          >
+            <Route path="/" element={<WelcomeScreen />} />
 
-              <Route path="/signup" element={<SignUp />} />
+            <Route path="/signup" element={<SignUp />} />
 
-              <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Login />} />
 
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </>
-          ) : (
-            <Route element={<Layout toggleTheme={toggleTheme} theme={theme} />}>
-              <Route path="/" element={<Home userName={userName} />} />
-              <Route
-                path="/workout"
-                element={<ActiveWorkout addWorkout={addWorkout} />}
-              />
-              <Route
-                path="/history"
-                element={<History workouts={workouts} />}
-              />
-              <Route path="/progress" element={<Progress />} />
-              <Route
-                path="changeWorkout/:id"
-                element={<ChangeWorkout deleteWorkout={handleDeleteWorkout} />}
-              />
-            </Route>
-          )}
-        </Routes>
-      </div>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Route>
+        ) : (
+          <Route
+            element={
+              <Layout toggleTheme={toggleTheme} theme={theme} session={true} />
+            }
+          >
+            <Route path="/" element={<Home userName={userName} />} />
+            <Route
+              path="/workout"
+              element={<ActiveWorkout addWorkout={addWorkout} />}
+            />
+            <Route path="/history" element={<History workouts={workouts} />} />
+            <Route path="/progress" element={<Progress />} />
+            <Route
+              path="changeWorkout/:id"
+              element={<ChangeWorkout deleteWorkout={handleDeleteWorkout} />}
+            />
+          </Route>
+        )}
+      </Routes>
     </Router>
   );
 }
