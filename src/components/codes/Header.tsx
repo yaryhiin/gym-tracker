@@ -18,7 +18,7 @@ const Header = ({ toggleTheme, theme, handleLogout, session }: HeaderProps) => {
     navigate("/login");
   }
   return (
-    <header className="header">
+    <header className={cn("header", styles.header)}>
       {session ? (
         <div className={styles.sessionBox}>
           <button
@@ -30,19 +30,18 @@ const Header = ({ toggleTheme, theme, handleLogout, session }: HeaderProps) => {
         </div>
       ) : (
         <div className={styles.sessionBox}>
-          <button onClick={login} className={styles.logIn}>
+          <button onClick={login} className={cn("button", styles.logIn)}>
             Log In
           </button>
-          <button onClick={signup} className={styles.signUp}>
+          <button onClick={signup} className={cn("button", styles.signUp)}>
             Sign Up
           </button>
         </div>
       )}
-      <div>
+      <div className={styles.themeBox}>
         <button
-          type="button"
           onClick={toggleTheme}
-          className={styles.themeSwitch}
+          className={cn("button", styles.themeSwitch)}
           aria-pressed={theme === "dark"}
           title={theme === "dark" ? "Switch to light" : "Switch to dark"}
         >

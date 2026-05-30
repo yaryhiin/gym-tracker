@@ -41,7 +41,7 @@ const ChangeWorkout = ({ deleteWorkout }: ChangeWorkoutProps) => {
   async function handleDelete() {
     setShowModal(false);
     await deleteWorkout(String(id));
-    home()
+    home();
   }
   return (
     <div className={styles.workoutContainer}>

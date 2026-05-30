@@ -9,7 +9,7 @@ export type WorkoutSetDB = {
   created_at: string;
 };
 
-export type ExerciseDB = {
+export type WorkoutExerciseDB = {
   id: string;
   workout_id: string;
   exercise_name: string;
@@ -34,7 +34,17 @@ export type Workout = {
   started_at: string;
   finished_at: string;
   duration_seconds: number;
-  exercises: Exercise[];
+  exercises: WorkoutExercise[];
+};
+
+export type WorkoutExercise = {
+  id: string;
+  exercise_name: string;
+  exercise_id: string;
+  category: string;
+  order_index: number;
+  notes: string;
+  sets: WorkoutSet[];
 };
 
 export type WorkoutSet = {
@@ -45,19 +55,56 @@ export type WorkoutSet = {
   done: boolean;
 };
 
-export type Exercise = {
-  id: string;
-  exercise_name: string;
-  category: string;
-  order_index: number;
-  notes: string;
-  sets: WorkoutSet[];
-};
-
 export type WorkoutDetails = WorkoutDB & {
   workout_exercises: Array<
-    ExerciseDB & {
+    WorkoutExerciseDB & {
       workout_sets: WorkoutSetDB[];
+    }
+  >;
+};
+
+export type ExerciseDB = {
+  id: string;
+  user_id: string;
+  name: string;
+  category: string;
+  created_at: string;
+};
+
+export type Exercise = {
+  name: string;
+  category: string;
+};
+
+export type Routine = {
+  name: string;
+  exercises: RoutineExercise[];
+};
+
+export type RoutineDB = {
+  id: string;
+  user_id: string;
+  name: string;
+  created_at: string;
+};
+
+export type RoutineExercise = {
+  exercise_id: string;
+  order_index: number;
+};
+
+export type RoutineExerciseDB = {
+  id: string;
+  routine_id: string;
+  exercise_id: string;
+  order_index: number;
+  created_at: string;
+};
+
+export type RoutineDetails = RoutineDB & {
+  routine_exercises: Array<
+    RoutineExerciseDB & {
+      exercises: ExerciseDB;
     }
   >;
 };

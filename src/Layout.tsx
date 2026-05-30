@@ -1,5 +1,5 @@
 import { supabase } from "./supabase";
-import { useNavigate, Outlet, useLocation } from "react-router-dom";
+import { useNavigate, Outlet, useLocation, matchPath } from "react-router-dom";
 
 import Header from "./components/codes/Header";
 import NavButtons from "./components/codes/NavButtons";
@@ -13,7 +13,9 @@ type LayoutProps = {
 export default function Layout({ toggleTheme, theme, session }: LayoutProps) {
   const location = useLocation();
 
-  const isActiveWorkout = location.pathname === "/workout";
+  const isActiveWorkout =
+    location.pathname === "/workout" ||
+    !!matchPath("/changeWorkout/:id", location.pathname);
   const navigate = useNavigate();
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();

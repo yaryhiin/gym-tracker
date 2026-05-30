@@ -1,12 +1,31 @@
 import styles from "../styles/WelcomeScreen.module.scss";
+import { useNavigate } from "react-router-dom";
+import cn from "classnames";
 
 const WelcomeScreen = () => {
+  const navigate = useNavigate();
+
+  function login() {
+    navigate("/login");
+  }
+
+  function signup() {
+    navigate("/signup");
+  }
   return (
     <div className={styles.content}>
       <h1 className={styles.title}>Welcome to the Gym Tracker App</h1>
       <h3 className={styles.description}>
-        Track your workouts, exercises, sets and rest time all in one app
+        Track your workouts, exercises, sets and time all in one app
       </h3>
+      <div className={styles.sessionBox}>
+        <button onClick={login} className={cn("button", styles.logIn)}>
+          Log In
+        </button>
+        <button onClick={signup} className={cn("button", styles.signUp)}>
+          Sign Up
+        </button>
+      </div>
     </div>
   );
 };

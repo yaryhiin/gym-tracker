@@ -6,11 +6,25 @@
 }
 
 .history {
+  width: 100%;
+}
+
+.title {
+  text-align: center;
+}
+
+.historyElement {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 18px;
   padding: 16px;
   width: 100%;
+  margin-bottom: 30px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--card-hover);
+  }
 }
 
 .workoutsContainer {
@@ -22,5 +36,15 @@
 .workouts {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 15px;
+  width: 100%;
+  column-gap: 35px;
+  row-gap: 20px;
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
+.button {
+  width: 140px;
+  height: 60px;
+  font-size: 16px;
 }

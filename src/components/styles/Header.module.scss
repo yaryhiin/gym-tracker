@@ -1,0 +1,48 @@
+.header {
+  background-color: var(--bg);
+  width: 100%;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+    justify-content: space-between;
+}
+
+.sessionBox {
+    display: flex;
+    gap: 10px;
+}
+
+button {
+  width: 90px;
+  height: 45px;
+  font-size: 14px;
+  font-weight: bold;
+  border: 1px solid var(--card-bg-border);
+  background-color: var(--card);
+  color: var(--text);
+
+  &:hover {
+    background-color: var(--card-hover);
+  }
+}
+
+.themeSwitch {
+  width: 90px;
+  height: 45px;
+  padding: 6px 10px;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  background-color: var(--card);
+  color: var(--text);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition:
+    background 150ms,
+    transform 120ms;
+}
+
+.themeSwitch:hover {
+  transform: translateY(-1px);
+}
+.themeSwitch[aria-pressed="true"] {
+  outline: 2px solid rgba(0, 0, 0, 0.08);
+}

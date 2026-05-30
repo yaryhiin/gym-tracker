@@ -8,9 +8,25 @@ import {
 } from "react-router-dom";
 
 import type { Session } from "@supabase/supabase-js";
-import type { WorkoutDB, Workout } from "./types";
+import type {
+  WorkoutDB,
+  Workout,
+  ExerciseDB,
+  RoutineDB,
+  Routine,
+} from "./types";
 
-import { getWorkoutsHistory, createWorkout, deleteWorkout } from "./utils";
+import {
+  getWorkoutsHistory,
+  createWorkout,
+  deleteWorkout,
+  getExercises,
+  createExercise,
+  deleteExercise,
+  getRoutines,
+  createRoutine,
+  deleteRoutine,
+} from "./utils";
 
 import Home from "./components/codes/Home";
 import ActiveWorkout from "./components/codes/ActiveWorkout";
@@ -21,6 +37,9 @@ import Login from "./components/codes/Login";
 import WelcomeScreen from "./components/codes/WelcomeScreen";
 import ChangeWorkout from "./components/codes/ChangeWorkout";
 import Layout from "./Layout";
+import Exercises from "./components/codes/Exercises";
+import Routines from "./components/codes/Routines";
+import RoutineBuilder from "./components/codes/RoutineBuilder";
 
 function App() {
   const userName = "Tim";
@@ -32,6 +51,8 @@ function App() {
   const [userId, setUserId] = useState("");
 
   const [workouts, setWorkouts] = useState<WorkoutDB[]>([]);
+  const [exercises, setExercises] = useState<ExerciseDB[]>([]);
+  const [routines, setRoutines] = useState<RoutineDB[]>([]);
 
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem("theme");
@@ -78,6 +99,10 @@ function App() {
     try {
       const workoutsData = await getWorkoutsHistory();
       setWorkouts(workoutsData);
+      const exercisesData = await getExercises();
+      setExercises(exercisesData);
+      const routinesData = await getRoutines();
+      setRoutines(routinesData);
     } catch (error) {
       console.error("Error loading data:", error);
     } finally {
@@ -107,9 +132,29 @@ function App() {
     await loadData();
   }
 
+  async function addExercise(name: string, category: string) {
+    await createExercise({ name, category }, userId);
+    await loadData();
+  }
+
+  async function addRoutine(routine: Routine) {
+    await createRoutine(routine, userId);
+    await loadData();
+  }
+
   async function handleDeleteWorkout(id: string) {
     await deleteWorkout(id, userId);
     setWorkouts((prev) => prev.filter((workout) => workout.id !== id));
+  }
+
+  async function handleDeleteExercise(id: string) {
+    await deleteExercise(id, userId);
+    setExercises((prev) => prev.filter((exercise) => exercise.id != id));
+  }
+
+  async function handleDeleteRoutine(id: string) {
+    await deleteRoutine(id, userId);
+    setRoutines((prev) => prev.filter((routine) => routine.id != id));
   }
 
   if (authLoading) return <div>Loading...</div>;
@@ -137,9 +182,22 @@ function App() {
               <Layout toggleTheme={toggleTheme} theme={theme} session={true} />
             }
           >
-            <Route path="/" element={<Home userName={userName} />} />
+            <Route
+              path="/"
+              element={
+                <Home
+                  workouts={workouts}
+                  userName={userName}
+                  routines={routines}
+                />
+              }
+            />
             <Route
               path="/workout"
+              element={<ActiveWorkout addWorkout={addWorkout} />}
+            />
+            <Route
+              path="/workout/routine/:routineId"
               element={<ActiveWorkout addWorkout={addWorkout} />}
             />
             <Route path="/history" element={<History workouts={workouts} />} />
@@ -147,6 +205,47 @@ function App() {
             <Route
               path="changeWorkout/:id"
               element={<ChangeWorkout deleteWorkout={handleDeleteWorkout} />}
+            />
+            <Route
+              path="/exercises"
+              element={
+                <Exercises
+                  exercises={exercises}
+                  addExercise={addExercise}
+                  deleteExercise={handleDeleteExercise}
+                />
+              }
+            />
+            <Route
+              path="/routines"
+              element={
+                <Routines
+                  routines={routines}
+                  deleteRoutine={handleDeleteRoutine}
+                />
+              }
+            />
+            <Route
+              path="/routines/new"
+              element={
+                <RoutineBuilder
+                  exercises={exercises}
+                  createRoutine={addRoutine}
+                  addExercise={addExercise}
+                  routines={routines}
+                />
+              }
+            />
+            <Route
+              path="/routines/:id/edit"
+              element={
+                <RoutineBuilder
+                  exercises={exercises}
+                  createRoutine={addRoutine}
+                  addExercise={addExercise}
+                  routines={routines}
+                />
+              }
             />
           </Route>
         )}

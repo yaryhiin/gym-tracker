@@ -15,16 +15,22 @@ const NavButtons = () => {
           Home
         </button>
         <button
+          className={cn(styles.routines, styles.navButton)}
+          onClick={() => navigate("/routines")}
+        >
+          Routines
+        </button>
+        <button
+          className={cn(styles.progress, styles.navButton)}
+          onClick={() => navigate("/exercises")}
+        >
+          Exercises
+        </button>
+        <button
           className={cn(styles.history, styles.navButton)}
           onClick={() => navigate("/history")}
         >
           History
-        </button>
-        <button
-          className={cn(styles.progress, styles.navButton)}
-          onClick={() => navigate("/progress")}
-        >
-          Progress
         </button>
       </div>
     </div>

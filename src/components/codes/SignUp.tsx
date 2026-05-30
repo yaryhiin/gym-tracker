@@ -149,6 +149,7 @@ const SignUp = () => {
                 }}
                 onDelete={() => login()}
                 twoButton={false}
+                btnText="Okay"
               />
             )}
           </div>

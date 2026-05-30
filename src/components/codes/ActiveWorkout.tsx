@@ -2,39 +2,23 @@ import { useEffect, useState } from "react";
 import Modal from "./Modal";
 import styles from "../styles/ActiveWorkout.module.scss";
 import cn from "classnames";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import MessageModal from "./MessageModal";
-
-type WorkoutSet = {
-  set_number: number;
-  weight: number;
-  reps: number;
-  rest_seconds: number;
-  done: boolean;
-};
-
-type Exercise = {
-  id: string;
-  exercise_name: string;
-  category: string;
-  order_index: number;
-  notes: string;
-  sets: WorkoutSet[];
-};
-
-type Workout = {
-  name: string;
-  started_at: string;
-  finished_at: string;
-  duration_seconds: number;
-  exercises: Exercise[];
-};
+import { formatTime, getRoutineDetails } from "../../utils";
+import type { Workout, WorkoutSet } from "../../types";
 
 type ActiveWorkoutProps = {
   addWorkout: (workout: Workout) => Promise<void>;
 };
 
 const ActiveWorkout = ({ addWorkout }: ActiveWorkoutProps) => {
+  const navigate = useNavigate();
+
+  function home() {
+    navigate("/");
+  }
+
+  const { routineId } = useParams();
   const [seconds, setSeconds] = useState(() => {
     const savedSeconds = localStorage.getItem("activeWorkoutSeconds");
 
@@ -54,42 +38,80 @@ const ActiveWorkout = ({ addWorkout }: ActiveWorkoutProps) => {
   const textBack = `Are you sure you want to exit workout? \n The data will be lost`;
   const textFinish = `Are you sure you want to finish this workout?`;
 
-  const navigate = useNavigate();
-
-  function home() {
-    navigate("/");
-  }
+  const createEmptyWorkout = (): Workout => ({
+    name: "Custom Workout",
+    started_at: Date.now().toString(),
+    finished_at: "",
+    duration_seconds: 0,
+    exercises: [],
+  });
 
   const [workout, setWorkout] = useState<Workout>(() => {
     const savedWorkout = localStorage.getItem("activeWorkout");
+
     if (savedWorkout) {
-      return JSON.parse(savedWorkout);
+      try {
+        return JSON.parse(savedWorkout) as Workout;
+      } catch {
+        localStorage.removeItem("activeWorkout");
+      }
     }
-    return {
-      name: "Push Day",
-      started_at: Date.now().toString(),
-      finished_at: "",
-      duration_seconds: 0,
-      exercises: [
-        {
-          id: `${Date.now().toString()}-bench`,
-          exercise_name: "Bench Press",
-          category: "chest",
-          order_index: 1,
-          notes: "",
-          sets: [
-            {
-              set_number: 1,
-              weight: 0,
-              reps: 0,
-              rest_seconds: 0,
-              done: false,
-            },
-          ],
-        },
-      ],
-    };
+
+    return createEmptyWorkout();
   });
+
+  useEffect(() => {
+    const savedWorkout = localStorage.getItem("activeWorkout");
+    if (savedWorkout) {
+      return;
+    }
+    if (routineId) {
+      async function getDetails() {
+        try {
+          const routine = await getRoutineDetails(String(routineId));
+          if (routine) {
+            setWorkout({
+              name: routine.name,
+              started_at: Date.now().toString(),
+              finished_at: "",
+              duration_seconds: seconds,
+              exercises: [...routine.routine_exercises]
+                .sort((a, b) => a.order_index - b.order_index)
+                .map((item) => ({
+                  id: item.id,
+                  exercise_id: item.exercise_id,
+                  exercise_name: item.exercises.name,
+                  category: item.exercises.category,
+                  order_index: item.order_index,
+                  notes: "",
+                  sets: [
+                    {
+                      set_number: 1,
+                      weight: 0,
+                      reps: 0,
+                      rest_seconds: 0,
+                      done: false,
+                    },
+                  ],
+                })),
+            });
+          }
+        } catch (error) {
+          console.error("Error loading data: ", error);
+        }
+      }
+
+      getDetails();
+    } else {
+      setWorkout({
+        name: "Custom Workout",
+        started_at: Date.now().toString(),
+        finished_at: "",
+        duration_seconds: seconds,
+        exercises: [],
+      });
+    }
+  }, [routineId]);
 
   useEffect(() => {
     if (!isRunning) return;
@@ -100,14 +122,6 @@ const ActiveWorkout = ({ addWorkout }: ActiveWorkoutProps) => {
 
     return () => clearInterval(interval);
   }, [isRunning]);
-
-  function formatTime(totalSeconds: number): string {
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const secs = totalSeconds % 60;
-
-    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
-  }
 
   useEffect(() => {
     localStorage.setItem("activeWorkout", JSON.stringify(workout));
@@ -169,6 +183,7 @@ const ActiveWorkout = ({ addWorkout }: ActiveWorkoutProps) => {
         {
           id: `${Date.now().toString()}-${exerciseName}`,
           exercise_name: exerciseName,
+          exercise_id: Date.now().toString(),
           category: "",
           order_index: prev.exercises.length + 1,
           notes: "",
@@ -208,7 +223,7 @@ const ActiveWorkout = ({ addWorkout }: ActiveWorkoutProps) => {
   return (
     <div className={styles.workoutContainer}>
       <div className={styles.header}>
-        <h3 className={styles.title}>Push Day</h3>
+        <h3 className={styles.title}>{workout.name}</h3>
         <p className={styles.stopwatch}>{formatTime(seconds)}</p>
         <button
           className={styles.backBtn}

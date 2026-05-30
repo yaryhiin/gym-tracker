@@ -1,13 +1,6 @@
-.header {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin-bottom: 30px;
-}
-
 .errorMessage {
   display: block;
-  color: var(--delete-btn-bg);
+  color: var(--danger);
   margin: 5px;
 }
 
@@ -32,63 +25,35 @@
   background-color: var(--input-bg);
   margin-top: 5px;
   cursor: pointer;
+  font-size: 16px;
 }
 
 .inputBox {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 24px;
-  row-gap: 16px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 10px; 
-  margin-bottom: 30px; 
+  padding-top: 10px;
+  margin-bottom: 30px;
   width: 100%;
-  max-width: 850px;
-}
-
-.fullWidth {
-  grid-column: 1 / -1;
 }
 
 .inputContainer {
   margin-bottom: 15px;
   width: 100%;
 }
-
-.fieldRow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.fieldRow select, .fieldRow input {
-  flex: 1;
-}
-
-.fieldRow input {
-  margin: 0 10px;
-}
-
-.convertBtn {
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    text-align: center;
-    font-size: 22px;
-    margin: 0 5px;
-}
-
 .inputText {
   font-size: 18px;
   margin-bottom: 5px;
-  color: var(--input-text);
+  color: var(--text);
   text-align: left;
 }
 
 .buttonContainer {
+  width: 100%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  gap: 20px;
 }
 
 .heading {
@@ -98,33 +63,8 @@
   margin-bottom: 10px;
 }
 
-.saveBtn {
-  background-color: var(--save-btn-bg);
-
-  &:hover {
-    background-color: var(--save-btn-hover-bg);
-  }
-}
-
-.changeBtn {
-  background-color: var(--change-btn-bg);
-
-  &:hover {
-    background-color: var(--change-btn-hover-bg);
-  }
-}
-
-.deleteBtn {
-  background-color: var(--delete-btn-bg);
-
-  &:hover {
-    background-color: var(--delete-btn-hover-bg);
-  }
-}
-
 .error {
-  border: 2px solid var(--error-border);
-  background-color: var(--error-bg);
+  border: 2px solid var(--danger);
 }
 
 .deleteCategoryBtn {
@@ -135,27 +75,10 @@
   margin-top: 5px;
 }
 
-@media (max-width: 600px) {
-  .inputContainer {
-    max-width: 300px;
-    margin: 0;
-  }
+.saveBtn {
+  background-color: var(--button-bg);
 
-  .input {
-    font-size: 14px;
-    height: 35px;
-  }
-  .inputBox {
-    display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  margin: 0;
-  gap: 0;
-  }
-
-  .formContainer {
-    gap: 15px;
+  &:hover {
+    background-color: var(--button-hover);
   }
 }
