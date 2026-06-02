@@ -1,6 +1,7 @@
 import { useState } from "react";
-import styles from "../styles/Modal.module.scss";
 import cn from "classnames";
+
+import styles from "../styles//modules/Modal.module.scss";
 
 type CreateExerciseModalProps = {
   onClose: () => void;

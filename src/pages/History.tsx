@@ -1,15 +1,38 @@
-import styles from "../styles/History.module.scss";
-import type { WorkoutDB } from "../../types";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-import { formatDate, formatTime } from "../../utils";
+import styles from "../styles/modules/History.module.scss";
 
-type HistoryProps = {
-  workouts: WorkoutDB[];
-};
+import type { WorkoutDB } from "../types/workout";
 
-const History = ({ workouts }: HistoryProps) => {
+import { formatDate, formatTime } from "../services/utils";
+import { getWorkoutsHistory } from "../services/workouts";
+
+const History = () => {
   const navigate = useNavigate();
+
+  const [workouts, setWorkouts] = useState<WorkoutDB[]>([]);
+
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    async function loadData() {
+      setLoading(true);
+      try {
+        const workoutsData = await getWorkoutsHistory();
+        setWorkouts(workoutsData);
+      } catch (error) {
+        console.error("Error loading data:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadData();
+  }, []);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
   return (
     <div className={styles.historyContainer}>
       <div className={styles.tableWrapper}>

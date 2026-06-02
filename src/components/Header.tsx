@@ -1,6 +1,7 @@
 import cn from "classnames";
-import styles from "../styles/Header.module.scss";
 import { useNavigate } from "react-router-dom";
+
+import styles from "../styles/modules/Header.module.scss";
 
 type HeaderProps = {
   toggleTheme: () => void;

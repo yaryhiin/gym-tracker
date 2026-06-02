@@ -1,4 +1,4 @@
-import styles from "../styles/WelcomeScreen.module.scss";
+import styles from "../styles/modules/WelcomeScreen.module.scss";
 import { useNavigate } from "react-router-dom";
 import cn from "classnames";
 

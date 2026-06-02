@@ -1,7 +1,10 @@
-import type { ExerciseDB } from "../../types";
-import styles from "../styles/Modal.module.scss";
 import cn from "classnames";
 import { useState } from "react";
+
+import styles from "../styles//modules/Modal.module.scss";
+
+import type { ExerciseDB } from "../types/exercise";
+
 import CreateExerciseModal from "./CreateExerciseModal";
 
 type ChooseExerciseModalProps = {
@@ -27,37 +30,6 @@ const ChooseExerciseModal = ({
     <div className={styles.modal}>
       <div className={styles.modalContent}>
         <h2 className={styles.heading}>Select Exercise</h2>
-        <div className={styles.exerciseList}>
-          <h2>Exercise List:</h2>
-          {exercises.length === 0 ? (
-            <p>You dont have any exercises, add some first</p>
-          ) : (
-            exercises.map((exercise) => (
-              <div key={exercise.id} className={styles.exerciseElement}>
-                <button
-                  type="button"
-                  className={cn(
-                    styles.exerciseBtn,
-                    chosenExercise?.id === exercise.id && styles.active,
-                  )}
-                  onClick={() => setChosenExercise(exercise)}
-                >
-                  {exercise.name} - {exercise.category}
-                </button>
-                {/* <button className={styles.editExerciseBtn}>Edit</button>
-              <button
-                className={styles.deleteExerciseBtn}
-                onClick={() => {
-                  setShowMessageModal(true);
-                  setChosenExerciseId(exercise.id);
-                }}
-              >
-                Delete
-              </button> */}
-              </div>
-            ))
-          )}
-        </div>
         <div className={styles.categoryContainer}>
           {exercises.length != 0 && <h2>Sort by Category</h2>}
           {categories.map((category) => (
@@ -70,6 +42,38 @@ const ChooseExerciseModal = ({
               {category}
             </button>
           ))}
+          <button
+            type="button"
+            className={`${styles.categoryBtn} ${chosenExerciseCategory === "" && styles.active}`}
+            onClick={() => setChosenExerciseCategory("")}
+          >
+            All
+          </button>
+        </div>
+        <div className={styles.exerciseList}>
+          {exercises.length === 0 ? (
+            <p>You dont have any exercises, add some first</p>
+          ) : (
+            exercises
+              .filter((exercise) => {
+                if (chosenExerciseCategory === "") return true;
+                return exercise.category === chosenExerciseCategory;
+              })
+              .map((exercise) => (
+                <div key={exercise.id} className={styles.exerciseElement}>
+                  <button
+                    type="button"
+                    className={cn(
+                      styles.exerciseBtn,
+                      chosenExercise?.id === exercise.id && styles.active,
+                    )}
+                    onClick={() => setChosenExercise(exercise)}
+                  >
+                    {exercise.name} - {exercise.category}
+                  </button>
+                </div>
+              ))
+          )}
         </div>
         <button
           className={styles.createExerciseBtn}

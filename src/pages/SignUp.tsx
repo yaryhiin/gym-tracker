@@ -1,9 +1,9 @@
-import { supabase } from "../../supabase";
+import { supabase } from "../supabase";
 import { useState, useEffect } from "react";
-import styles from "../styles/FormLayout.module.scss";
+import styles from "../styles/modules/FormLayout.module.scss";
 import cn from "classnames";
 import { useNavigate } from "react-router-dom";
-import MessageModal from "./MessageModal";
+import MessageModal from "../components/MessageModal";
 
 type Errors = {
   confirmPassword: boolean;

@@ -1,5 +1,6 @@
-import styles from "../styles/Modal.module.scss";
 import cn from "classnames";
+
+import styles from "../styles/modules/Modal.module.scss";
 
 type DeleteModalProps = {
   title: string;
@@ -8,12 +9,7 @@ type DeleteModalProps = {
   onDelete: () => void;
 };
 
-const DeleteModal = ({
-  title,
-  text,
-  onClose,
-  onDelete,
-}: DeleteModalProps) => {
+const DeleteModal = ({ title, text, onClose, onDelete }: DeleteModalProps) => {
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>

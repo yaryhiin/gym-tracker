@@ -1,5 +1,6 @@
-import styles from "../styles/Modal.module.scss";
 import cn from "classnames";
+
+import styles from "../styles/modules/Modal.module.scss";
 
 type MessageModalProps = {
   title: string;

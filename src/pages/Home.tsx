@@ -1,16 +1,48 @@
 import { useNavigate } from "react-router-dom";
-import styles from "../styles/Home.module.scss";
-import type { RoutineDB, WorkoutDB } from "../../types";
-import { formatDate, formatTime } from "../../utils";
+import { useEffect, useState } from "react";
+
+import styles from "../styles/modules/Home.module.scss";
+
+import type { RoutineDB } from "../types/routine";
+import type { WorkoutDB } from "../types/workout";
+
+import { getWorkoutsHistory } from "../services/workouts";
+import { getRoutines } from "../services/routines";
+
+import { formatDate, formatTime } from "../services/utils";
 
 type homeProps = {
   userName: string;
-  workouts: WorkoutDB[];
-  routines: RoutineDB[];
 };
 
-const Home = ({ userName, workouts, routines }: homeProps) => {
+const Home = ({ userName }: homeProps) => {
   const navigate = useNavigate();
+
+  const [workouts, setWorkouts] = useState<WorkoutDB[]>([]);
+  const [routines, setRoutines] = useState<RoutineDB[]>([]);
+
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    async function loadData() {
+      setLoading(true);
+      try {
+        const workoutsData = await getWorkoutsHistory();
+        setWorkouts(workoutsData);
+        const routinesData = await getRoutines();
+        setRoutines(routinesData);
+      } catch (error) {
+        console.error("Error loading data:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadData();
+  }, []);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
   return (
     <div className={styles.home}>
       <h1 className={styles.title}>Good evening, {userName}</h1>

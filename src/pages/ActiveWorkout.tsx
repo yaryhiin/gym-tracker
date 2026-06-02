@@ -1,24 +1,26 @@
 import { useEffect, useState } from "react";
-import Modal from "./Modal";
-import styles from "../styles/ActiveWorkout.module.scss";
-import cn from "classnames";
 import { useNavigate, useParams } from "react-router-dom";
-import MessageModal from "./MessageModal";
-import { formatTime, getRoutineDetails } from "../../utils";
-import type { Workout, WorkoutSet } from "../../types";
+import cn from "classnames";
 
-type ActiveWorkoutProps = {
-  addWorkout: (workout: Workout) => Promise<void>;
-};
+import styles from "../styles/modules/ActiveWorkout.module.scss";
 
-const ActiveWorkout = ({ addWorkout }: ActiveWorkoutProps) => {
+import type { Workout, WorkoutSet } from "../types/workout";
+import type { ExerciseDB } from "../types/exercise";
+
+import MessageModal from "../components/MessageModal";
+import ChooseExerciseModal from "../components/ChooseExerciseModal";
+
+import { getRoutineDetails } from "../services/routines";
+import { createExercise, getExercises } from "../services/exercises";
+import { createWorkout } from "../services/workouts";
+import { formatTime } from "../services/utils";
+
+const ActiveWorkout = () => {
   const navigate = useNavigate();
-
-  function home() {
-    navigate("/");
-  }
-
   const { routineId } = useParams();
+
+  const [exercises, setExercises] = useState<ExerciseDB[]>([]);
+
   const [seconds, setSeconds] = useState(() => {
     const savedSeconds = localStorage.getItem("activeWorkoutSeconds");
 
@@ -59,6 +61,27 @@ const ActiveWorkout = ({ addWorkout }: ActiveWorkoutProps) => {
 
     return createEmptyWorkout();
   });
+
+  const [loading, setLoading] = useState(true);
+  async function loadData() {
+    setLoading(true);
+    try {
+      const exercisesData = await getExercises();
+      setExercises(exercisesData);
+    } catch (error) {
+      console.error("Error loading data:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  async function addExercise(name: string, category: string) {
+    await createExercise({ name, category });
+    await loadData();
+  }
 
   useEffect(() => {
     const savedWorkout = localStorage.getItem("activeWorkout");
@@ -175,16 +198,16 @@ const ActiveWorkout = ({ addWorkout }: ActiveWorkoutProps) => {
     }));
   }
 
-  function addExercise(exerciseName: string) {
+  function chooseExercise(exercise: ExerciseDB) {
     setWorkout((prev) => ({
       ...prev,
       exercises: [
         ...prev.exercises,
         {
-          id: `${Date.now().toString()}-${exerciseName}`,
-          exercise_name: exerciseName,
-          exercise_id: Date.now().toString(),
-          category: "",
+          id: exercise.id,
+          exercise_name: exercise.name,
+          exercise_id: exercise.id,
+          category: exercise.category,
           order_index: prev.exercises.length + 1,
           notes: "",
           sets: [
@@ -199,6 +222,7 @@ const ActiveWorkout = ({ addWorkout }: ActiveWorkoutProps) => {
         },
       ],
     }));
+    setShowModal(false);
   }
 
   async function finishWorkout() {
@@ -213,13 +237,16 @@ const ActiveWorkout = ({ addWorkout }: ActiveWorkoutProps) => {
 
     setWorkout(finishedWorkout);
 
-    await addWorkout(finishedWorkout);
+    await createWorkout(workout);
     localStorage.removeItem("activeWorkout");
     localStorage.removeItem("activeWorkoutSeconds");
     setSeconds(0);
-    home();
+    navigate("/");
   }
 
+  if (loading) {
+    return <p>Loading...</p>;
+  }
   return (
     <div className={styles.workoutContainer}>
       <div className={styles.header}>
@@ -326,9 +353,11 @@ const ActiveWorkout = ({ addWorkout }: ActiveWorkoutProps) => {
         </button>
 
         {showModal && (
-          <Modal
+          <ChooseExerciseModal
+            exercises={exercises}
             onClose={() => setShowModal(false)}
-            onAddExercise={addExercise}
+            addExercise={addExercise}
+            chooseExercise={chooseExercise}
           />
         )}
         {showBackModal && (
@@ -339,7 +368,7 @@ const ActiveWorkout = ({ addWorkout }: ActiveWorkoutProps) => {
               setShowBackModal(false);
               localStorage.removeItem("activeWorkout");
               localStorage.removeItem("activeWorkoutSeconds");
-              home();
+              navigate("/");
             }}
             onClose={() => {
               setShowBackModal(false);

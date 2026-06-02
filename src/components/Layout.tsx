@@ -1,8 +1,9 @@
-import { supabase } from "./supabase";
 import { useNavigate, Outlet, useLocation, matchPath } from "react-router-dom";
 
-import Header from "./components/codes/Header";
-import NavButtons from "./components/codes/NavButtons";
+import Header from "./Header";
+import NavButtons from "./NavButtons";
+
+import { supabase } from "../supabase";
 
 type LayoutProps = {
   toggleTheme: () => void;

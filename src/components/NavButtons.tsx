@@ -1,6 +1,7 @@
 import cn from "classnames";
-import styles from "../styles/NavButtons.module.scss";
 import { useNavigate } from "react-router-dom";
+
+import styles from "../styles/modules/NavButtons.module.scss";
 
 const NavButtons = () => {
   const navigate = useNavigate();

@@ -1,23 +1,17 @@
-import styles from "../styles/ActiveWorkout.module.scss";
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-import { getWorkoutDetails } from "../../utils";
+import styles from "../styles/modules/ActiveWorkout.module.scss";
 
-import type { WorkoutDetails } from "../../types";
-import MessageModal from "./MessageModal";
+import type { WorkoutDetails } from "../types/workout";
 
-type ChangeWorkoutProps = {
-  deleteWorkout: (id: string) => void;
-};
+import MessageModal from "../components/MessageModal";
 
-const ChangeWorkout = ({ deleteWorkout }: ChangeWorkoutProps) => {
+import { getWorkoutDetails, deleteWorkout } from "../services/workouts";
+
+const ChangeWorkout = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
-  function home() {
-    navigate("/");
-  }
 
   const [workout, setWorkout] = useState<WorkoutDetails>();
   const [showModal, setShowModal] = useState(false);
@@ -25,23 +19,32 @@ const ChangeWorkout = ({ deleteWorkout }: ChangeWorkoutProps) => {
   const title = "Confirm Action";
   const text = `Are you sure you want to delete this workout? \n This action cannot be undone.`;
 
+  async function handleDelete() {
+    setShowModal(false);
+    await deleteWorkout(String(id));
+    navigate("/");
+  }
+
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    async function getDetails() {
+    async function loadData() {
+      setLoading(true);
       try {
         const workoutDetails = await getWorkoutDetails(String(id));
         setWorkout(workoutDetails);
       } catch (error) {
         console.error("Error loading data: ", error);
+      } finally {
+        setLoading(false);
       }
     }
 
-    getDetails();
+    loadData();
   }, []);
 
-  async function handleDelete() {
-    setShowModal(false);
-    await deleteWorkout(String(id));
-    home();
+  if (loading) {
+    return <p>Loading...</p>;
   }
   return (
     <div className={styles.workoutContainer}>
@@ -94,7 +97,7 @@ const ChangeWorkout = ({ deleteWorkout }: ChangeWorkoutProps) => {
       </div>
 
       <div className={styles.buttonContainer}>
-        <button className={styles.backBtn} onClick={() => home()}>
+        <button className={styles.backBtn} onClick={() => navigate("/")}>
           Back
         </button>
         <button className={styles.deleteBtn} onClick={() => setShowModal(true)}>
