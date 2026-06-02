@@ -5,27 +5,20 @@ import styles from "../styles/modules/ActiveWorkout.module.scss";
 
 import type { WorkoutDetails } from "../types/workout";
 
-import MessageModal from "../components/MessageModal";
+import ExecuteModal from "../components/ExecuteModal";
 
 import { getWorkoutDetails, deleteWorkout } from "../services/workouts";
+
+const MODAL_TEXT = `Are you sure you want to delete this workout? \n This action cannot be undone.`;
 
 const ChangeWorkout = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [workout, setWorkout] = useState<WorkoutDetails>();
-  const [showModal, setShowModal] = useState(false);
-
-  const title = "Confirm Action";
-  const text = `Are you sure you want to delete this workout? \n This action cannot be undone.`;
-
-  async function handleDelete() {
-    setShowModal(false);
-    await deleteWorkout(String(id));
-    navigate("/");
-  }
-
   const [loading, setLoading] = useState(true);
+
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -42,6 +35,12 @@ const ChangeWorkout = () => {
 
     loadData();
   }, []);
+
+  async function handleDelete() {
+    await deleteWorkout(String(id));
+    setShowModal(false);
+    navigate("/");
+  }
 
   if (loading) {
     return <p>Loading...</p>;
@@ -83,15 +82,13 @@ const ChangeWorkout = () => {
           </div>
         ))}
         {showModal && (
-          <MessageModal
-            title={title}
-            text={text}
-            onDelete={handleDelete}
+          <ExecuteModal
+            text={MODAL_TEXT}
+            btnText="Delete"
             onClose={() => {
               setShowModal(false);
             }}
-            twoButton={true}
-            btnText="Delete"
+            onDelete={handleDelete}
           />
         )}
       </div>

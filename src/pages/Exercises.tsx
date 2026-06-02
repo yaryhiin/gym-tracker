@@ -5,23 +5,27 @@ import styles from "../styles/modules/Exercises.module.scss";
 import type { ExerciseDB } from "../types/exercise";
 
 import CreateExerciseModal from "../components/CreateExerciseModal";
-import DeleteModal from "../components/DeleteModal";
+import ExecuteModal from "../components/ExecuteModal";
 import {
   createExercise,
   getExercises,
   deleteExercise,
 } from "../services/exercises";
 
+const MODAL_TEXT = `Are you sure you want to delete this exercise? \n It will be removed from your existing routines`;
+
 const Exercises = () => {
   const [exercises, setExercises] = useState<ExerciseDB[]>([]);
+  const [chosenExerciseId, setChosenExerciseId] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const [showModal, setShowModal] = useState(false);
   const [showMessageModal, setShowMessageModal] = useState(false);
-  const title = "Confirm Action";
-  const text = `Are you sure you want to delete this exercise? \n It will be removed from your existing routines`;
-  const [chosenExerciseId, setChosenExerciseId] = useState("");
 
-  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    loadData();
+  }, []);
+
   async function loadData() {
     setLoading(true);
     try {
@@ -33,9 +37,6 @@ const Exercises = () => {
       setLoading(false);
     }
   }
-  useEffect(() => {
-    loadData();
-  }, []);
 
   async function addExercise(name: string, category: string) {
     await createExercise({ name, category });
@@ -87,9 +88,9 @@ const Exercises = () => {
         />
       )}
       {showMessageModal && (
-        <DeleteModal
-          title={title}
-          text={text}
+        <ExecuteModal
+          text={MODAL_TEXT}
+          btnText="Delete"
           onClose={() => setShowMessageModal(false)}
           onDelete={() => {
             handleDeleteExercise(chosenExerciseId);

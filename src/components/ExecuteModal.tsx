@@ -2,18 +2,23 @@ import cn from "classnames";
 
 import styles from "../styles/modules/Modal.module.scss";
 
-type DeleteModalProps = {
-  title: string;
+type ExecuteModalProps = {
   text: string;
+  btnText: string;
   onClose: () => void;
   onDelete: () => void;
 };
 
-const DeleteModal = ({ title, text, onClose, onDelete }: DeleteModalProps) => {
+const ExecuteModal = ({
+  text,
+  onClose,
+  onDelete,
+  btnText,
+}: ExecuteModalProps) => {
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
-        <h2 className={styles.heading}>{title}</h2>
+        <h2 className={styles.heading}>Confirm Action</h2>
         <p style={{ whiteSpace: "pre-line" }} className={styles.message}>
           {text}
         </p>
@@ -22,7 +27,7 @@ const DeleteModal = ({ title, text, onClose, onDelete }: DeleteModalProps) => {
             className={cn(styles.deleteBtn, "button")}
             onClick={() => onDelete()}
           >
-            Delete
+            {btnText}
           </button>
           <button
             className={cn(styles.backBtn, "button")}
@@ -36,4 +41,4 @@ const DeleteModal = ({ title, text, onClose, onDelete }: DeleteModalProps) => {
   );
 };
 
-export default DeleteModal;
+export default ExecuteModal;

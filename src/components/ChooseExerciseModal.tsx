@@ -20,12 +20,13 @@ const ChooseExerciseModal = ({
   addExercise,
   chooseExercise,
 }: ChooseExerciseModalProps) => {
-  const [showModal, setShowModal] = useState(false);
-  const [chosenExerciseCategory, setChosenExerciseCategory] = useState("");
-  const [chosenExercise, setChosenExercise] = useState<ExerciseDB>();
   const categories = [
     ...new Set(exercises.map((exercise) => exercise.category)),
   ];
+  const [chosenExerciseCategory, setChosenExerciseCategory] = useState("");
+  const [chosenExercise, setChosenExercise] = useState<ExerciseDB>();
+
+  const [showModal, setShowModal] = useState(false);
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>

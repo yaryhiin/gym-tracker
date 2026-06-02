@@ -6,19 +6,9 @@ type MessageModalProps = {
   title: string;
   text: string;
   onClose: () => void;
-  twoButton: boolean;
-  onDelete: () => void;
-  btnText: string;
 };
 
-const MessageModal = ({
-  title,
-  text,
-  onClose,
-  twoButton,
-  onDelete,
-  btnText,
-}: MessageModalProps) => {
+const MessageModal = ({ title, text, onClose }: MessageModalProps) => {
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
@@ -26,32 +16,14 @@ const MessageModal = ({
         <p style={{ whiteSpace: "pre-line" }} className={styles.message}>
           {text}
         </p>
-
-        {twoButton ? (
-          <div className={styles.buttons}>
-            <button
-              className={cn(styles.deleteBtn, "button")}
-              onClick={() => onDelete()}
-            >
-              {btnText}
-            </button>
-            <button
-              className={cn(styles.backBtn, "button")}
-              onClick={() => onClose()}
-            >
-              Back
-            </button>
-          </div>
-        ) : (
-          <div className={styles.buttons}>
-            <button
-              className={cn(styles.backBtn, "button")}
-              onClick={() => onClose()}
-            >
-              Ok
-            </button>
-          </div>
-        )}
+        <div className={styles.buttons}>
+          <button
+            className={cn(styles.backBtn, "button")}
+            onClick={() => onClose()}
+          >
+            Ok
+          </button>
+        </div>
       </div>
     </div>
   );

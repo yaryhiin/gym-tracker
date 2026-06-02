@@ -12,8 +12,8 @@ const History = () => {
   const navigate = useNavigate();
 
   const [workouts, setWorkouts] = useState<WorkoutDB[]>([]);
-
   const [loading, setLoading] = useState(true);
+  
   useEffect(() => {
     async function loadData() {
       setLoading(true);

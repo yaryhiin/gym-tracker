@@ -12,12 +12,7 @@ type HeaderProps = {
 
 const Header = ({ toggleTheme, theme, handleLogout, session }: HeaderProps) => {
   const navigate = useNavigate();
-  function signup() {
-    navigate("/signup");
-  }
-  function login() {
-    navigate("/login");
-  }
+
   return (
     <header className={cn("header", styles.header)}>
       {session ? (
@@ -31,10 +26,16 @@ const Header = ({ toggleTheme, theme, handleLogout, session }: HeaderProps) => {
         </div>
       ) : (
         <div className={styles.sessionBox}>
-          <button onClick={login} className={cn("button", styles.logIn)}>
+          <button
+            onClick={() => navigate("/login")}
+            className={cn("button", styles.logIn)}
+          >
             Log In
           </button>
-          <button onClick={signup} className={cn("button", styles.signUp)}>
+          <button
+            onClick={() => navigate("/signup")}
+            className={cn("button", styles.signUp)}
+          >
             Sign Up
           </button>
         </div>

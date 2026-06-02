@@ -7,7 +7,7 @@ import styles from "../styles/modules/ActiveWorkout.module.scss";
 import type { Workout, WorkoutSet } from "../types/workout";
 import type { ExerciseDB } from "../types/exercise";
 
-import MessageModal from "../components/MessageModal";
+import ExecuteModal from "../components/ExecuteModal";
 import ChooseExerciseModal from "../components/ChooseExerciseModal";
 
 import { getRoutineDetails } from "../services/routines";
@@ -15,76 +15,64 @@ import { createExercise, getExercises } from "../services/exercises";
 import { createWorkout } from "../services/workouts";
 import { formatTime } from "../services/utils";
 
-const ActiveWorkout = () => {
-  const navigate = useNavigate();
-  const { routineId } = useParams();
+const ACTIVE_WORKOUT_KEY = "activeWorkout";
+const ACTIVE_WORKOUT_SECONDS_KEY = "activeWorkoutSeconds";
 
-  const [exercises, setExercises] = useState<ExerciseDB[]>([]);
+const BACK_TEXT = `Are you sure you want to exit workout? \n The data will be lost`;
+const FINISH_TEXT = `Are you sure you want to finish this workout?`;
 
-  const [seconds, setSeconds] = useState(() => {
-    const savedSeconds = localStorage.getItem("activeWorkoutSeconds");
-
-    if (!savedSeconds) return 0;
-
-    const parsedSeconds = Number(savedSeconds);
-
-    return Number.isNaN(parsedSeconds) ? 0 : parsedSeconds;
-  });
-  const [isRunning, setIsRunning] = useState(true);
-
-  const [showModal, setShowModal] = useState(false);
-  const [showBackModal, setShowBackModal] = useState(false);
-  const [showFinishModal, setShowFinishModal] = useState(false);
-
-  const title = "Confirm Action";
-  const textBack = `Are you sure you want to exit workout? \n The data will be lost`;
-  const textFinish = `Are you sure you want to finish this workout?`;
-
-  const createEmptyWorkout = (): Workout => ({
+function createEmptyWorkout(): Workout {
+  return {
     name: "Custom Workout",
     started_at: Date.now().toString(),
     finished_at: "",
     duration_seconds: 0,
     exercises: [],
-  });
+  };
+}
 
-  const [workout, setWorkout] = useState<Workout>(() => {
-    const savedWorkout = localStorage.getItem("activeWorkout");
+function getInitialSeconds() {
+  const savedSeconds = localStorage.getItem(ACTIVE_WORKOUT_SECONDS_KEY);
+  if (!savedSeconds) return 0;
 
-    if (savedWorkout) {
-      try {
-        return JSON.parse(savedWorkout) as Workout;
-      } catch {
-        localStorage.removeItem("activeWorkout");
-      }
-    }
+  const parsedSeconds = Number(savedSeconds);
+  return Number.isNaN(parsedSeconds) ? 0 : parsedSeconds;
+}
 
-    return createEmptyWorkout();
-  });
+function getInitialWorkout() {
+  const savedWorkout = localStorage.getItem(ACTIVE_WORKOUT_KEY);
 
-  const [loading, setLoading] = useState(true);
-  async function loadData() {
-    setLoading(true);
+  if (savedWorkout) {
     try {
-      const exercisesData = await getExercises();
-      setExercises(exercisesData);
-    } catch (error) {
-      console.error("Error loading data:", error);
-    } finally {
-      setLoading(false);
+      return JSON.parse(savedWorkout) as Workout;
+    } catch {
+      localStorage.removeItem(ACTIVE_WORKOUT_KEY);
     }
   }
+
+  return createEmptyWorkout();
+}
+
+const ActiveWorkout = () => {
+  const navigate = useNavigate();
+  const { routineId } = useParams();
+
+  const [workout, setWorkout] = useState<Workout>(getInitialWorkout);
+  const [seconds, setSeconds] = useState(getInitialSeconds);
+  const [exercises, setExercises] = useState<ExerciseDB[]>([]);
+  const [isRunning, setIsRunning] = useState(true);
+  const [loading, setLoading] = useState(true);
+
+  const [showModal, setShowModal] = useState(false);
+  const [showBackModal, setShowBackModal] = useState(false);
+  const [showFinishModal, setShowFinishModal] = useState(false);
+
   useEffect(() => {
     loadData();
   }, []);
 
-  async function addExercise(name: string, category: string) {
-    await createExercise({ name, category });
-    await loadData();
-  }
-
   useEffect(() => {
-    const savedWorkout = localStorage.getItem("activeWorkout");
+    const savedWorkout = localStorage.getItem(ACTIVE_WORKOUT_KEY);
     if (savedWorkout) {
       return;
     }
@@ -147,12 +135,29 @@ const ActiveWorkout = () => {
   }, [isRunning]);
 
   useEffect(() => {
-    localStorage.setItem("activeWorkout", JSON.stringify(workout));
+    localStorage.setItem(ACTIVE_WORKOUT_KEY, JSON.stringify(workout));
   }, [workout]);
 
   useEffect(() => {
-    localStorage.setItem("activeWorkoutSeconds", String(seconds));
+    localStorage.setItem(ACTIVE_WORKOUT_SECONDS_KEY, String(seconds));
   }, [seconds]);
+
+  async function loadData() {
+    setLoading(true);
+    try {
+      const exercisesData = await getExercises();
+      setExercises(exercisesData);
+    } catch (error) {
+      console.error("Error loading data:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function addExercise(name: string, category: string) {
+    await createExercise({ name, category });
+    await loadData();
+  }
 
   function addSet(exerciseId: string) {
     setWorkout((prev) => ({
@@ -235,11 +240,12 @@ const ActiveWorkout = () => {
       duration_seconds: seconds,
     };
 
-    setWorkout(finishedWorkout);
+    await createWorkout(finishedWorkout);
 
-    await createWorkout(workout);
-    localStorage.removeItem("activeWorkout");
-    localStorage.removeItem("activeWorkoutSeconds");
+    localStorage.removeItem(ACTIVE_WORKOUT_KEY);
+    localStorage.removeItem(ACTIVE_WORKOUT_SECONDS_KEY);
+
+    setWorkout(finishedWorkout);
     setSeconds(0);
     navigate("/");
   }
@@ -361,32 +367,26 @@ const ActiveWorkout = () => {
           />
         )}
         {showBackModal && (
-          <MessageModal
-            title={title}
-            text={textBack}
+          <ExecuteModal
+            text={BACK_TEXT}
+            btnText="Exit"
+            onClose={() => setShowBackModal(false)}
             onDelete={() => {
               setShowBackModal(false);
-              localStorage.removeItem("activeWorkout");
-              localStorage.removeItem("activeWorkoutSeconds");
+              localStorage.removeItem(ACTIVE_WORKOUT_KEY);
+              localStorage.removeItem(ACTIVE_WORKOUT_SECONDS_KEY);
               navigate("/");
             }}
-            onClose={() => {
-              setShowBackModal(false);
-            }}
-            twoButton={true}
-            btnText="Exit"
           />
         )}
         {showFinishModal && (
-          <MessageModal
-            title={title}
-            text={textFinish}
+          <ExecuteModal
+            text={FINISH_TEXT}
+            btnText="Finish"
             onDelete={finishWorkout}
             onClose={() => {
               setShowFinishModal(false);
             }}
-            twoButton={true}
-            btnText="Finish"
           />
         )}
       </div>

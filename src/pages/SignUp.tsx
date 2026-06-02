@@ -1,17 +1,22 @@
 import { supabase } from "../supabase";
 import { useState, useEffect } from "react";
-import styles from "../styles/modules/FormLayout.module.scss";
-import cn from "classnames";
 import { useNavigate } from "react-router-dom";
+
+import cn from "classnames";
+
+import styles from "../styles/modules/FormLayout.module.scss";
+
+import type { Errors } from "../types/errors";
+
 import MessageModal from "../components/MessageModal";
 
-type Errors = {
-  confirmPassword: boolean;
-  password: boolean;
-  email: boolean;
-};
+const MODAL_TITLE = "Account created";
+const MODAL_TEXT =
+  "Check your email for a confirmation link. \n If you already have an account, try logging in instead.";
 
 const SignUp = () => {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -23,17 +28,6 @@ const SignUp = () => {
   const [authError, setAuthError] = useState("");
 
   const [showModal, setShowModal] = useState(false);
-  const title = "Account created";
-  const text =
-    "Check your email for a confirmation link. \n If you already have an account, try logging in instead.";
-
-  const navigate = useNavigate();
-  function home() {
-    navigate("/");
-  }
-  function login() {
-    navigate("/login");
-  }
 
   useEffect(() => {
     const newErrors: Errors = {
@@ -87,15 +81,15 @@ const SignUp = () => {
     setShowModal(true);
   }
 
-  const onBack = (e: React.MouseEvent<HTMLButtonElement>) => {
+  function onBack(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
 
     setEmail("");
     setPassword("");
     setConfirmPassword("");
 
-    home();
-  };
+    navigate("/");
+  }
 
   return (
     <>
@@ -141,15 +135,12 @@ const SignUp = () => {
             </div>
             {showModal && (
               <MessageModal
-                title={title}
-                text={text}
+                title={MODAL_TITLE}
+                text={MODAL_TEXT}
                 onClose={() => {
                   setShowModal(false);
-                  login();
+                  navigate("/login");
                 }}
-                onDelete={() => login()}
-                twoButton={false}
-                btnText="Okay"
               />
             )}
           </div>

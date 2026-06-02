@@ -24,12 +24,13 @@ const CreateExerciseModal = ({
     "Cardio",
     "Other",
   ];
-  const handleSubmit = () => {
+
+  function handleSubmit() {
     if (newExerciseName.trim()) {
       onAddExercise(newExerciseName, newExerciseCategory);
       onClose(); // pass value to parent
     }
-  };
+  }
 
   return (
     <div className={styles.modal}>

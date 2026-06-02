@@ -5,20 +5,24 @@ import styles from "../styles/modules/Routines.module.scss";
 
 import type { RoutineDB } from "../types/routine";
 
-import DeleteModal from "../components/DeleteModal";
+import ExecuteModal from "../components/ExecuteModal";
 
 import { getRoutines, deleteRoutine } from "../services/routines";
+
+const MODAL_TEXT = `Are you sure you want to delete this routine?`;
 
 const Routines = () => {
   const navigate = useNavigate();
 
   const [routines, setRoutines] = useState<RoutineDB[]>([]);
-
-  const [showMessageModal, setShowMessageModal] = useState(false);
-  const title = "Confirm Action";
-  const text = `Are you sure you want to delete this exercise? \n It will be removed from your existing routines`;
   const [chosenRoutineId, setChosenRoutineId] = useState("");
   const [loading, setLoading] = useState(true);
+
+  const [showMessageModal, setShowMessageModal] = useState(false);
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   async function loadData() {
     setLoading(true);
@@ -31,10 +35,6 @@ const Routines = () => {
       setLoading(false);
     }
   }
-
-  useEffect(() => {
-    loadData();
-  }, []);
 
   async function handleDeleteRoutine(id: string) {
     await deleteRoutine(id);
@@ -78,9 +78,9 @@ const Routines = () => {
         </button>
       </div>
       {showMessageModal && (
-        <DeleteModal
-          title={title}
-          text={text}
+        <ExecuteModal
+          text={MODAL_TEXT}
+          btnText="Delete"
           onClose={() => setShowMessageModal(false)}
           onDelete={() => {
             handleDeleteRoutine(chosenRoutineId);

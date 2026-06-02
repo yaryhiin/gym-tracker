@@ -6,9 +6,28 @@ import styles from "../styles/modules/RoutineBuilder.module.scss";
 import type { Routine, RoutineDraft } from "../types/routine";
 import type { ExerciseDB } from "../types/exercise";
 
-import DeleteModal from "../components/DeleteModal";
+import ExecuteModal from "../components/ExecuteModal";
 import ChooseExerciseModal from "../components/ChooseExerciseModal";
-import MessageModal from "../components/MessageModal";
+
+const BACK_TEXT = `Are you sure you want to exit? \n All unsaved progress will be lost.`;
+const MODAL_TEXT = `Are you sure you want to delete this exercise from your Routine?`;
+
+function getInitialRoutine(draftKey: string) {
+  const savedDraft = localStorage.getItem(draftKey);
+
+  if (savedDraft) {
+    try {
+      return JSON.parse(savedDraft) as RoutineDraft;
+    } catch {
+      localStorage.removeItem(draftKey);
+    }
+  }
+
+  return {
+    name: "",
+    exercises: [],
+  };
+}
 
 import {
   getRoutineDetails,
@@ -23,46 +42,16 @@ const RoutineBuilder = () => {
 
   const draftKey = routineId ? `routineDraft:${routineId}` : "routineDraft:new";
 
+  const [routineDraft, setRoutineDraft] = useState<RoutineDraft>(() =>
+    getInitialRoutine(draftKey),
+  );
   const [exercises, setExercises] = useState<ExerciseDB[]>([]);
-
-  const textBack = `Are you sure you want to exit? \n All unsaved progress will be lost.`;
-  const [routineDraft, setRoutineDraft] = useState<RoutineDraft>(() => {
-    const savedDraft = localStorage.getItem(draftKey);
-
-    if (savedDraft) {
-      try {
-        return JSON.parse(savedDraft) as RoutineDraft;
-      } catch {
-        localStorage.removeItem(draftKey);
-      }
-    }
-
-    return {
-      name: "",
-      exercises: [],
-    };
-  });
-
   const [chosenExerciseId, setChosenExerciseId] = useState("");
+  const [loading, setLoading] = useState(true);
+
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showChooseExerciseModal, setShowChooseExerciseModal] = useState(false);
   const [showBackModal, setShowBackModal] = useState(false);
-  const title = "Confirm Action";
-  const text = `Are you sure you want to delete this exercise from your Routine?`;
-
-  const [loading, setLoading] = useState(true);
-
-  async function loadData() {
-    setLoading(true);
-    try {
-      const exercisesData = await getExercises();
-      setExercises(exercisesData);
-    } catch (error) {
-      console.error("Error loading data:", error);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   useEffect(() => {
     loadData();
@@ -95,6 +84,22 @@ const RoutineBuilder = () => {
     getDetails();
   }, [routineId]);
 
+  useEffect(() => {
+    localStorage.setItem(draftKey, JSON.stringify(routineDraft));
+  }, [routineDraft]);
+
+  async function loadData() {
+    setLoading(true);
+    try {
+      const exercisesData = await getExercises();
+      setExercises(exercisesData);
+    } catch (error) {
+      console.error("Error loading data:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   function chooseExercise(exercise: ExerciseDB) {
     setRoutineDraft((prev) => ({
       ...prev,
@@ -110,10 +115,6 @@ const RoutineBuilder = () => {
     }));
     setShowChooseExerciseModal(false);
   }
-
-  useEffect(() => {
-    localStorage.setItem(draftKey, JSON.stringify(routineDraft));
-  }, [routineDraft]);
 
   async function addRoutine(routine: Routine) {
     await createRoutine(routine);
@@ -207,9 +208,9 @@ const RoutineBuilder = () => {
         </button>
       </div>
       {showDeleteModal && (
-        <DeleteModal
-          title={title}
-          text={text}
+        <ExecuteModal
+          text={MODAL_TEXT}
+          btnText="Delete"
           onClose={() => setShowDeleteModal(false)}
           onDelete={() => {
             setRoutineDraft((prev) => ({
@@ -231,19 +232,15 @@ const RoutineBuilder = () => {
         />
       )}
       {showBackModal && (
-        <MessageModal
-          title={title}
-          text={textBack}
+        <ExecuteModal
+          text={BACK_TEXT}
+          btnText="Exit"
+          onClose={() => setShowBackModal(false)}
           onDelete={() => {
             setShowBackModal(false);
             localStorage.removeItem(draftKey);
             navigate("/routines");
           }}
-          onClose={() => {
-            setShowBackModal(false);
-          }}
-          twoButton={true}
-          btnText="Exit"
         />
       )}
     </div>

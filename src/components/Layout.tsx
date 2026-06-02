@@ -13,11 +13,12 @@ type LayoutProps = {
 
 export default function Layout({ toggleTheme, theme, session }: LayoutProps) {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const isActiveWorkout =
     location.pathname === "/workout" ||
     !!matchPath("/changeWorkout/:id", location.pathname);
-  const navigate = useNavigate();
+
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
 
@@ -28,6 +29,7 @@ export default function Layout({ toggleTheme, theme, session }: LayoutProps) {
 
     navigate("/");
   };
+
   return (
     <div className={"appShell"}>
       {!isActiveWorkout && (

@@ -20,8 +20,8 @@ const Home = ({ userName }: homeProps) => {
 
   const [workouts, setWorkouts] = useState<WorkoutDB[]>([]);
   const [routines, setRoutines] = useState<RoutineDB[]>([]);
-
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     async function loadData() {
       setLoading(true);

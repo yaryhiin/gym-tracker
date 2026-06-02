@@ -1,16 +1,16 @@
 import { supabase } from "../supabase";
 import { useState } from "react";
-import styles from "../styles/modules/FormLayout.module.scss";
-import cn from "classnames";
 import { useNavigate } from "react-router-dom";
 
-type Errors = {
-  confirmPassword: boolean;
-  password: boolean;
-  email: boolean;
-};
+import cn from "classnames";
+
+import styles from "../styles/modules/FormLayout.module.scss";
+
+import type { Errors } from "../types/errors";
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<Errors>({
@@ -19,11 +19,6 @@ const Login = () => {
     email: false,
   });
   const [authError, setAuthError] = useState("");
-
-  const navigate = useNavigate();
-  function home() {
-    navigate("/");
-  }
 
   async function handleLogin(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
@@ -56,69 +51,67 @@ const Login = () => {
 
     setEmail("");
     setPassword("");
-    home();
+    navigate("/");
   }
 
-  const onBack = (e: React.MouseEvent<HTMLButtonElement>) => {
+  function onBack(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
 
     setEmail("");
     setPassword("");
 
-    home();
-  };
+    navigate("/");
+  }
 
   return (
-    <>
-      <div className="container">
-        <div className={styles.formContainer}>
-          <h1 className={styles.heading}>Log In</h1>
-          <div className={styles.inputBox}>
-            <div className={styles.inputContainer}>
-              <p className={styles.inputText}>Email</p>
-              <input
-                className={cn(styles.input, errors.email && styles.error)}
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              {authError && (
-                <p className={cn(styles.errorMessage, styles.fullWidth)}>
-                  {authError}
-                </p>
-              )}
-            </div>
-            <div className={styles.inputContainer}>
-              <p className={styles.inputText}>Password</p>
-              <input
-                className={cn(styles.input, errors.password && styles.error)}
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              {authError && (
-                <p className={cn(styles.errorMessage, styles.fullWidth)}>
-                  {authError}
-                </p>
-              )}
-            </div>
+    <div className="container">
+      <div className={styles.formContainer}>
+        <h1 className={styles.heading}>Log In</h1>
+        <div className={styles.inputBox}>
+          <div className={styles.inputContainer}>
+            <p className={styles.inputText}>Email</p>
+            <input
+              className={cn(styles.input, errors.email && styles.error)}
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            {authError && (
+              <p className={cn(styles.errorMessage, styles.fullWidth)}>
+                {authError}
+              </p>
+            )}
           </div>
-          <div className={styles.buttonContainer}>
-            <button className="backBtn button" onClick={onBack}>
-              Back
-            </button>
-            <button
-              className={cn(styles.saveBtn, "button")}
-              onClick={handleLogin}
-            >
-              Log In
-            </button>
+          <div className={styles.inputContainer}>
+            <p className={styles.inputText}>Password</p>
+            <input
+              className={cn(styles.input, errors.password && styles.error)}
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            {authError && (
+              <p className={cn(styles.errorMessage, styles.fullWidth)}>
+                {authError}
+              </p>
+            )}
           </div>
         </div>
+        <div className={styles.buttonContainer}>
+          <button className="backBtn button" onClick={onBack}>
+            Back
+          </button>
+          <button
+            className={cn(styles.saveBtn, "button")}
+            onClick={handleLogin}
+          >
+            Log In
+          </button>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 
