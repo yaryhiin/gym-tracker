@@ -34,7 +34,9 @@ const WorkoutForm = ({
 
     return [...previousExercise.workout_sets]
       .sort((a, b) => a.set_number - b.set_number)
-      .map((set) => `${set.weight}kg x ${set.reps}`)
+      .map((set) =>
+        set.weight === 0 ? `${set.reps}` : `${set.weight}kg x ${set.reps}`,
+      )
       .join(", ");
   }
 
