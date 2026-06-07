@@ -16,8 +16,8 @@ export default function Layout({ toggleTheme, theme, session }: LayoutProps) {
   const navigate = useNavigate();
 
   const isActiveWorkout =
-    location.pathname === "/workout" ||
-    !!matchPath("/changeWorkout/:id", location.pathname);
+    matchPath("/workout", location.pathname) ||
+    matchPath("/workout/*", location.pathname);
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();

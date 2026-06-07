@@ -3,6 +3,7 @@
   top: 0;
   left: 0;
   width: 100vw;
+  max-width: 425px;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
@@ -49,7 +50,8 @@
 }
 
 .addBtn,
-.backBtn {
+.backBtn,
+.deleteBtn {
   color: var(--text);
   width: 80px;
 }
@@ -89,4 +91,8 @@
   background: var(--accent);
   color: var(--button-text);
   border-color: var(--accent);
+}
+
+.error {
+  border: 2px solid var(--danger);
 }

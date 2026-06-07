@@ -6,14 +6,14 @@ import cn from "classnames";
 
 import styles from "../styles/modules/FormLayout.module.scss";
 
-import type { Errors } from "../types/errors";
+import type { AuthErrors } from "../types/errors";
 
 const Login = () => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState<Errors>({
+  const [errors, setErrors] = useState<AuthErrors>({
     confirmPassword: false,
     password: false,
     email: false,
@@ -23,7 +23,7 @@ const Login = () => {
   async function handleLogin(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     setAuthError("");
-    const newErrors: Errors = {
+    const newErrors: AuthErrors = {
       confirmPassword: false,
       password: false,
       email: false,

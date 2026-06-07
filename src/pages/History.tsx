@@ -13,7 +13,7 @@ const History = () => {
 
   const [workouts, setWorkouts] = useState<WorkoutDB[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   useEffect(() => {
     async function loadData() {
       setLoading(true);
@@ -46,13 +46,20 @@ const History = () => {
           </thead>
           <tbody>
             {workouts.map((workout) => (
-              <tr
-                key={workout.id}
-                onClick={() => navigate(`/changeWorkout/${workout.id}`)}
-              >
+              <tr key={workout.id}>
                 <td>{formatDate(workout.created_at)}</td>
                 <td>{workout.name}</td>
-                <td>{formatTime(workout.duration_seconds)}</td>
+                <td>
+                  {formatTime(workout.duration_seconds)}{" "}
+                  <button
+                    onClick={() => navigate(`/history/${workout.id}/edit`)}
+                  >
+                    Change
+                  </button>
+                  <button onClick={() => navigate(`/history/${workout.id}`)}>
+                    View
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

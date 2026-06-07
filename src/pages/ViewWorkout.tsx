@@ -5,54 +5,24 @@ import styles from "../styles/modules/ActiveWorkout.module.scss";
 
 import type { Workout } from "../types/workout";
 
-import ExecuteModal from "../components/ExecuteModal";
 import WorkoutForm from "../components/WorkoutForm";
 
-import { getWorkoutDetails, deleteWorkout } from "../services/workouts";
-
-const CHANGE_WORKOUT_KEY = "changeWorkout";
-
-const MODAL_TEXT = `Are you sure you want to delete this workout? \n This action cannot be undone.`;
-
-function createEmptyWorkout(): Workout {
-  return {
-    name: "Custom Workout",
-    started_at: Date.now().toString(),
-    finished_at: "",
-    duration_seconds: 0,
-    exercises: [],
-  };
-}
-
-function getInitialWorkout() {
-  const savedWorkout = localStorage.getItem(CHANGE_WORKOUT_KEY);
-
-  if (savedWorkout) {
-    try {
-      return JSON.parse(savedWorkout) as Workout;
-    } catch {
-      localStorage.removeItem(CHANGE_WORKOUT_KEY);
-    }
-  }
-
-  return createEmptyWorkout();
-}
+import { getWorkoutDetails } from "../services/workouts";
 
 const ChangeWorkout = () => {
   const { workoutId } = useParams();
   const navigate = useNavigate();
 
-  const [workout, setWorkout] = useState<Workout>(getInitialWorkout);
+  const [workout, setWorkout] = useState<Workout>({
+    name: "Custom Workout",
+    started_at: Date.now().toString(),
+    finished_at: "",
+    duration_seconds: 0,
+    exercises: [],
+  });
   const [loading, setLoading] = useState(true);
 
-  const [showModal, setShowModal] = useState(false);
-
   useEffect(() => {
-    const savedWorkout = localStorage.getItem(CHANGE_WORKOUT_KEY);
-    if (savedWorkout) {
-      setLoading(false);
-      return;
-    }
     async function loadData() {
       setLoading(true);
       try {
@@ -92,17 +62,6 @@ const ChangeWorkout = () => {
     loadData();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem(CHANGE_WORKOUT_KEY, JSON.stringify(workout));
-  }, [workout]);
-
-  async function handleDelete() {
-    await deleteWorkout(String(workoutId));
-    localStorage.removeItem(CHANGE_WORKOUT_KEY);
-    setShowModal(false);
-    navigate("/");
-  }
-
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -110,29 +69,15 @@ const ChangeWorkout = () => {
     <div className={styles.workoutContainer}>
       <h3 className={styles.title}>{workout?.name}</h3>
       <p className={styles.stopwatch}>{workout?.duration_seconds}</p>
-      <WorkoutForm workout={workout} readonly={false} setWorkout={setWorkout}/>
-      {showModal && (
-        <ExecuteModal
-          text={MODAL_TEXT}
-          btnText="Delete"
-          onClose={() => {
-            setShowModal(false);
-          }}
-          onDelete={handleDelete}
-        />
-      )}
+      <WorkoutForm workout={workout} readonly={true} />
       <div className={styles.buttonContainerChange}>
         <button
           className={styles.backBtn}
           onClick={() => {
             navigate("/");
-            localStorage.removeItem(CHANGE_WORKOUT_KEY);
           }}
         >
           Back
-        </button>
-        <button className={styles.deleteBtn} onClick={() => setShowModal(true)}>
-          Delete
         </button>
       </div>
     </div>

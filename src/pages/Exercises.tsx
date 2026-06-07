@@ -53,23 +53,29 @@ const Exercises = () => {
   }
   return (
     <div className={styles.exercisesContainer}>
-      <h1 className={styles.title}>Exercises</h1>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Exercises</h1>
+        <p>Manage your exercises</p>
+      </div>
       <div className={styles.exercisesList}>
         {exercises.map((exercise) => (
           <div key={exercise.id} className={styles.exerciseElement}>
-            <p>
-              {exercise.name} - {exercise.category}
-            </p>
-            <button className={styles.editExerciseBtn}>Edit</button>
-            <button
-              className={styles.deleteExerciseBtn}
-              onClick={() => {
-                setShowMessageModal(true);
-                setChosenExerciseId(exercise.id);
-              }}
-            >
-              Delete
-            </button>
+            <div className={styles.exerciseElementTop}>
+              <h3>{exercise.name}</h3>
+              <p>{exercise.category}</p>
+            </div>
+            <div className={styles.exerciseElementButtons}>
+              <button className={styles.editExerciseBtn}>Edit</button>
+              <button
+                className={styles.deleteExerciseBtn}
+                onClick={() => {
+                  setShowMessageModal(true);
+                  setChosenExerciseId(exercise.id);
+                }}
+              >
+                Delete
+              </button>
+            </div>
           </div>
         ))}
       </div>

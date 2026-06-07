@@ -1,0 +1,88 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+
+  h2 {
+    color: var(--text);
+    font-size: 25px;
+    margin: 5px;
+  }
+
+  input {
+    width: 80%;
+    font-size: 16px;
+  }
+}
+
+.selectedExercisesList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+  margin-top: 40px;
+}
+
+.selectedExerciseElement {
+  background: var(--card);
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.selectedExerciseElementTop {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.selectedExerciseElement h3 {
+  margin: 0 0 6px;
+  font-size: 20px;
+  color: var(--text);
+}
+
+.selectedExerciseElement p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 16px;
+}
+
+.selectedExerciseElementButtons {
+  display: flex;
+  gap: 8px;
+
+  button {
+    width: 80px;
+    height: 45px;
+  }
+}
+
+.deleteExerciseBtn {
+  border: 1px solid var(--danger);
+}
+
+.saveRoutine {
+  background: var(--accent);
+}
+
+.buttonContainer {
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+
+  button {
+    padding: 8px;
+    width: 110px;
+  }
+}

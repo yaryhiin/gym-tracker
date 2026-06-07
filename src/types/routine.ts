@@ -3,12 +3,16 @@ import type { ExerciseDB } from "./exercise";
 export type Routine = {
   name: string;
   exercises: RoutineExercise[];
+  exercises_count: number;
+  categories: string[];
 };
 
 export type RoutineDB = {
   id: string;
   user_id: string;
   name: string;
+  exercises_count: number;
+  categories: string[];
   created_at: string;
 };
 

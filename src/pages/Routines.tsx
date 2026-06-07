@@ -46,26 +46,41 @@ const Routines = () => {
   }
   return (
     <div className={styles.routinesContainer}>
-      <h1 className={styles.title}>Routines</h1>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Routines</h1>
+        <p>Manage your workout routines</p>
+      </div>
       <div className={styles.routinesList}>
         {routines.map((routine) => (
           <div key={routine.id} className={styles.routineElement}>
-            <p>{routine.name}</p>
-            <button
-              className={styles.editRoutineBtn}
-              onClick={() => navigate(`/routines/${routine.id}/edit`)}
-            >
-              Edit
-            </button>
-            <button
-              className={styles.deleteRoutineBtn}
-              onClick={() => {
-                setShowMessageModal(true);
-                setChosenRoutineId(routine.id);
-              }}
-            >
-              Delete
-            </button>
+            <div className={styles.routineElementTop}>
+              <h3>{routine.name}</h3>
+              <p>{routine.exercises_count} Exercises</p>
+              <p>{routine.categories.join(" • ")}</p>
+            </div>
+            <div className={styles.routineElementButtons}>
+              <button
+                className={styles.startRoutineBtn}
+                onClick={() => navigate(`/workout/routine/${routine.id}`)}
+              >
+                Start
+              </button>
+              <button
+                className={styles.editRoutineBtn}
+                onClick={() => navigate(`/routines/${routine.id}/edit`)}
+              >
+                Edit
+              </button>
+              <button
+                className={styles.deleteRoutineBtn}
+                onClick={() => {
+                  setShowMessageModal(true);
+                  setChosenRoutineId(routine.id);
+                }}
+              >
+                Delete
+              </button>
+            </div>
           </div>
         ))}
       </div>

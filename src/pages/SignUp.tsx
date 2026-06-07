@@ -6,7 +6,7 @@ import cn from "classnames";
 
 import styles from "../styles/modules/FormLayout.module.scss";
 
-import type { Errors } from "../types/errors";
+import type { AuthErrors } from "../types/errors";
 
 import MessageModal from "../components/MessageModal";
 
@@ -20,7 +20,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [errors, setErrors] = useState<Errors>({
+  const [errors, setErrors] = useState<AuthErrors>({
     confirmPassword: false,
     password: false,
     email: false,
@@ -30,7 +30,7 @@ const SignUp = () => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    const newErrors: Errors = {
+    const newErrors: AuthErrors = {
       confirmPassword: false,
       password: false,
       email: false,
@@ -42,7 +42,7 @@ const SignUp = () => {
   async function handleSignUp(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
 
-    const newErrors: Errors = {
+    const newErrors: AuthErrors = {
       confirmPassword: false,
       password: false,
       email: false,

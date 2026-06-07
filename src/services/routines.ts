@@ -49,6 +49,8 @@ export async function createRoutine(routine: Routine) {
     .insert({
       name: routine.name,
       user_id: userId,
+      exercises_count: routine.exercises_count,
+      categories: routine.categories,
     })
     .select()
     .single();
@@ -76,6 +78,8 @@ export async function updateRoutine(routine: Routine, routineId: string) {
     .from("routines")
     .update({
       name: routine.name,
+      exercises_count: routine.exercises_count,
+      categories: routine.categories,
     })
     .eq("id", routineId);
 

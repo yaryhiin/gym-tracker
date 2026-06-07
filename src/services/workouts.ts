@@ -61,6 +61,10 @@ export async function createWorkout(workout: Workout) {
       .insert({
         workout_id: createdWorkout.id,
         exercise_name: exercise.exercise_name,
+        exercise_id: exercise.exercise_id,
+        category: exercise.category,
+        order_index: exercise.order_index,
+        notes: exercise.notes,
       })
       .select()
       .single();
@@ -116,4 +120,62 @@ export async function deleteWorkout(workoutId: string) {
   }
 
   return true;
+}
+
+export async function getPreviousExerciseData(exerciseIds: string[]) {
+  if (exerciseIds.length === 0) return {};
+
+  const { data, error } = await supabase
+    .from("workout_exercises")
+    .select(
+      `
+      id,
+      exercise_id,
+      exercise_name,
+      workout_id,
+      order_index,
+      workout_sets (
+        id,
+        set_number,
+        weight,
+        reps,
+        rest_seconds,
+        done
+      ),
+      workouts (
+        id,
+        name,
+        finished_at,
+        created_at
+      )
+    `,
+    )
+    .in("exercise_id", exerciseIds);
+
+  if (error) {
+    console.error("Error fetching previous exercise data:", error);
+    return {};
+  }
+
+  const previousByExerciseId: Record<string, any> = {};
+
+  const sortedData = [...(data || [])].sort((a, b) => {
+    const dateA = new Date(
+      a.workouts?.[0]?.finished_at || a.workouts?.[0]?.created_at || 0,
+    ).getTime();
+
+    const dateB = new Date(
+      b.workouts?.[0]?.finished_at || b.workouts?.[0]?.created_at || 0,
+    ).getTime();
+
+    return dateB - dateA;
+  });
+
+  for (const item of sortedData) {
+    if (!previousByExerciseId[item.exercise_id]) {
+      previousByExerciseId[item.exercise_id] = item;
+    }
+  }
+
+  return previousByExerciseId;
 }

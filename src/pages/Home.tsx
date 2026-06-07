@@ -47,21 +47,19 @@ const Home = ({ userName }: homeProps) => {
     <div className={styles.home}>
       <h1 className={styles.title}>Good evening, {userName}</h1>
       <div className={styles.routinesContainer}>
-        <h2 className={styles.routinesTitle}>Start Workout</h2>
+        <h2 className={styles.routinesTitle}>Choose Routine:</h2>
         <div className={styles.routinesList}>
-          <p>Choose Routine:</p>
           {routines.map((routine) => (
-            <div className={styles.routineElement} key={routine.id}>
-              <button
-                className={styles.button}
-                onClick={() => navigate(`/workout/routine/${routine.id}`)}
-              >
-                {routine.name}
-              </button>
-            </div>
+            <button
+              className={styles.routineElement}
+              key={routine.id}
+              onClick={() => navigate(`/workout/routine/${routine.id}`)}
+            >
+              {routine.name}
+            </button>
           ))}
           <button
-            className={styles.button}
+            className={styles.routineElement}
             onClick={() => navigate("/workout")}
           >
             Custom Workout
@@ -81,7 +79,7 @@ const Home = ({ userName }: homeProps) => {
           .map((workout) => (
             <div
               className={styles.historyElement}
-              onClick={() => navigate(`/changeWorkout/${workout.id}`)}
+              onClick={() => navigate(`/history/${workout.id}/edit`)}
               key={workout.id}
             >
               <p className={styles.descName}>

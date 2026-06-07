@@ -1,7 +1,7 @@
 import cn from "classnames";
 import { useState } from "react";
 
-import styles from "../styles//modules/Modal.module.scss";
+import styles from "../styles//modules/ChooseExerciseModal.module.scss";
 
 import type { ExerciseDB } from "../types/exercise";
 
@@ -30,51 +30,60 @@ const ChooseExerciseModal = ({
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
-        <h2 className={styles.heading}>Select Exercise</h2>
+        <h2 className={styles.heading}>Choose Exercise</h2>
         <div className={styles.categoryContainer}>
-          {exercises.length != 0 && <h2>Sort by Category</h2>}
-          {categories.map((category) => (
+          <p>Filter by Category</p>
+          <div className={styles.categories}>
             <button
-              key={category}
               type="button"
-              className={`${styles.categoryBtn} ${chosenExerciseCategory === category && styles.active}`}
-              onClick={() => setChosenExerciseCategory(category)}
+              className={`${styles.categoryBtn} ${chosenExerciseCategory === "" && styles.active}`}
+              onClick={() => setChosenExerciseCategory("")}
             >
-              {category}
+              All
             </button>
-          ))}
-          <button
-            type="button"
-            className={`${styles.categoryBtn} ${chosenExerciseCategory === "" && styles.active}`}
-            onClick={() => setChosenExerciseCategory("")}
-          >
-            All
-          </button>
+            {categories.map((category) => (
+              <button
+                key={category}
+                type="button"
+                className={`${styles.categoryBtn} ${chosenExerciseCategory === category && styles.active}`}
+                onClick={() => setChosenExerciseCategory(category)}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
         </div>
-        <div className={styles.exerciseList}>
-          {exercises.length === 0 ? (
-            <p>You dont have any exercises, add some first</p>
-          ) : (
-            exercises
-              .filter((exercise) => {
-                if (chosenExerciseCategory === "") return true;
-                return exercise.category === chosenExerciseCategory;
-              })
-              .map((exercise) => (
-                <div key={exercise.id} className={styles.exerciseElement}>
+        <div className={styles.exerciseContainer}>
+          <div className={styles.exerciseList}>
+            {exercises.length === 0 ? (
+              <p>You dont have any exercises, add some first</p>
+            ) : (
+              exercises
+                .filter((exercise) => {
+                  if (chosenExerciseCategory === "") return true;
+                  return exercise.category === chosenExerciseCategory;
+                })
+                .map((exercise) => (
                   <button
                     type="button"
+                    key={exercise.id}
                     className={cn(
-                      styles.exerciseBtn,
-                      chosenExercise?.id === exercise.id && styles.active,
+                      styles.exerciseElement,
+                      chosenExercise?.id === exercise.id && styles.selected,
                     )}
                     onClick={() => setChosenExercise(exercise)}
                   >
-                    {exercise.name} - {exercise.category}
+                    <span>{exercise.name}</span>{" "}
+                    <span className={styles.exerciseCategory}>
+                      {exercise.category}
+                    </span>
                   </button>
-                </div>
-              ))
-          )}
+                ))
+            )}
+          </div>
+          <p className={styles.hint}>
+            Selected exercise: {chosenExercise?.name}
+          </p>
         </div>
         <button
           className={styles.createExerciseBtn}

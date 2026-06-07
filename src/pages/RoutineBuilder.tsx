@@ -154,19 +154,22 @@ const RoutineBuilder = () => {
             key={exercise.exercise_id}
             className={styles.selectedExerciseElement}
           >
-            <p>
-              {exercise.exercise_name} - {exercise.category}
-            </p>
-            <button className={styles.editExerciseBtn}>Edit</button>
-            <button
-              className={styles.deleteExerciseBtn}
-              onClick={() => {
-                setShowDeleteModal(true);
-                setChosenExerciseId(exercise.exercise_id);
-              }}
-            >
-              Delete
-            </button>
+            <div className={styles.selectedExerciseElementTop}>
+              <h3>{exercise.exercise_name}</h3>
+              <p>{exercise.category}</p>
+            </div>
+            <div className={styles.selectedExerciseElementButtons}>
+              <button className={styles.editExerciseBtn}>Edit</button>
+              <button
+                className={styles.deleteExerciseBtn}
+                onClick={() => {
+                  setShowDeleteModal(true);
+                  setChosenExerciseId(exercise.exercise_id);
+                }}
+              >
+                Delete
+              </button>
+            </div>
           </div>
         ))}
       </div>
@@ -186,10 +189,14 @@ const RoutineBuilder = () => {
                 exercise_id: exercise.exercise_id,
                 order_index: exercise.order_index,
               })),
+              exercises_count: routineDraft.exercises.length,
+              categories: [
+                ...new Set(
+                  routineDraft.exercises.map((exercise) => exercise.category),
+                ),
+              ],
             };
             if (routineId) {
-              console.log(routineToSave);
-              console.log(routineId);
               handleUpdateRoutine(routineToSave, routineId);
             } else {
               addRoutine(routineToSave);

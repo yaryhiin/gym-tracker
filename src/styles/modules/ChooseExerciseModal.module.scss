@@ -1,0 +1,160 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+  text-align: center;
+}
+
+.modalContent {
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  padding: 25px;
+  border-radius: 8px;
+  min-width: 300px;
+  max-width: 400px;
+  height: 90dvh;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.heading {
+  margin: 0;
+  font-size: 32px;
+}
+
+.modalContent .buttons {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+}
+
+.addBtn,
+.backBtn,
+.deleteBtn {
+  color: var(--text);
+  width: 80px;
+}
+
+.addBtn {
+  background-color: var(--accent);
+
+  &:hover {
+    background-color: var(--save-btn-hover-bg);
+  }
+}
+
+.backBtn {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border);
+  &:hover {
+    background-color: var(--back-btn-hover-bg);
+  }
+}
+
+.categoryContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+
+  p {
+    font-size: 23px;
+    font-weight: normal;
+    margin-top: 5px;
+  }
+}
+
+.categories {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  gap: 8px;
+}
+
+.categoryBtn {
+  width: 75px;
+  height: 35px;
+  padding: 8px 10px;
+  border-radius: 50px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.active {
+  background: var(--accent);
+  color: var(--button-text);
+  border-color: var(--accent);
+}
+
+.exerciseContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.exerciseList {
+  width: 100%;
+  height: 30dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.exerciseElement {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  background: var(--card);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  text-align: left;
+  font-size: 16px;
+}
+
+.hint {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.exerciseElement:hover {
+  background: var(--card-hover);
+}
+
+.selected {
+  border-color: #4f8cff;
+  background: #172033;
+}
+
+.exerciseCategory {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #222;
+  color: #aaa;
+}

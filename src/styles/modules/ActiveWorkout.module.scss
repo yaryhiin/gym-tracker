@@ -7,16 +7,41 @@ body {
   color: var(--text);
 }
 
+.header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  background-color: var(--bg);
+  width: 100%;
+  border-bottom: 1px solid var(--border);
+
+  .backBtn {
+    justify-self: start;
+    width: 80px;
+    height: 40px;
+    align-self: flex-end;
+    margin-bottom: 15px;
+  }
+
+  .header > div {
+    grid-column: 2;
+    justify-self: center;
+  }
+}
+
 .workoutContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .title {
   font-size: 24px;
   font-weight: 700;
   margin-bottom: 4px;
+  text-align: center;
 }
 
 .stopwatch {
@@ -24,105 +49,31 @@ body {
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 24px;
-}
-
-.exerciseContainer {
-  display: flex;
-  flex-direction: column;
-}
-
-.exerciseCard {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 16px;
-}
-
-.exerciseName {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.exercisePrev,
-.exerciseSuggest {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin: 2px;
-}
-
-.exerciseSuggest {
-  color: var(--accent);
-}
-
-.sets {
-  margin-top: 25px;
-}
-
-.exerciseContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-input {
-  background: var(--input-bg);
-  border: 1px solid var(--input-border);
-  color: var(--text);
-  border-radius: 10px;
-  padding: 8px;
-  width: 70px;
-}
-
-input:focus {
-  outline: none;
-  border-color: var(--input-focus);
+  text-align: center;
 }
 
 .buttonContainer {
-  margin: 20px;
+  margin-top: 20px;
   z-index: 1000;
   position: fixed;
-  bottom: 100;
+  bottom: 0px;
   display: flex;
   flex-direction: row;
-  gap: 20px;
+  gap: 50px;
+  padding: 15px;
+  width: 100%;
+  justify-content: center;
+  background: var(--bg-secondary);
 }
 
-button {
-  border: none;
-  border-radius: 14px;
-  padding: 12px 16px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.addExercise {
-  background: var(--button-bg);
-  color: var(--button-text);
-  margin-top: 15px;
-  margin-bottom: 60px;
-}
-
-.button:hover,
-.addExercise:hover {
-  background: var(--button-hover);
-}
-
-.addSet {
-  margin-top: 12px;
-  background: transparent;
-  color: var(--accent);
-  border: 1px solid var(--border);
+.buttonContainerChange {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
 }
 
 .finishBtn {
   background: var(--button-bg);
   color: var(--button-text);
-}
-
-.backBtn {
-  background-color: var(--bg--secondary);
-  color: var(--text);
-  border: 1px solid var(--border);
 }

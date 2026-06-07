@@ -1,1 +1,15 @@
 @use "./variables";
+
+button {
+  width: 100px;
+  height: 50px;
+  border: none;
+  border-radius: 14px;
+  padding: 8px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  background-color: var(--bg--secondary);
+  color: var(--text);
+  border: 1px solid var(--border);
+}

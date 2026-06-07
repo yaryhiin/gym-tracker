@@ -16,6 +16,7 @@ import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import WelcomeScreen from "./pages/WelcomeScreen";
 import ChangeWorkout from "./pages/ChangeWorkout";
+import ViewWorkout from "./pages/ViewWorkout";
 import Layout from "./components/Layout";
 import Exercises from "./pages/Exercises";
 import Routines from "./pages/Routines";
@@ -71,7 +72,6 @@ function App() {
   }
 
   if (authLoading) return <div>Loading...</div>;
-  if (!session) return <div>Loading...</div>;
   return (
     <Router>
       <Routes>
@@ -101,16 +101,24 @@ function App() {
               path="/workout/routine/:routineId"
               element={<ActiveWorkout />}
             />
+
             <Route path="/history" element={<History />} />
-            <Route path="/progress" element={<Progress />} />
-            <Route path="changeWorkout/:id" element={<ChangeWorkout />} />
-            <Route path="/exercises" element={<Exercises />} />
+            <Route
+              path="/history/:workoutId/edit"
+              element={<ChangeWorkout />}
+            />
+            <Route path="/history/:workoutId" element={<ViewWorkout />} />
+
             <Route path="/routines" element={<Routines />} />
             <Route path="/routines/new" element={<RoutineBuilder />} />
             <Route
               path="/routines/:routineId/edit"
               element={<RoutineBuilder />}
             />
+
+            <Route path="/exercises" element={<Exercises />} />
+
+            <Route path="/progress" element={<Progress />} />
           </Route>
         )}
       </Routes>

@@ -3,6 +3,8 @@ import cn from "classnames";
 
 import styles from "../styles//modules/Modal.module.scss";
 
+import type { AddErrors } from "../types/errors";
+
 type CreateExerciseModalProps = {
   onClose: () => void;
   onAddExercise: (name: string, category: string) => void;
@@ -24,12 +26,22 @@ const CreateExerciseModal = ({
     "Cardio",
     "Other",
   ];
+  const [errors, setErrors] = useState<AddErrors>({
+    name: false,
+    category: false,
+  });
 
   function handleSubmit() {
-    if (newExerciseName.trim()) {
-      onAddExercise(newExerciseName, newExerciseCategory);
-      onClose(); // pass value to parent
+    if (!newExerciseName.trim()) {
+      setErrors((prev) => ({ ...prev, name: true }));
+      return;
     }
+    if (!newExerciseCategory.trim()) {
+      setErrors((prev) => ({ ...prev, category: true }));
+      return;
+    }
+    onAddExercise(newExerciseName, newExerciseCategory);
+    onClose();
   }
 
   return (
@@ -37,18 +49,23 @@ const CreateExerciseModal = ({
       <div className={styles.modalContent}>
         <h2 className={styles.heading}>Add New Exercise</h2>
         <input
-          className={styles.input}
+          className={cn(styles.input, errors.name && styles.error)}
           type="text"
           value={newExerciseName}
           onChange={(e) => setNewExerciseName(e.target.value)}
           placeholder="Exercise name"
         />
         <div className={styles.categoryContainer}>
+          <h2 className={styles.label}>Category:</h2>
           {categories.map((category) => (
             <button
               key={category}
               type="button"
-              className={`${styles.categoryBtn} ${newExerciseCategory === category && styles.active}`}
+              className={cn(
+                styles.categoryBtn,
+                newExerciseCategory === category && styles.active,
+                errors.category && styles.error,
+              )}
               onClick={() => setNewExerciseCategory(category)}
             >
               {category}

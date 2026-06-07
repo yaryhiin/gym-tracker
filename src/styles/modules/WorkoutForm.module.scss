@@ -1,0 +1,81 @@
+.exerciseContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.exerciseCard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px;
+}
+
+.exerciseName {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.exercisePrev,
+.exerciseSuggest {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 2px;
+}
+
+.exerciseSuggest {
+  color: var(--accent);
+}
+
+.sets {
+  margin-top: 25px;
+}
+
+.set {
+  border: none;
+}
+
+.button {
+  align-self: center;
+}
+
+.exerciseContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+input {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text);
+  border-radius: 10px;
+  font-size: 16px;
+  padding: 8px;
+  width: 70px;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--input-focus);
+}
+
+.addExercise {
+  background: var(--button-bg);
+  color: var(--button-text);
+  margin-top: 15px;
+  margin-bottom: 60px;
+}
+
+.button:hover,
+.addExercise:hover {
+  background: var(--button-hover);
+}
+
+.addSet {
+  margin-top: 12px;
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--border);
+}
