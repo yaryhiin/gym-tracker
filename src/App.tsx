@@ -23,8 +23,6 @@ import Routines from "./pages/Routines";
 import RoutineBuilder from "./pages/RoutineBuilder";
 
 function App() {
-  const userName = "Tim";
-
   const [session, setSession] = useState<Session | null>();
   const [authLoading, setAuthLoading] = useState(true);
 
@@ -95,7 +93,7 @@ function App() {
               <Layout toggleTheme={toggleTheme} theme={theme} session={true} />
             }
           >
-            <Route path="/" element={<Home userName={userName} />} />
+            <Route path="/" element={<Home />} />
             <Route path="/workout" element={<ActiveWorkout />} />
             <Route
               path="/workout/routine/:routineId"

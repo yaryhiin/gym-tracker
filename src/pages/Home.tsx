@@ -11,11 +11,7 @@ import { getRoutines } from "../services/routines";
 
 import { formatDate, formatTime } from "../services/utils";
 
-type homeProps = {
-  userName: string;
-};
-
-const Home = ({ userName }: homeProps) => {
+const Home = () => {
   const navigate = useNavigate();
 
   const [workouts, setWorkouts] = useState<WorkoutDB[]>([]);
@@ -45,7 +41,13 @@ const Home = ({ userName }: homeProps) => {
   }
   return (
     <div className={styles.home}>
-      <h1 className={styles.title}>Good evening, {userName}</h1>
+      <h1 className={styles.title}>
+        {new Date().getHours()
+          ? "Good morning"
+          : new Date().getHours() < 18
+            ? "Good afternoon"
+            : "Good evening"}
+      </h1>
       <div className={styles.routinesContainer}>
         <h2 className={styles.routinesTitle}>Choose Routine:</h2>
         <div className={styles.routinesList}>
