@@ -29,14 +29,31 @@ const WorkoutForm = ({
 }: WorkoutFormProps) => {
   const [showModal, setShowModal] = useState(false);
 
-  function formatPreviousSets(previousExercise: any) {
+  type PreviousExercise = {
+    workout_sets: WorkoutSet[];
+  };
+
+  function formatPreviousSets(previousExercise?: PreviousExercise | null) {
     if (!previousExercise) return "No previous data";
 
-    return [...previousExercise.workout_sets]
+    const grouped = new Map<number, number[]>();
+
+    [...previousExercise.workout_sets]
       .sort((a, b) => a.set_number - b.set_number)
-      .map((set) =>
-        set.weight === 0 ? `${set.reps}` : `${set.weight}kg x ${set.reps}`,
-      )
+      .forEach((set) => {
+        const reps = grouped.get(set.weight) ?? [];
+        reps.push(set.reps);
+        grouped.set(set.weight, reps);
+      });
+
+    return [...grouped.entries()]
+      .map(([weight, reps]) => {
+        if (weight === 0) {
+          return `BW x ${reps.join(", ")}`;
+        }
+
+        return `${weight}kg x ${reps.join(", ")}`;
+      })
       .join(", ");
   }
 
