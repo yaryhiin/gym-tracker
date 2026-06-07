@@ -133,7 +133,7 @@ const WorkoutForm = ({
               <thead>
                 <tr>
                   <th>Set</th>
-                  <th>Weight</th>
+                  <th>Weight (kg)</th>
                   <th>Reps</th>
                   <th>Done</th>
                 </tr>
