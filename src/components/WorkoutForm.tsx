@@ -126,8 +126,8 @@ const WorkoutForm = ({
               {formatPreviousSets(previousData[exercise.exercise_id])}
             </p>
           )}
-          <div className={styles.sets}>
-            <table className={styles.set}>
+          <div className={styles.exercises}>
+            <table className={styles.sets}>
               <thead>
                 <tr>
                   <th>Set</th>
@@ -139,7 +139,7 @@ const WorkoutForm = ({
 
               <tbody>
                 {exercise.sets.map((set) => (
-                  <tr key={set.set_number}>
+                  <tr key={set.set_number} className={styles.set}>
                     <td>{set.set_number}</td>
                     <td>
                       <input

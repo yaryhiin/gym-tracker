@@ -4,22 +4,26 @@ import styles from "../styles/modules/Exercises.module.scss";
 
 import type { ExerciseDB } from "../types/exercise";
 
-import CreateExerciseModal from "../components/CreateExerciseModal";
+import ManageExerciseModal from "../components/ManageExerciseModal";
 import ExecuteModal from "../components/ExecuteModal";
 import {
   createExercise,
   getExercises,
   deleteExercise,
+  updateExercise,
 } from "../services/exercises";
 
 const MODAL_TEXT = `Are you sure you want to delete this exercise? \n It will be removed from your existing routines`;
 
 const Exercises = () => {
   const [exercises, setExercises] = useState<ExerciseDB[]>([]);
-  const [chosenExerciseId, setChosenExerciseId] = useState("");
+  const [chosenExercise, setChosenExercise] = useState<ExerciseDB>(
+    exercises[0],
+  );
   const [loading, setLoading] = useState(true);
 
-  const [showModal, setShowModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [showMessageModal, setShowMessageModal] = useState(false);
 
   useEffect(() => {
@@ -43,9 +47,16 @@ const Exercises = () => {
     await loadData();
   }
 
-  async function handleDeleteExercise(id: string) {
-    await deleteExercise(id);
-    setExercises((prev) => prev.filter((exercise) => exercise.id != id));
+  async function handleUpdateExercise(name: string, category: string) {
+    await updateExercise(name, category, chosenExercise.id);
+    await loadData();
+  }
+
+  async function handleDeleteExercise(exercise: ExerciseDB) {
+    await deleteExercise(exercise.id);
+    setExercises((prev) =>
+      prev.filter((exercise) => exercise.id != exercise.id),
+    );
   }
 
   if (loading) {
@@ -65,12 +76,20 @@ const Exercises = () => {
               <p>{exercise.category}</p>
             </div>
             <div className={styles.exerciseElementButtons}>
-              <button className={styles.editExerciseBtn}>Edit</button>
+              <button
+                className={styles.editExerciseBtn}
+                onClick={() => {
+                  setShowEditModal(true);
+                  setChosenExercise(exercise);
+                }}
+              >
+                Edit
+              </button>
               <button
                 className={styles.deleteExerciseBtn}
                 onClick={() => {
                   setShowMessageModal(true);
-                  setChosenExerciseId(exercise.id);
+                  setChosenExercise(exercise);
                 }}
               >
                 Delete
@@ -82,15 +101,22 @@ const Exercises = () => {
       <div className={styles.buttonContainer}>
         <button
           className={styles.createExerciseBtn}
-          onClick={() => setShowModal(true)}
+          onClick={() => setShowCreateModal(true)}
         >
           + Create Exercise
         </button>
       </div>
-      {showModal && (
-        <CreateExerciseModal
-          onClose={() => setShowModal(false)}
+      {showCreateModal && (
+        <ManageExerciseModal
+          onClose={() => setShowCreateModal(false)}
           onAddExercise={addExercise}
+        />
+      )}
+      {showEditModal && (
+        <ManageExerciseModal
+          onClose={() => setShowEditModal(false)}
+          onAddExercise={handleUpdateExercise}
+          exercise={chosenExercise}
         />
       )}
       {showMessageModal && (
@@ -99,7 +125,7 @@ const Exercises = () => {
           btnText="Delete"
           onClose={() => setShowMessageModal(false)}
           onDelete={() => {
-            handleDeleteExercise(chosenExerciseId);
+            handleDeleteExercise(chosenExercise);
             setShowMessageModal(false);
           }}
         />

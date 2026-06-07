@@ -79,7 +79,7 @@ const Home = ({ userName }: homeProps) => {
           .map((workout) => (
             <div
               className={styles.historyElement}
-              onClick={() => navigate(`/history/${workout.id}/edit`)}
+              onClick={() => navigate(`/history/${workout.id}`)}
               key={workout.id}
             >
               <p className={styles.descName}>

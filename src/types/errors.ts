@@ -8,3 +8,8 @@ export type AddErrors = {
   name: boolean;
   category: boolean;
 };
+
+export type RoutineErrors = {
+  name: boolean;
+  exercises: boolean;
+};

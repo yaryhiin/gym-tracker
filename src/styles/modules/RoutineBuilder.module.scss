@@ -2,6 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  justify-content: center;
   flex-direction: column;
   gap: 16px;
   margin-bottom: 24px;
@@ -12,15 +13,19 @@
     margin: 5px;
   }
 
-  input {
+  .input {
     width: 80%;
     font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 }
 
 .selectedExercisesList {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 12px;
   margin-bottom: 20px;
   margin-top: 40px;
@@ -30,6 +35,7 @@
   background: var(--card);
   padding: 20px;
   border: 1px solid var(--border);
+  width: 100%;
   border-radius: 14px;
   display: flex;
   flex-direction: row;
@@ -67,6 +73,11 @@
   }
 }
 
+.addExerciseBtn {
+  width: 120px;
+  margin-top: 10px;
+}
+
 .deleteExerciseBtn {
   border: 1px solid var(--danger);
 }
@@ -85,4 +96,13 @@
     padding: 8px;
     width: 110px;
   }
+}
+
+.error {
+  border: 1px solid var(--danger);
+}
+
+.errorMessage {
+  color: var(--danger);
+  margin: 3px;
 }

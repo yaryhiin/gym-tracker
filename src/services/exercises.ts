@@ -33,7 +33,21 @@ export async function createExercise(exercise: Exercise) {
   return data;
 }
 
-export async function updateExercise() {}
+export async function updateExercise(
+  name: string,
+  category: string,
+  id: string,
+) {
+  const { error: ExerciseError } = await supabase
+    .from("exercises")
+    .update({
+      name,
+      category,
+    })
+    .eq("id", id);
+
+  if (ExerciseError) throw ExerciseError;
+}
 
 export async function deleteExercise(exercise_id: string) {
   const userId = await getCurrentUserId();

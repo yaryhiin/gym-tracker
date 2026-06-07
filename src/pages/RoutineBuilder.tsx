@@ -1,13 +1,22 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import cn from "classnames";
 
 import styles from "../styles/modules/RoutineBuilder.module.scss";
 
 import type { Routine, RoutineDraft } from "../types/routine";
 import type { ExerciseDB } from "../types/exercise";
+import type { RoutineErrors } from "../types/errors";
 
 import ExecuteModal from "../components/ExecuteModal";
 import ChooseExerciseModal from "../components/ChooseExerciseModal";
+
+import {
+  getRoutineDetails,
+  createRoutine,
+  updateRoutine,
+} from "../services/routines";
+import { getExercises, createExercise } from "../services/exercises";
 
 const BACK_TEXT = `Are you sure you want to exit? \n All unsaved progress will be lost.`;
 const MODAL_TEXT = `Are you sure you want to delete this exercise from your Routine?`;
@@ -29,13 +38,6 @@ function getInitialRoutine(draftKey: string) {
   };
 }
 
-import {
-  getRoutineDetails,
-  createRoutine,
-  updateRoutine,
-} from "../services/routines";
-import { getExercises, createExercise } from "../services/exercises";
-
 const RoutineBuilder = () => {
   const navigate = useNavigate();
   const { routineId } = useParams();
@@ -48,6 +50,10 @@ const RoutineBuilder = () => {
   const [exercises, setExercises] = useState<ExerciseDB[]>([]);
   const [chosenExerciseId, setChosenExerciseId] = useState("");
   const [loading, setLoading] = useState(true);
+  const [errors, setErrors] = useState<RoutineErrors>({
+    name: false,
+    exercises: false,
+  });
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showChooseExerciseModal, setShowChooseExerciseModal] = useState(false);
@@ -117,13 +123,31 @@ const RoutineBuilder = () => {
   }
 
   async function addRoutine(routine: Routine) {
+    const newErrors = { name: false, exercises: false };
+    if (!routineDraft.name.trim()) newErrors.name = true;
+    if (routineDraft.exercises.length === 0) newErrors.exercises = true;
+    if (Object.values(newErrors).some(Boolean)) {
+      setErrors(newErrors);
+      return;
+    }
     await createRoutine(routine);
     await loadData();
+    localStorage.removeItem(draftKey);
+    navigate("/routines");
   }
 
   async function handleUpdateRoutine(routine: Routine, routineId: string) {
+    const newErrors = { name: false, exercises: false };
+    if (!routineDraft.name.trim()) newErrors.name = true;
+    if (routineDraft.exercises.length === 0) newErrors.exercises = true;
+    if (Object.values(newErrors).some(Boolean)) {
+      setErrors(newErrors);
+      return;
+    }
     await updateRoutine(routine, routineId);
     await loadData();
+    localStorage.removeItem(draftKey);
+    navigate("/routines");
   }
 
   async function addExercise(name: string, category: string) {
@@ -138,15 +162,18 @@ const RoutineBuilder = () => {
     <div className={styles.routineBuilderContainer}>
       <div className={styles.header}>
         <h2 className={styles.title}>Routine Name: </h2>
-        <input
-          className={styles.input}
-          type="text"
-          value={routineDraft.name}
-          onChange={(e) =>
-            setRoutineDraft((prev) => ({ ...prev, name: e.target.value }))
-          }
-          placeholder="Enter name"
-        />
+        <div className={styles.input}>
+          <input
+            className={cn(styles.input, errors.name && styles.error)}
+            type="text"
+            value={routineDraft.name}
+            onChange={(e) =>
+              setRoutineDraft((prev) => ({ ...prev, name: e.target.value }))
+            }
+            placeholder="Enter name"
+          />
+          {errors.name && <p className={styles.errorMessage}>You need to enter routine name</p>}
+        </div>
       </div>
       <div className={styles.selectedExercisesList}>
         {routineDraft.exercises.map((exercise) => (
@@ -172,13 +199,18 @@ const RoutineBuilder = () => {
             </div>
           </div>
         ))}
+        <button
+          className={cn(
+            styles.addExerciseBtn,
+            errors.exercises && styles.error,
+          )}
+          onClick={() => setShowChooseExerciseModal(true)}
+        >
+          + Add Exercise
+        </button>
+        {errors.exercises && <p className={styles.errorMessage}>You need to add at least 1 exercise</p>}
       </div>
-      <button
-        className={styles.addExerciseBtn}
-        onClick={() => setShowChooseExerciseModal(true)}
-      >
-        + Add Exercise
-      </button>
+
       <div className={styles.buttonContainer}>
         <button
           className={styles.saveRoutine}
@@ -201,8 +233,6 @@ const RoutineBuilder = () => {
             } else {
               addRoutine(routineToSave);
             }
-            localStorage.removeItem(draftKey);
-            navigate("/routines");
           }}
         >
           Save Routine

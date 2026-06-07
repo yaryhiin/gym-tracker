@@ -9,6 +9,7 @@ import ExecuteModal from "../components/ExecuteModal";
 import WorkoutForm from "../components/WorkoutForm";
 
 import { getWorkoutDetails, deleteWorkout } from "../services/workouts";
+import { formatTime } from "../services/utils";
 
 const CHANGE_WORKOUT_KEY = "changeWorkout";
 
@@ -109,8 +110,10 @@ const ChangeWorkout = () => {
   return (
     <div className={styles.workoutContainer}>
       <h3 className={styles.title}>{workout?.name}</h3>
-      <p className={styles.stopwatch}>{workout?.duration_seconds}</p>
-      <WorkoutForm workout={workout} readonly={false} setWorkout={setWorkout}/>
+      <p className={styles.stopwatch}>
+        {formatTime(workout?.duration_seconds)}
+      </p>
+      <WorkoutForm workout={workout} readonly={false} setWorkout={setWorkout} />
       {showModal && (
         <ExecuteModal
           text={MODAL_TEXT}

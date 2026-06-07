@@ -8,6 +8,9 @@
   border: 1px solid var(--border);
   border-radius: 18px;
   padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .exerciseName {
@@ -27,12 +30,17 @@
   color: var(--accent);
 }
 
-.sets {
-  margin-top: 25px;
+.exercises {
+  margin: 15px 0;
 }
 
-.set {
+.sets {
+  width: 100%;
   border: none;
+  border-collapse: collapse;
+  font-size: 14px;
+  text-align: center;
+  border-collapse: collapse;
 }
 
 .button {
@@ -54,6 +62,10 @@ input {
   font-size: 16px;
   padding: 8px;
   width: 70px;
+}
+
+input[type="checkbox"] {
+  width: auto;
 }
 
 input:focus {

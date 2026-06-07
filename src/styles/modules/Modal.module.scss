@@ -3,7 +3,6 @@
   top: 0;
   left: 0;
   width: 100vw;
-  max-width: 425px;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
@@ -19,7 +18,7 @@
   padding: 20px 25px;
   border-radius: 8px;
   min-width: 300px;
-  max-width: 90%;
+  max-width: 410px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
@@ -36,7 +35,6 @@
 .modalContent input {
   padding: 8px 10px;
   font-size: 16px;
-  border: 1px solid #ccc;
   border-radius: 10px;
   width: 100%;
   box-sizing: border-box;
@@ -74,7 +72,16 @@
 
 .categoryContainer {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+.label {
+  text-align: center;
+}
+
+.categories {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 8px;
 }
 
@@ -94,5 +101,10 @@
 }
 
 .error {
-  border: 2px solid var(--danger);
+  border: 1px solid var(--danger);
+}
+
+.errorMessage {
+  color: var(--danger);
+  margin: 3px;
 }

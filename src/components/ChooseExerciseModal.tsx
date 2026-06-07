@@ -5,7 +5,7 @@ import styles from "../styles//modules/ChooseExerciseModal.module.scss";
 
 import type { ExerciseDB } from "../types/exercise";
 
-import CreateExerciseModal from "./CreateExerciseModal";
+import CreateExerciseModal from "./ManageExerciseModal";
 
 type ChooseExerciseModalProps = {
   exercises: ExerciseDB[];

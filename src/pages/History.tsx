@@ -39,9 +39,10 @@ const History = () => {
         <table className={styles.workouts}>
           <thead>
             <tr>
-              <td>Date</td>
-              <td>Workout</td>
-              <td>Duration</td>
+              <th>Date</th>
+              <th>Workout</th>
+              <th>Duration</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -49,16 +50,18 @@ const History = () => {
               <tr key={workout.id}>
                 <td>{formatDate(workout.created_at)}</td>
                 <td>{workout.name}</td>
+                <td>{formatTime(workout.duration_seconds)} </td>
                 <td>
-                  {formatTime(workout.duration_seconds)}{" "}
-                  <button
-                    onClick={() => navigate(`/history/${workout.id}/edit`)}
-                  >
-                    Change
-                  </button>
-                  <button onClick={() => navigate(`/history/${workout.id}`)}>
-                    View
-                  </button>
+                  <div className={styles.actions}>
+                    <button onClick={() => navigate(`/history/${workout.id}`)}>
+                      View
+                    </button>
+                    <button
+                      onClick={() => navigate(`/history/${workout.id}/edit`)}
+                    >
+                      Change
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

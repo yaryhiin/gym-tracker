@@ -8,6 +8,7 @@ import type { Workout } from "../types/workout";
 import WorkoutForm from "../components/WorkoutForm";
 
 import { getWorkoutDetails } from "../services/workouts";
+import { formatTime } from "../services/utils";
 
 const ChangeWorkout = () => {
   const { workoutId } = useParams();
@@ -68,9 +69,17 @@ const ChangeWorkout = () => {
   return (
     <div className={styles.workoutContainer}>
       <h3 className={styles.title}>{workout?.name}</h3>
-      <p className={styles.stopwatch}>{workout?.duration_seconds}</p>
+      <p className={styles.stopwatch}>
+        {formatTime(workout?.duration_seconds)}
+      </p>
       <WorkoutForm workout={workout} readonly={true} />
       <div className={styles.buttonContainerChange}>
+        <button
+          className={styles.editBtn}
+          onClick={() => navigate(`/history/${workoutId}/edit`)}
+        >
+          Edit
+        </button>
         <button
           className={styles.backBtn}
           onClick={() => {
