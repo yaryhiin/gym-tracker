@@ -8,9 +8,12 @@ const WelcomeScreen = () => {
 
   return (
     <div className={styles.content}>
-      <h1 className={styles.title}>Welcome to the Gym Tracker App</h1>
+      <h1 className={styles.title}>
+        Track your workouts and progress in one place.
+      </h1>
       <h3 className={styles.description}>
-        Track your workouts, exercises, sets and time all in one app
+        Create exercises, build routines, log sets, view history, and follow
+        your progress over time. Simple, fast, and made for real gym sessions.
       </h3>
       <div className={styles.sessionBox}>
         <button
