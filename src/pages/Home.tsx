@@ -66,6 +66,12 @@ const Home = () => {
           >
             Custom Workout
           </button>
+          <button
+            className={styles.routineElement}
+            onClick={() => navigate("/routines/new")}
+          >
+            + Create Routine
+          </button>
         </div>
       </div>
       <div className={styles.history}>
@@ -92,6 +98,13 @@ const Home = () => {
               </div>
             </div>
           ))}
+
+        <button
+          className={styles.routineElement}
+          onClick={() => navigate("/history")}
+        >
+          View All
+        </button>
       </div>
     </div>
   );
