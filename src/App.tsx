@@ -21,6 +21,7 @@ import Layout from "./components/Layout";
 import Exercises from "./pages/Exercises";
 import Routines from "./pages/Routines";
 import RoutineBuilder from "./pages/RoutineBuilder";
+import Profile from "./pages/Profile";
 
 function App() {
   const [session, setSession] = useState<Session | null>();
@@ -90,7 +91,7 @@ function App() {
         ) : (
           <Route
             element={
-              <Layout toggleTheme={toggleTheme} theme={theme} session={true} />
+              <Layout session={true} toggleTheme={toggleTheme} theme={theme} />
             }
           >
             <Route path="/" element={<Home />} />
@@ -115,6 +116,11 @@ function App() {
             />
 
             <Route path="/exercises" element={<Exercises />} />
+
+            <Route
+              path="/profile"
+              element={<Profile toggleTheme={toggleTheme} theme={theme} />}
+            />
 
             <Route path="/progress" element={<Progress />} />
           </Route>

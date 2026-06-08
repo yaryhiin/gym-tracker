@@ -1,9 +1,7 @@
-import { useNavigate, Outlet, useLocation, matchPath } from "react-router-dom";
+import { Outlet, useLocation, matchPath } from "react-router-dom";
 
 import Header from "./Header";
 import NavButtons from "./NavButtons";
-
-import { supabase } from "../supabase";
 
 type LayoutProps = {
   toggleTheme: () => void;
@@ -13,22 +11,10 @@ type LayoutProps = {
 
 export default function Layout({ toggleTheme, theme, session }: LayoutProps) {
   const location = useLocation();
-  const navigate = useNavigate();
 
   const isActiveWorkout =
     matchPath("/workout", location.pathname) ||
     matchPath("/workout/*", location.pathname);
-
-  const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
-      console.error("Logout error:", error.message);
-      return;
-    }
-
-    navigate("/");
-  };
 
   return (
     <div className={"appShell"}>
@@ -36,7 +22,6 @@ export default function Layout({ toggleTheme, theme, session }: LayoutProps) {
         <Header
           toggleTheme={toggleTheme}
           theme={theme}
-          handleLogout={handleLogout}
           session={session}
         />
       )}

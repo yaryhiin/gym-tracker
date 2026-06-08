@@ -4,13 +4,12 @@ import { useNavigate } from "react-router-dom";
 import styles from "../styles/modules/Header.module.scss";
 
 type HeaderProps = {
+  session: boolean;
   toggleTheme: () => void;
   theme: string;
-  handleLogout: () => void;
-  session: boolean;
 };
 
-const Header = ({ toggleTheme, theme, handleLogout, session }: HeaderProps) => {
+const Header = ({ toggleTheme, theme, session }: HeaderProps) => {
   const navigate = useNavigate();
 
   return (
@@ -18,10 +17,10 @@ const Header = ({ toggleTheme, theme, handleLogout, session }: HeaderProps) => {
       {session ? (
         <div className={styles.sessionBox}>
           <button
-            className={cn("button", styles.logOut)}
-            onClick={handleLogout}
+            className={styles.profileLogo}
+            onClick={() => navigate("/profile")}
           >
-            Log Out
+            👤
           </button>
         </div>
       ) : (
@@ -38,18 +37,18 @@ const Header = ({ toggleTheme, theme, handleLogout, session }: HeaderProps) => {
           >
             Sign Up
           </button>
+          <div className={styles.themeBox}>
+            <button
+              onClick={toggleTheme}
+              className={cn("button", styles.themeSwitch)}
+              aria-pressed={theme === "dark"}
+              title={theme === "dark" ? "Switch to light" : "Switch to dark"}
+            >
+              {theme === "dark" ? "🌙 Dark" : "☀️ Light"}
+            </button>
+          </div>
         </div>
       )}
-      <div className={styles.themeBox}>
-        <button
-          onClick={toggleTheme}
-          className={cn("button", styles.themeSwitch)}
-          aria-pressed={theme === "dark"}
-          title={theme === "dark" ? "Switch to light" : "Switch to dark"}
-        >
-          {theme === "dark" ? "🌙 Dark" : "☀️ Light"}
-        </button>
-      </div>
     </header>
   );
 };
