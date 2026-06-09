@@ -29,7 +29,7 @@ select {
   font-size: 16px;
   background-color: var(--card);
   color: #f8fafc;
-  border-radius: 5px;
+  border-radius: 8px;
   padding: 5px;
 }
 
@@ -59,10 +59,10 @@ select {
     border-radius: 0;
 
     &:first-child {
-      border-radius: 5px 0 0 5px;
+      border-radius: 8px 0 0 8px;
     }
     &:last-child {
-      border-radius: 0 5px 5px 0;
+      border-radius: 0 8px 8px 0;
     }
     transition:
       background 320ms,
@@ -70,6 +70,6 @@ select {
   }
 
   border: 1px solid var(--border);
-  border-radius: 5px;
+  border-radius: 8px;
   width: fit-content;
 }

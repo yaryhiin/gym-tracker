@@ -23,9 +23,12 @@ import Routines from "./pages/Routines";
 import RoutineBuilder from "./pages/RoutineBuilder";
 import Profile from "./pages/Profile";
 
+import { getOrCreateProfile } from "./services/profiles";
+
 function App() {
   const [session, setSession] = useState<Session | null>();
   const [authLoading, setAuthLoading] = useState(true);
+  const [profileLoading, setProfileLoading] = useState(true);
 
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem("theme");
@@ -62,6 +65,23 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (!session) return;
+
+    async function setupProfile() {
+      setProfileLoading(true);
+      try {
+        await getOrCreateProfile();
+      } catch (error) {
+        console.error("Error loading profile:", error);
+      } finally {
+        setProfileLoading(false);
+      }
+    }
+
+    setupProfile();
+  }, [session]);
+
+  useEffect(() => {
     document.documentElement.setAttribute("theme", theme);
     localStorage.setItem("theme", theme);
   }, [theme]);
@@ -70,7 +90,7 @@ function App() {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   }
 
-  if (authLoading) return <div>Loading...</div>;
+  if (authLoading || profileLoading) return <div>Loading...</div>;
   return (
     <Router>
       <Routes>
