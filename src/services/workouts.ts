@@ -89,21 +89,63 @@ export async function createWorkout(workout: Workout) {
   return createdWorkout;
 }
 
-// export async function updateWorkout(key: string, updatedData) {
-//   const { id, ...updates } = updatedData;
-//   const { data, error } = await supabase
-//     .from(key)
-//     .update(updates)
-//     .eq("id", id)
-//     .select();
+export async function updateWorkout(workout: Workout, workoutId: string) {
+  const userId = await getCurrentUserId();
 
-//   if (error) {
-//     console.error(`Error updating ${key}:`, error.message);
-//     return null;
-//   }
+  const { data: updatedWorkout, error: workoutError } = await supabase
+    .from("workouts")
+    .update({
+      name: workout.name,
+      duration_seconds: workout.duration_seconds,
+      finished_at: workout.finished_at || new Date().toISOString(),
+    })
+    .eq("id", workoutId)
+    .eq("user_id", userId)
+    .select()
+    .single();
 
-//   return data?.[0] || null;
-// }
+  if (workoutError) throw workoutError;
+
+  const { error: deleteError } = await supabase
+    .from("workout_exercises")
+    .delete()
+    .eq("workout_id", workoutId);
+
+  if (deleteError) throw deleteError;
+
+  for (const exercise of workout.exercises) {
+    const { data: createdExercise, error: exerciseError } = await supabase
+      .from("workout_exercises")
+      .insert({
+        workout_id: workoutId,
+        exercise_name: exercise.exercise_name,
+        exercise_id: exercise.exercise_id,
+        category: exercise.category,
+        order_index: exercise.order_index,
+        notes: exercise.notes,
+      })
+      .select()
+      .single();
+
+    if (exerciseError) throw exerciseError;
+
+    const setsToInsert = exercise.sets.map((set) => ({
+      workout_exercise_id: createdExercise.id,
+      set_number: set.set_number,
+      weight: set.weight,
+      reps: set.reps,
+      done: set.done,
+    }));
+
+    const { error: setsError } = await supabase
+      .from("workout_sets")
+      .insert(setsToInsert);
+
+    if (setsError) throw setsError;
+  }
+
+  return updatedWorkout;
+}
 
 export async function deleteWorkout(workoutId: string) {
   const userId = await getCurrentUserId();

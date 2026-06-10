@@ -8,7 +8,11 @@ import type { Workout } from "../types/workout";
 import ExecuteModal from "../components/ExecuteModal";
 import WorkoutForm from "../components/WorkoutForm";
 
-import { getWorkoutDetails, deleteWorkout } from "../services/workouts";
+import {
+  getWorkoutDetails,
+  deleteWorkout,
+  updateWorkout,
+} from "../services/workouts";
 import { formatTime } from "../services/utils";
 
 const CHANGE_WORKOUT_KEY = "changeWorkout";
@@ -104,15 +108,29 @@ const ChangeWorkout = () => {
     navigate("/");
   }
 
+  async function handleUpdate() {
+    await updateWorkout(workout, String(workoutId));
+    localStorage.removeItem(CHANGE_WORKOUT_KEY);
+    navigate("/");
+  }
+
   if (loading) {
     return <p>Loading...</p>;
   }
   return (
     <div className={styles.workoutContainer}>
-      <h3 className={styles.title}>{workout?.name}</h3>
-      <p className={styles.stopwatch}>
-        {formatTime(workout?.duration_seconds)}
-      </p>
+      <div className={styles.header}>
+        <button className={styles.saveBtn} onClick={handleUpdate}>
+          Save Changes
+        </button>
+        <div>
+          <h3 className={styles.title}>{workout?.name}</h3>
+          <p className={styles.stopwatch}>
+            {formatTime(workout?.duration_seconds)}
+          </p>
+        </div>
+      </div>
+
       <WorkoutForm workout={workout} readonly={false} setWorkout={setWorkout} />
       {showModal && (
         <ExecuteModal

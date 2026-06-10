@@ -68,18 +68,23 @@ const ChangeWorkout = () => {
   }
   return (
     <div className={styles.workoutContainer}>
-      <h3 className={styles.title}>{workout?.name}</h3>
-      <p className={styles.stopwatch}>
-        {formatTime(workout?.duration_seconds)}
-      </p>
-      <WorkoutForm workout={workout} readonly={true} />
-      <div className={styles.buttonContainerChange}>
+      <div className={styles.header}>
         <button
           className={styles.editBtn}
           onClick={() => navigate(`/history/${workoutId}/edit`)}
         >
           Edit
         </button>
+        <div>
+          <h3 className={styles.title}>{workout?.name}</h3>
+
+          <p className={styles.stopwatch}>
+            {formatTime(workout?.duration_seconds)}
+          </p>
+        </div>
+      </div>
+      <WorkoutForm workout={workout} readonly={true} />
+      <div className={styles.buttonContainerChange}>
         <button
           className={styles.backBtn}
           onClick={() => {

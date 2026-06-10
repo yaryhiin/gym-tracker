@@ -32,6 +32,57 @@
   margin-top: 10px;
 }
 
+.inputContainer {
+  margin: 5px;
+}
+
+.input {
+  width: 70%;
+  height: 35px;
+  font-size: 16px;
+  background-color: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 5px;
+}
+
+.inputLabel {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+.active {
+  background: var(--accent);
+  color: var(--button-text);
+}
+
+.toggle {
+  background-color: var(--card);
+  button {
+    width: 90px;
+    height: 45px;
+    padding: 6px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    border-radius: 0;
+
+    &:first-child {
+      border-radius: 8px 0 0 8px;
+    }
+    &:last-child {
+      border-radius: 0 8px 8px 0;
+    }
+    transition:
+      background 320ms,
+      transform 320ms;
+  }
+
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  width: fit-content;
+}
+
 .modalContent input {
   padding: 8px 10px;
   font-size: 16px;

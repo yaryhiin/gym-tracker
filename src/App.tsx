@@ -21,14 +21,21 @@ import Layout from "./components/Layout";
 import Exercises from "./pages/Exercises";
 import Routines from "./pages/Routines";
 import RoutineBuilder from "./pages/RoutineBuilder";
-import Profile from "./pages/Profile";
+import ProfilePage from "./pages/ProfilePage";
 
-import { getOrCreateProfile } from "./services/profiles";
+import ProfileSetupModal from "./components/ProfileSetupModal";
+
+import type { PreferredUnit, Profile, ProfileDB } from "./types/profile";
+
+import { getProfile, createProfile, updateProfile } from "./services/profiles";
 
 function App() {
   const [session, setSession] = useState<Session | null>();
   const [authLoading, setAuthLoading] = useState(true);
   const [profileLoading, setProfileLoading] = useState(true);
+  const [profile, setProfile] = useState<ProfileDB>();
+
+  const [showProfileSetup, setShowProfileSetup] = useState(false);
 
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem("theme");
@@ -65,12 +72,20 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!session) return;
+    if (!session) {
+      setProfileLoading(false);
+      return;
+    }
 
     async function setupProfile() {
       setProfileLoading(true);
       try {
-        await getOrCreateProfile();
+        const profileData = await getProfile();
+        if (profileData) {
+          setProfile(profileData);
+        } else {
+          setShowProfileSetup(true);
+        }
       } catch (error) {
         console.error("Error loading profile:", error);
       } finally {
@@ -86,67 +101,102 @@ function App() {
     localStorage.setItem("theme", theme);
   }, [theme]);
 
+  async function handleCreateProfile(
+    name: string,
+    preferredUnit: PreferredUnit,
+  ) {
+    const profileData = await createProfile(name, preferredUnit);
+    setProfile(profileData);
+    setShowProfileSetup(false);
+  }
+
+  async function handleUpdateProfile(profile: Profile) {
+    const profileData = await updateProfile(profile);
+    if (!profileData) return;
+    setProfile(profileData);
+  }
+
   function toggleTheme() {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   }
 
   if (authLoading || profileLoading) return <div>Loading...</div>;
   return (
-    <Router>
-      <Routes>
-        {!session ? (
-          <Route
-            element={
-              <Layout toggleTheme={toggleTheme} theme={theme} session={false} />
-            }
-          >
-            <Route path="/" element={<WelcomeScreen />} />
-
-            <Route path="/signup" element={<SignUp />} />
-
-            <Route path="/login" element={<Login />} />
-
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Route>
-        ) : (
-          <Route
-            element={
-              <Layout session={true} toggleTheme={toggleTheme} theme={theme} />
-            }
-          >
-            <Route path="/" element={<Home />} />
-            <Route path="/workout" element={<ActiveWorkout />} />
+    <>
+      <Router>
+        <Routes>
+          {!session ? (
             <Route
-              path="/workout/routine/:routineId"
-              element={<ActiveWorkout />}
-            />
+              element={
+                <Layout
+                  toggleTheme={toggleTheme}
+                  theme={theme}
+                  session={false}
+                />
+              }
+            >
+              <Route path="/" element={<WelcomeScreen />} />
 
-            <Route path="/history" element={<History />} />
-            <Route
-              path="/history/:workoutId/edit"
-              element={<ChangeWorkout />}
-            />
-            <Route path="/history/:workoutId" element={<ViewWorkout />} />
+              <Route path="/signup" element={<SignUp />} />
 
-            <Route path="/routines" element={<Routines />} />
-            <Route path="/routines/new" element={<RoutineBuilder />} />
-            <Route
-              path="/routines/:routineId/edit"
-              element={<RoutineBuilder />}
-            />
+              <Route path="/login" element={<Login />} />
 
-            <Route path="/exercises" element={<Exercises />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Route>
+          ) : (
+            profile && (
+              <Route
+                element={
+                  <Layout
+                    session={true}
+                    toggleTheme={toggleTheme}
+                    theme={theme}
+                  />
+                }
+              >
+                <Route path="/" element={<Home />} />
+                <Route path="/workout" element={<ActiveWorkout />} />
+                <Route
+                  path="/workout/routine/:routineId"
+                  element={<ActiveWorkout />}
+                />
 
-            <Route
-              path="/profile"
-              element={<Profile toggleTheme={toggleTheme} theme={theme} />}
-            />
+                <Route path="/history" element={<History />} />
+                <Route
+                  path="/history/:workoutId/edit"
+                  element={<ChangeWorkout />}
+                />
+                <Route path="/history/:workoutId" element={<ViewWorkout />} />
 
-            <Route path="/progress" element={<Progress />} />
-          </Route>
-        )}
-      </Routes>
-    </Router>
+                <Route path="/routines" element={<Routines />} />
+                <Route path="/routines/new" element={<RoutineBuilder />} />
+                <Route
+                  path="/routines/:routineId/edit"
+                  element={<RoutineBuilder />}
+                />
+
+                <Route path="/exercises" element={<Exercises />} />
+
+                <Route
+                  path="/profile"
+                  element={
+                    <ProfilePage
+                      toggleTheme={toggleTheme}
+                      theme={theme}
+                      profile={profile}
+                      handleUpdateProfile={handleUpdateProfile}
+                    />
+                  }
+                />
+
+                <Route path="/progress" element={<Progress />} />
+              </Route>
+            )
+          )}
+        </Routes>
+      </Router>
+      {showProfileSetup && <ProfileSetupModal onCreate={handleCreateProfile} />}
+    </>
   );
 }
 
