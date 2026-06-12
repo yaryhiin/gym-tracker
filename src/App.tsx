@@ -24,6 +24,8 @@ import RoutineBuilder from "./pages/RoutineBuilder";
 import ProfilePage from "./pages/ProfilePage";
 
 import ProfileSetupModal from "./components/ProfileSetupModal";
+import WeightCheckinModal from "./components/WeightCheckinModal";
+import MeasurementsCheckinModal from "./components/MeasurementsCheckinModal";
 
 import type { PreferredUnit, Profile, ProfileDB } from "./types/profile";
 
@@ -36,6 +38,9 @@ function App() {
   const [profile, setProfile] = useState<ProfileDB>();
 
   const [showProfileSetup, setShowProfileSetup] = useState(false);
+  const [showWeightCheckinModal, setShowWeightCheckinModal] = useState(false);
+  const [showMeasurementsCheckinModal, setShowMeasurementsCheckinModal] =
+    useState(true);
 
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem("theme");
@@ -196,6 +201,41 @@ function App() {
         </Routes>
       </Router>
       {showProfileSetup && <ProfileSetupModal onCreate={handleCreateProfile} />}
+      {showWeightCheckinModal && profile && (
+        <WeightCheckinModal
+          name={profile.name}
+          unit={profile.preferred_unit}
+          previousWeight={74.2}
+          previousDate="June 10"
+          onSave={(weight) => {
+            console.log(weight);
+            setShowWeightCheckinModal(false);
+          }}
+          onSkip={() => setShowWeightCheckinModal(false)}
+        />
+      )}
+
+      {showMeasurementsCheckinModal && profile && (
+        <MeasurementsCheckinModal
+          name={profile.name}
+          unit={profile?.preferred_unit === "kg" ? "cm" : "in"}
+          previousDate="May 28"
+          previousMeasurements={{
+            waist: "",
+            chest: "",
+            shoulders: "",
+            hips: "",
+            biceps: "",
+            quads: "",
+            calves: "",
+          }}
+          onSave={(measurements) => {
+            console.log(measurements);
+            setShowMeasurementsCheckinModal(false);
+          }}
+          onSkip={() => setShowMeasurementsCheckinModal(false)}
+        />
+      )}
     </>
   );
 }

@@ -10,8 +10,8 @@ export type CheckinFrequency =
 export type ProfileDB = {
   id: string;
   user_id: string;
-  name: string | null;
-  date_of_birth: string | null;
+  name: string;
+  date_of_birth: string;
   preferred_unit: PreferredUnit;
   first_day_of_week: string;
   weight_checkin_frequency: CheckinFrequency;

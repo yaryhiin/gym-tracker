@@ -13,3 +13,7 @@ export type RoutineErrors = {
   name: boolean;
   exercises: boolean;
 };
+
+export type WeightCheckinErrors = {
+  weight: boolean;
+};
