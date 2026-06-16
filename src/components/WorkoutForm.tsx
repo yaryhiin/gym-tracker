@@ -8,6 +8,7 @@ import type { ExerciseDB } from "../types/exercise";
 import type { Dispatch, SetStateAction } from "react";
 
 import ChooseExerciseModal from "../components/ChooseExerciseModal";
+import { createLocalId } from "../services/utils";
 
 type WorkoutFormProps = {
   workout: Workout;
@@ -113,7 +114,7 @@ const WorkoutForm = ({
       exercises: [
         ...prev.exercises,
         {
-          id: crypto.randomUUID(),
+          id: createLocalId(),
           exercise_name: exercise.name,
           exercise_id: exercise.id,
           category: exercise.category,

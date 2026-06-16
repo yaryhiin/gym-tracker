@@ -30,6 +30,7 @@ import MeasurementsCheckinModal from "./components/MeasurementsCheckinModal";
 import type { PreferredUnit, Profile, ProfileDB } from "./types/profile";
 
 import { getProfile, createProfile, updateProfile } from "./services/profiles";
+import { createWeightLog } from "./services/weightLogs";
 
 function App() {
   const [session, setSession] = useState<Session | null>();
@@ -121,6 +122,16 @@ function App() {
     setProfile(profileData);
   }
 
+  async function handleCreateWeightLog(weight: number, measuredAt: string) {
+    const weightInKg =
+      profile?.preferred_unit === "lb" ? weight / 2.20462262 : weight;
+    const finalMeasuredAt =
+      measuredAt || new Date().toISOString().split("T")[0];
+    const roundedWeight = Math.round(weightInKg * 10) / 10;
+    const weightLog = await createWeightLog(roundedWeight, finalMeasuredAt);
+    console.log(weightLog);
+  }
+
   function toggleTheme() {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   }
@@ -208,7 +219,10 @@ function App() {
           previousWeight={74.2}
           previousDate="June 10"
           onSave={(weight) => {
-            console.log(weight);
+            handleCreateWeightLog(
+              weight,
+              new Date().toISOString().split("T")[0],
+            );
             setShowWeightCheckinModal(false);
           }}
           onSkip={() => setShowWeightCheckinModal(false)}
@@ -219,16 +233,16 @@ function App() {
         <MeasurementsCheckinModal
           name={profile.name}
           unit={profile?.preferred_unit === "kg" ? "cm" : "in"}
-          previousDate="May 28"
-          previousMeasurements={{
-            waist: "",
-            chest: "",
-            shoulders: "",
-            hips: "",
-            biceps: "",
-            quads: "",
-            calves: "",
-          }}
+          // previousDate="May 28"
+          // previousMeasurements={{
+          //   waist: "30",
+          //   chest: "20",
+          //   shoulders: "10",
+          //   hips: "50",
+          //   biceps: "40",
+          //   quads: "50",
+          //   calves: "20",
+          // }}
           onSave={(measurements) => {
             console.log(measurements);
             setShowMeasurementsCheckinModal(false);

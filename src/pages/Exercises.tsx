@@ -54,9 +54,7 @@ const Exercises = () => {
 
   async function handleDeleteExercise(exercise: ExerciseDB) {
     await deleteExercise(exercise.id);
-    setExercises((prev) =>
-      prev.filter((exercise) => exercise.id != exercise.id),
-    );
+    setExercises((prev) => prev.filter((ex) => ex.id != exercise.id));
   }
 
   if (loading) {

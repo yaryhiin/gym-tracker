@@ -61,6 +61,9 @@ const WeightCheckinModal = ({
             className={`${styles.input} ${errors.weight && styles.error}`}
             type="number"
             inputMode="decimal"
+            step="0.01"
+            min="0"
+            max="1000"
             onChange={(e) => setNewWeight(e.target.value)}
             value={newWeight}
           />{" "}

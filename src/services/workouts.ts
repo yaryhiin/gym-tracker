@@ -3,9 +3,11 @@ import { getCurrentUserId } from "./auth";
 import type { Workout } from "../types/workout";
 
 export async function getWorkoutsHistory() {
+  const userId = await getCurrentUserId();
   const { data, error } = await supabase
     .from("workouts")
     .select("*")
+    .eq("user_id", userId)
     .order("created_at", { ascending: false });
 
   if (error) {
