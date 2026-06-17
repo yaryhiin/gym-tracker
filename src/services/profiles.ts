@@ -9,6 +9,7 @@ export async function getProfile() {
     .from("profiles")
     .select("*")
     .eq("user_id", userId)
+    .select()
     .maybeSingle();
 
   if (getError) throw getError;

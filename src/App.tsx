@@ -30,7 +30,9 @@ import MeasurementsCheckinModal from "./components/MeasurementsCheckinModal";
 import type { PreferredUnit, Profile, ProfileDB } from "./types/profile";
 
 import { getProfile, createProfile, updateProfile } from "./services/profiles";
-import { createWeightLog } from "./services/weightLogs";
+import { getLatestWeightLog } from "./services/weightLogs";
+import { getDaysSince } from "./services/utils";
+import { getLatestMeasurementLog } from "./services/measurements";
 
 function App() {
   const [session, setSession] = useState<Session | null>();
@@ -41,7 +43,7 @@ function App() {
   const [showProfileSetup, setShowProfileSetup] = useState(false);
   const [showWeightCheckinModal, setShowWeightCheckinModal] = useState(false);
   const [showMeasurementsCheckinModal, setShowMeasurementsCheckinModal] =
-    useState(true);
+    useState(false);
 
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem("theme");
@@ -103,6 +105,63 @@ function App() {
   }, [session]);
 
   useEffect(() => {
+    async function checkWeightReminder() {
+      if (!session || !profile) return;
+      const latestWeightLog = await getLatestWeightLog();
+      if (!latestWeightLog) {
+        if (profile?.weight_checkin_frequency !== "off") {
+          setShowWeightCheckinModal(true);
+        }
+        return;
+      }
+      const dayDifference = getDaysSince(latestWeightLog.measured_at);
+      if (dayDifference >= 1 && profile?.weight_checkin_frequency === "daily") {
+        setShowWeightCheckinModal(true);
+        return;
+      }
+      if (
+        dayDifference >= 7 &&
+        profile?.weight_checkin_frequency === "weekly"
+      ) {
+        setShowWeightCheckinModal(true);
+        return;
+      }
+    }
+
+    checkWeightReminder();
+  }, [session?.user.id, profile?.weight_checkin_frequency]);
+
+  useEffect(() => {
+    async function checkMeasurementsReminder() {
+      if (!session || !profile) return;
+      const latestMeasurementLog = await getLatestMeasurementLog();
+      if (!latestMeasurementLog) {
+        if (profile?.measurements_checkin_frequency !== "off") {
+          setShowMeasurementsCheckinModal(true);
+        }
+        return;
+      }
+      const dayDifference = getDaysSince(latestMeasurementLog.measured_at);
+      if (
+        dayDifference >= 14 &&
+        profile?.measurements_checkin_frequency === "biweekly"
+      ) {
+        setShowMeasurementsCheckinModal(true);
+        return;
+      }
+      if (
+        dayDifference >= 28 &&
+        profile?.measurements_checkin_frequency === "monthly"
+      ) {
+        setShowMeasurementsCheckinModal(true);
+        return;
+      }
+    }
+
+    checkMeasurementsReminder();
+  }, [session?.user.id, profile?.measurements_checkin_frequency]);
+
+  useEffect(() => {
     document.documentElement.setAttribute("theme", theme);
     localStorage.setItem("theme", theme);
   }, [theme]);
@@ -120,16 +179,6 @@ function App() {
     const profileData = await updateProfile(profile);
     if (!profileData) return;
     setProfile(profileData);
-  }
-
-  async function handleCreateWeightLog(weight: number, measuredAt: string) {
-    const weightInKg =
-      profile?.preferred_unit === "lb" ? weight / 2.20462262 : weight;
-    const finalMeasuredAt =
-      measuredAt || new Date().toISOString().split("T")[0];
-    const roundedWeight = Math.round(weightInKg * 10) / 10;
-    const weightLog = await createWeightLog(roundedWeight, finalMeasuredAt);
-    console.log(weightLog);
   }
 
   function toggleTheme() {
@@ -216,15 +265,6 @@ function App() {
         <WeightCheckinModal
           name={profile.name}
           unit={profile.preferred_unit}
-          previousWeight={74.2}
-          previousDate="June 10"
-          onSave={(weight) => {
-            handleCreateWeightLog(
-              weight,
-              new Date().toISOString().split("T")[0],
-            );
-            setShowWeightCheckinModal(false);
-          }}
           onSkip={() => setShowWeightCheckinModal(false)}
         />
       )}
@@ -243,10 +283,6 @@ function App() {
           //   quads: "50",
           //   calves: "20",
           // }}
-          onSave={(measurements) => {
-            console.log(measurements);
-            setShowMeasurementsCheckinModal(false);
-          }}
           onSkip={() => setShowMeasurementsCheckinModal(false)}
         />
       )}

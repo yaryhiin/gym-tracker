@@ -1,6 +1,8 @@
 import { supabase } from "../supabase";
 import { getCurrentUserId } from "./auth";
 
+import type { FormattedMeasurement } from "../types/measurements";
+
 export async function getMeasurementTypes() {
   const userId = await getCurrentUserId();
 
@@ -12,6 +14,19 @@ export async function getMeasurementTypes() {
   if (error) throw error;
 
   return data || [];
+}
+
+export async function getLatestMeasurementLog() {
+  const userId = await getCurrentUserId();
+  const { data, error } = await supabase
+    .from("measurement_logs")
+    .select("*")
+    .eq("user_id", userId)
+    .order("measured_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
 }
 
 export async function createMeasurementType(name: string) {
@@ -40,6 +55,19 @@ export async function deleteMeasurementType(id: string) {
   return true;
 }
 
-// export async function createMeasurementLog(measurements: MeasurementsForm) {
-//   const userId = await getCurrentUserId();
-// }
+export async function createMeasurementLog(
+  measurements: FormattedMeasurement[],
+) {
+  const userId = await getCurrentUserId();
+  const measurementsToInsert = measurements.map((measurement) => ({
+    ...measurement,
+    user_id: userId,
+  }));
+
+  const { error } = await supabase
+    .from("measurement_logs")
+    .insert(measurementsToInsert)
+    .select();
+
+  if (error) throw error;
+}

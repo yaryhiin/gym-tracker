@@ -9,5 +9,11 @@ export type MeasurementType = {
   id: string;
   measurement_type_id: string;
   name: string;
-  value_cm: string;
+  value: string;
+};
+
+export type FormattedMeasurement = {
+  measurement_type_id: string;
+  value_cm: number;
+  measured_at: string;
 };

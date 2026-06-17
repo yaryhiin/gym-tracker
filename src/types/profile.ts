@@ -15,7 +15,7 @@ export type ProfileDB = {
   preferred_unit: PreferredUnit;
   first_day_of_week: string;
   weight_checkin_frequency: CheckinFrequency;
-  measurement_checkin_frequency: CheckinFrequency;
+  measurements_checkin_frequency: CheckinFrequency;
   created_at: string;
   updated_at: string | null;
 };

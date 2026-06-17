@@ -34,7 +34,7 @@ const ProfilePage = ({
     first_day_of_week: profile.first_day_of_week || "monday",
     weight_checkin_frequency: profile.weight_checkin_frequency || "off",
     measurements_checkin_frequency:
-      profile.measurement_checkin_frequency || "off",
+      profile.measurements_checkin_frequency || "off",
   });
 
   useEffect(() => {
@@ -44,7 +44,7 @@ const ProfilePage = ({
       preferred_unit: profile.preferred_unit,
       first_day_of_week: profile.first_day_of_week,
       weight_checkin_frequency: profile.weight_checkin_frequency,
-      measurements_checkin_frequency: profile.measurement_checkin_frequency,
+      measurements_checkin_frequency: profile.measurements_checkin_frequency,
     });
   }, [profile]);
 
@@ -256,14 +256,14 @@ const ProfilePage = ({
               <button
                 type="button"
                 className={
-                  profileForm.measurements_checkin_frequency === "weekly"
+                  profileForm.measurements_checkin_frequency === "biweekly"
                     ? styles.active
                     : ""
                 }
                 onClick={() =>
                   setProfileForm((prev) => ({
                     ...prev,
-                    measurements_checkin_frequency: "weekly",
+                    measurements_checkin_frequency: "biweekly",
                   }))
                 }
               >
@@ -273,14 +273,14 @@ const ProfilePage = ({
               <button
                 type="button"
                 className={
-                  profileForm.measurements_checkin_frequency === "biweekly"
+                  profileForm.measurements_checkin_frequency === "monthly"
                     ? styles.active
                     : ""
                 }
                 onClick={() =>
                   setProfileForm((prev) => ({
                     ...prev,
-                    measurements_checkin_frequency: "biweekly",
+                    measurements_checkin_frequency: "monthly",
                   }))
                 }
               >

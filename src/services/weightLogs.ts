@@ -14,15 +14,27 @@ export async function getWeightsHistory() {
   return data || [];
 }
 
-export async function createWeightLog(weight_kg: number, measured_at: string) {
+export async function getLatestWeightLog() {
   const userId = await getCurrentUserId();
   const { data, error } = await supabase
+    .from("weight_logs")
+    .select("*")
+    .eq("user_id", userId)
+    .order("measured_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error) throw error;
+
+  return data;
+}
+
+export async function createWeightLog(weight_kg: number, measured_at: string) {
+  const userId = await getCurrentUserId();
+  const { error } = await supabase
     .from("weight_logs")
     .insert({ user_id: userId, weight_kg, measured_at })
     .select()
     .single();
 
   if (error) throw error;
-
-  return data || null;
 }

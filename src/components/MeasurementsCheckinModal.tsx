@@ -8,6 +8,7 @@ import {
   createMeasurementType,
   deleteMeasurementType,
   getMeasurementTypes,
+  createMeasurementLog,
 } from "../services/measurements";
 import { createLocalId } from "../services/utils";
 
@@ -18,7 +19,6 @@ type MeasurementsCheckinModalProps = {
   // previousMeasurements: MeasurementTypeDB[];
   // previousDate: string;
   name: string;
-  onSave: (newMeasurements: MeasurementType[]) => void;
   onSkip: () => void;
 };
 
@@ -27,7 +27,6 @@ const MeasurementsCheckinModal = ({
   // previousMeasurements,
   // previousDate,
   name,
-  onSave,
   onSkip,
 }: MeasurementsCheckinModalProps) => {
   const [newMeasurements, setNewMeasurements] = useState<MeasurementType[]>([]);
@@ -47,14 +46,12 @@ const MeasurementsCheckinModal = ({
 
       try {
         const types = await getMeasurementTypes();
-        console.log("Data from the database:", types);
         const formItems = types.map((type) => ({
           id: createLocalId(),
           measurement_type_id: type.id,
           name: type.name,
-          value_cm: "",
+          value: "",
         }));
-        console.log("local data that i add in the system:", formItems);
         setNewMeasurements(formItems);
       } catch (error) {
         console.error("Error loading measurement types:", error);
@@ -83,7 +80,7 @@ const MeasurementsCheckinModal = ({
           id: createLocalId(),
           measurement_type_id: createdType.id,
           name: createdType.name,
-          value_cm: "",
+          value: "",
         },
       ]);
       setNewMeasurementName("");
@@ -112,19 +109,35 @@ const MeasurementsCheckinModal = ({
     }
   }
 
+  async function handleCreateMeasurementLog() {
+    if (!newMeasurements) return;
+
+    const formatedMeasurements = newMeasurements
+      .filter((measurement) => measurement.value.trim() !== "")
+      .map((measurement) => {
+        const value = Number(measurement.value);
+        const formatedValue = unit === "in" ? value * 2.54 : value;
+        return {
+          measurement_type_id: measurement.measurement_type_id,
+          value_cm: formatedValue,
+          measured_at: new Date().toISOString().split("T")[0],
+        };
+      });
+    try {
+      await createMeasurementLog(formatedMeasurements);
+    } catch (error) {
+      console.error("Error creating weight log:", error);
+    } finally {
+      onSkip();
+    }
+  }
+
   function updateMeasurements(id: string, value: string) {
     setNewMeasurements((prev) =>
       prev.map((measurement) =>
-        measurement.id === id
-          ? { ...measurement, value_cm: value }
-          : measurement,
+        measurement.id === id ? { ...measurement, value: value } : measurement,
       ),
     );
-  }
-
-  function handleOnSave() {
-    if (!newMeasurements) return;
-    onSave(newMeasurements);
   }
 
   if (loading) {
@@ -133,7 +146,7 @@ const MeasurementsCheckinModal = ({
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
-        <h1 className={styles.heading}>Measurements check-in</h1>
+        <h1 className={styles.heading}>Measurements {<br></br>} check-in</h1>
         <div className={styles.message}>
           <p className={styles.messageContainer}>
             {new Date().getHours()
@@ -169,7 +182,7 @@ const MeasurementsCheckinModal = ({
                   onChange={(e) =>
                     updateMeasurements(measurement.id, e.target.value)
                   }
-                  value={measurement.value_cm}
+                  value={measurement.value}
                 />
                 <button
                   className={styles.deleteTypeBtn}
@@ -233,7 +246,10 @@ const MeasurementsCheckinModal = ({
           />
         )}
         <div className={styles.buttonContainer}>
-          <button className={styles.continueBtn} onClick={handleOnSave}>
+          <button
+            className={styles.continueBtn}
+            onClick={handleCreateMeasurementLog}
+          >
             Save
           </button>
           <button className={styles.skipBtn} onClick={onSkip}>

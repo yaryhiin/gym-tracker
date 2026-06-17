@@ -1,38 +1,60 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import styles from "../styles/modules/Modal.module.scss";
 
 import type { WeightCheckinErrors } from "../types/errors";
 
+import { createWeightLog, getLatestWeightLog } from "../services/weightLogs";
+
 type WeightCheckinModalProps = {
   unit: "kg" | "lb";
-  previousWeight?: number;
-  previousDate?: string;
   name: string;
-  onSave: (newWeight: number) => void;
   onSkip: () => void;
 };
 
 const WeightCheckinModal = ({
   unit,
-  previousWeight,
-  previousDate,
   name,
-  onSave,
   onSkip,
 }: WeightCheckinModalProps) => {
   const [newWeight, setNewWeight] = useState("");
   const [errors, setErrors] = useState<WeightCheckinErrors>({
     weight: false,
   });
+  const [previousData, setPreviousData] = useState({ date: "", weight: "" });
 
-  function handleOnSave() {
+  useEffect(() => {
+    async function getLatestData() {
+      const latestData = await getLatestWeightLog();
+      if (!latestData) return;
+      setPreviousData({
+        date: latestData.measured_at,
+        weight: latestData.weight_kg,
+      });
+    }
+
+    getLatestData();
+  }, []);
+
+  async function handleCreateWeightLog() {
     if (!newWeight) {
       setErrors({ weight: true });
       return;
     }
 
-    onSave(Number(newWeight));
+    const weight = Number(newWeight);
+    const weightInKg = unit === "lb" ? weight / 2.20462262 : weight;
+    const roundedWeight = Math.round(weightInKg * 10) / 10;
+    try {
+      await createWeightLog(
+        roundedWeight,
+        new Date().toISOString().split("T")[0],
+      );
+    } catch (error) {
+      console.error("Error creating weight log:", error);
+    } finally {
+      onSkip();
+    }
   }
 
   return (
@@ -52,8 +74,10 @@ const WeightCheckinModal = ({
           <p className={styles.message}>What`s your weight today?</p>
         </div>
         <p className={styles.previous}>
-          {previousWeight}
-          {unit} - {previousDate}
+          {unit === "lb"
+            ? Number(previousData.weight) * 2.204
+            : previousData.weight}
+          {unit} - {previousData.date}
         </p>
         <div className={styles.inputContainer}>
           <p className={styles.inputLabel}>New weight</p>
@@ -75,7 +99,10 @@ const WeightCheckinModal = ({
           )}
         </div>
         <div className={styles.buttonContainer}>
-          <button className={styles.continueBtn} onClick={handleOnSave}>
+          <button
+            className={styles.continueBtn}
+            onClick={handleCreateWeightLog}
+          >
             Save
           </button>
           <button className={styles.skipBtn} onClick={onSkip}>

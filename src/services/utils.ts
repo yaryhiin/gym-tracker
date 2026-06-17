@@ -25,3 +25,14 @@ export function createLocalId() {
 
   return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
+
+export function getDaysSince(dateString: string) {
+  const today = new Date();
+  const [year, month, day] = dateString.split("-").map(Number);
+  const measuredDate = new Date(year, month - 1, day);
+
+  today.setHours(0, 0, 0, 0);
+  measuredDate.setHours(0, 0, 0, 0);
+  const differenceMs = today.getTime() - measuredDate.getTime();
+  return Math.floor(differenceMs / (1000 * 60 * 60 * 24));
+}
