@@ -16,6 +16,19 @@ export async function getMeasurementTypes() {
   return data || [];
 }
 
+export async function getMeasurementsHistory() {
+  const userId = await getCurrentUserId();
+
+  const { data, error } = await supabase
+    .from("measurement_logs")
+    .select("*")
+    .eq("user_id", userId)
+    .order("measured_at", { ascending: false });
+
+  if (error) throw error;
+  return data || [];
+}
+
 export async function getLatestMeasurementLog() {
   const userId = await getCurrentUserId();
   const { data, error } = await supabase

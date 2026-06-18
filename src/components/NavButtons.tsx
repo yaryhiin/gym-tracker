@@ -29,9 +29,9 @@ const NavButtons = () => {
         </button>
         <button
           className={cn(styles.history, styles.navButton)}
-          onClick={() => navigate("/profile")}
+          onClick={() => navigate("/progress")}
         >
-          Profile
+          Progress
         </button>
       </div>
     </div>

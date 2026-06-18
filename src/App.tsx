@@ -31,8 +31,11 @@ import type { PreferredUnit, Profile, ProfileDB } from "./types/profile";
 
 import { getProfile, createProfile, updateProfile } from "./services/profiles";
 import { getLatestWeightLog } from "./services/weightLogs";
-import { getDaysSince } from "./services/utils";
+import { getDaysSince, getTodayDateString } from "./services/utils";
 import { getLatestMeasurementLog } from "./services/measurements";
+
+const WEIGHT_CHECKIN_SKIPPED_DATE_KEY = "weightCheckinSkippedDate";
+const MEASUREMENTS_CHECKIN_SKIPPED_DATE_KEY = "measurementsCheckinSkippedDate";
 
 function App() {
   const [session, setSession] = useState<Session | null>();
@@ -106,6 +109,10 @@ function App() {
 
   useEffect(() => {
     async function checkWeightReminder() {
+      const skippedDay = localStorage.getItem(WEIGHT_CHECKIN_SKIPPED_DATE_KEY);
+      if (skippedDay === getTodayDateString()) {
+        return;
+      }
       if (!session || !profile) return;
       const latestWeightLog = await getLatestWeightLog();
       if (!latestWeightLog) {
@@ -133,6 +140,12 @@ function App() {
 
   useEffect(() => {
     async function checkMeasurementsReminder() {
+      const skippedDay = localStorage.getItem(
+        MEASUREMENTS_CHECKIN_SKIPPED_DATE_KEY,
+      );
+      if (skippedDay === getTodayDateString()) {
+        return;
+      }
       if (!session || !profile) return;
       const latestMeasurementLog = await getLatestMeasurementLog();
       if (!latestMeasurementLog) {
@@ -254,7 +267,10 @@ function App() {
                   }
                 />
 
-                <Route path="/progress" element={<Progress />} />
+                <Route
+                  path="/progress"
+                  element={<Progress unit={profile.preferred_unit} />}
+                />
               </Route>
             )
           )}
@@ -265,7 +281,13 @@ function App() {
         <WeightCheckinModal
           name={profile.name}
           unit={profile.preferred_unit}
-          onSkip={() => setShowWeightCheckinModal(false)}
+          onSkip={() => {
+            localStorage.setItem(
+              WEIGHT_CHECKIN_SKIPPED_DATE_KEY,
+              getTodayDateString(),
+            );
+            setShowWeightCheckinModal(false);
+          }}
         />
       )}
 
@@ -283,7 +305,13 @@ function App() {
           //   quads: "50",
           //   calves: "20",
           // }}
-          onSkip={() => setShowMeasurementsCheckinModal(false)}
+          onSkip={() => {
+            localStorage.setItem(
+              MEASUREMENTS_CHECKIN_SKIPPED_DATE_KEY,
+              getTodayDateString(),
+            );
+            setShowMeasurementsCheckinModal(false);
+          }}
         />
       )}
     </>

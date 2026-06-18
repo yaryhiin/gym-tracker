@@ -106,7 +106,7 @@ const WeightCheckinModal = ({
             Save
           </button>
           <button className={styles.skipBtn} onClick={onSkip}>
-            Skip
+            Skip for today
           </button>
         </div>
       </div>

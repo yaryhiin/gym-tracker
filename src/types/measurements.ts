@@ -17,3 +17,12 @@ export type FormattedMeasurement = {
   value_cm: number;
   measured_at: string;
 };
+
+export type MeasurementLogDB = {
+  id: string;
+  user_id: string;
+  measurement_type_id: string;
+  value_cm: number;
+  measured_at: string;
+  created_at: string;
+}
