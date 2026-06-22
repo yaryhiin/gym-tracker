@@ -13,6 +13,7 @@ import type {
   MeasurementLogDB,
 } from "../types/measurements";
 import type { ChartBriefInfo, ChartData } from "../types/chart";
+import { getExercisesLogs } from "../services/exercises";
 
 type MeasurementsProgressProps = {
   unit: "cm" | "in";
@@ -35,8 +36,8 @@ const MeasurementsProgress = ({ unit }: MeasurementsProgressProps) => {
       try {
         const types = await getMeasurementTypes();
         const logs = await getMeasurementsHistory();
-        console.log("Logs:", logs);
-        console.log("Types", types);
+        const exerciseData = await getExercisesLogs();
+        console.log("Exercises logs:", exerciseData);
         if (!types || !logs) {
           return;
         }
@@ -58,28 +59,31 @@ const MeasurementsProgress = ({ unit }: MeasurementsProgressProps) => {
     const chosenData = measurementsData.filter(
       (data) => data.measurement_type_id === chosenType?.id,
     );
-    setFilteredData(
-      chosenData.map((data) => ({
-        date: data.measured_at,
-        value:
-          unit === "in"
-            ? Math.round((data.value_cm / 2.54) * 10) / 10
-            : data.value_cm,
-      })),
-    );
-    const current =
-      unit === "in"
-        ? Math.round((chosenData[0].value_cm / 2.54) * 10) / 10
-        : chosenData[0].value_cm;
+
+    const formattedData = chosenData.map((data) => ({
+      date: data.measured_at,
+      value:
+        unit === "in"
+          ? Math.round((data.value_cm / 2.54) * 10) / 10
+          : data.value_cm,
+      label: `${
+        unit === "in"
+          ? Math.round((data.value_cm / 2.54) * 10) / 10
+          : data.value_cm
+      } ${unit}`,
+    }));
+
     const entries = chosenData.length;
+
+    const firstEntry = formattedData[0];
+    const currentEntry = formattedData[formattedData.length - 1];
+
+    const current = currentEntry.value ?? 0;
+
     const change =
-      unit === "in"
-        ? Math.round(
-            (current -
-              Math.round((chosenData[entries - 1].value_cm / 2.54) * 10) / 10) *
-              10,
-          ) / 10
-        : current - chosenData[entries - 1].value_cm;
+      currentEntry && firstEntry ? currentEntry.value - firstEntry.value : 0;
+
+    setFilteredData(formattedData);
     setBriefData({ current, change, entries });
   }, [chosenType]);
 

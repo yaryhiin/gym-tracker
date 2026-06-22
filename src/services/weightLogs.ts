@@ -8,7 +8,7 @@ export async function getWeightsHistory() {
     .from("weight_logs")
     .select("*")
     .eq("user_id", userId)
-    .order("measured_at", { ascending: false });
+    .order("measured_at", { ascending: true });
   if (error) throw error;
 
   return data || [];

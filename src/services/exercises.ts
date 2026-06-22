@@ -16,6 +16,41 @@ export async function getExercises() {
   return data || [];
 }
 
+export async function getExercisesLogs() {
+  const userId = await getCurrentUserId();
+
+  const { data, error } = await supabase
+    .from("workouts")
+    .select(
+      `
+      id,
+      name,
+      created_at,
+      finished_at,
+      workout_exercises (
+        id,
+        exercise_id,
+        exercise_name,
+        category,
+        order_index,
+        workout_sets (
+          id,
+          set_number,
+          weight,
+          reps,
+          done
+        )
+      )
+    `,
+    )
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+
+  return data || [];
+}
+
 export async function createExercise(exercise: Exercise) {
   const userId = await getCurrentUserId();
 

@@ -22,30 +22,33 @@ const WeightProgress = ({ unit }: WeightProgressProps) => {
       try {
         const data = await getWeightsHistory();
         if (!data) return;
-        const current =
-          unit === "lb"
-            ? Math.round(data[0].weight_kg * 2.20462262 * 10) / 10
-            : data[0].weight_kg;
+        const formattedData = data.map((log) => ({
+          date: log.measured_at,
+          value:
+            unit === "lb"
+              ? Math.round(log.weight_kg * 2.20462262 * 10) / 10
+              : log.weight_kg,
+          label: `${
+            unit === "lb"
+              ? Math.round(log.weight_kg * 2.20462262 * 10) / 10
+              : log.weight_kg
+          } ${unit}`,
+        }));
+
         const entries = data.length;
+
+        const firstEntry = formattedData[0];
+        const currentEntry = formattedData[formattedData.length - 1];
+
+        const current = currentEntry.value ?? 0;
+
         const change =
-          unit === "lb"
-            ? Math.round(
-                (current -
-                  Math.round(data[entries - 1].weight_kg * 2.20462262 * 10) /
-                    10) *
-                  10,
-              ) / 10
-            : current - data[entries - 1].weight_kg;
+          currentEntry && firstEntry
+            ? currentEntry.value - firstEntry.value
+            : 0;
+
+        setWeightData(formattedData);
         setBriefData({ current, change, entries });
-        setWeightData(
-          data.map((log) => ({
-            date: log.measured_at,
-            value:
-              unit === "lb"
-                ? Math.round(log.weight_kg * 2.20462262 * 10) / 10
-                : log.weight_kg,
-          })),
-        );
       } catch (error) {
         console.error("Error fetching weight data:", error);
       } finally {
