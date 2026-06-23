@@ -44,7 +44,7 @@ const WeightProgress = ({ unit }: WeightProgressProps) => {
 
         const change =
           currentEntry && firstEntry
-            ? currentEntry.value - firstEntry.value
+            ? Math.round((currentEntry.value - firstEntry.value) * 10) / 10
             : 0;
 
         setWeightData(formattedData);
@@ -65,7 +65,7 @@ const WeightProgress = ({ unit }: WeightProgressProps) => {
   return (
     <div className={styles.mainContainer}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Body Weight</h1>
+        <h2 className={styles.title}>Body Weight</h2>
       </div>
       <Chart chartData={weightData} yPadding={5} />
       <div className={styles.briefInfo}>

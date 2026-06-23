@@ -119,7 +119,54 @@ const RoutineBuilder = () => {
         },
       ],
     }));
+    if (chosenExerciseId != "") {
+      deleteExercise();
+    }
     setShowChooseExerciseModal(false);
+  }
+
+  function deleteExercise() {
+    setRoutineDraft((prev) => ({
+      ...prev,
+      exercises: prev.exercises.filter(
+        (exercise) => exercise.exercise_id != chosenExerciseId,
+      ),
+    }));
+    setChosenExerciseId("");
+    setShowDeleteModal(false);
+  }
+
+  function moveExercise(exerciseId: string, direction: "up" | "down") {
+    setRoutineDraft((prev) => {
+      const currentIndex = prev.exercises.findIndex(
+        (exercise) => exercise.exercise_id === exerciseId,
+      );
+
+      if (currentIndex === -1) return prev;
+
+      const targetIndex =
+        direction === "up" ? currentIndex - 1 : currentIndex + 1;
+
+      if (targetIndex < 0 || targetIndex >= prev.exercises.length) {
+        return prev;
+      }
+
+      const updatedExercises = [...prev.exercises];
+
+      const temp = updatedExercises[currentIndex];
+      updatedExercises[currentIndex] = updatedExercises[targetIndex];
+      updatedExercises[targetIndex] = temp;
+
+      const reorderedExercises = updatedExercises.map((exercise, index) => ({
+        ...exercise,
+        order_index: index,
+      }));
+
+      return {
+        ...prev,
+        exercises: reorderedExercises,
+      };
+    });
   }
 
   async function addRoutine(routine: Routine) {
@@ -172,7 +219,11 @@ const RoutineBuilder = () => {
             }
             placeholder="Enter name"
           />
-          {errors.name && <p className={styles.errorMessage}>You need to enter routine name</p>}
+          {errors.name && (
+            <p className={styles.errorMessage}>
+              You need to enter routine name
+            </p>
+          )}
         </div>
       </div>
       <div className={styles.selectedExercisesList}>
@@ -181,12 +232,36 @@ const RoutineBuilder = () => {
             key={exercise.exercise_id}
             className={styles.selectedExerciseElement}
           >
+            <div className={styles.orderButtons}>
+              <button
+                className={styles.orderBtn}
+                onClick={() => moveExercise(exercise.exercise_id, "up")}
+                hidden={exercise.order_index === 0}
+              >
+                ↑
+              </button>
+              <button
+                className={styles.orderBtn}
+                onClick={() => moveExercise(exercise.exercise_id, "down")}
+                hidden={exercise.order_index === routineDraft.exercises.length - 1}
+              >
+                ↓
+              </button>
+            </div>
             <div className={styles.selectedExerciseElementTop}>
               <h3>{exercise.exercise_name}</h3>
               <p>{exercise.category}</p>
             </div>
             <div className={styles.selectedExerciseElementButtons}>
-              <button className={styles.editExerciseBtn}>Edit</button>
+              <button
+                className={styles.editExerciseBtn}
+                onClick={() => {
+                  setChosenExerciseId(exercise.exercise_id);
+                  setShowChooseExerciseModal(true);
+                }}
+              >
+                Edit
+              </button>
               <button
                 className={styles.deleteExerciseBtn}
                 onClick={() => {
@@ -208,7 +283,11 @@ const RoutineBuilder = () => {
         >
           + Add Exercise
         </button>
-        {errors.exercises && <p className={styles.errorMessage}>You need to add at least 1 exercise</p>}
+        {errors.exercises && (
+          <p className={styles.errorMessage}>
+            You need to add at least 1 exercise
+          </p>
+        )}
       </div>
 
       <div className={styles.buttonContainer}>
@@ -248,22 +327,20 @@ const RoutineBuilder = () => {
         <ExecuteModal
           text={MODAL_TEXT}
           btnText="Delete"
-          onClose={() => setShowDeleteModal(false)}
-          onDelete={() => {
-            setRoutineDraft((prev) => ({
-              ...prev,
-              exercises: prev.exercises.filter(
-                (exercise) => exercise.exercise_id != chosenExerciseId,
-              ),
-            }));
+          onClose={() => {
+            setChosenExerciseId("");
             setShowDeleteModal(false);
           }}
+          onDelete={deleteExercise}
         />
       )}
       {showChooseExerciseModal && (
         <ChooseExerciseModal
           exercises={exercises}
-          onClose={() => setShowChooseExerciseModal(false)}
+          onClose={() => {
+            setChosenExerciseId("");
+            setShowChooseExerciseModal(false);
+          }}
           addExercise={addExercise}
           chooseExercise={chooseExercise}
         />

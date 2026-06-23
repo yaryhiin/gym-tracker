@@ -11,23 +11,15 @@ export type Exercise = {
   category: string;
 };
 
-export type ExerciseLogsDB = {
-  id: string;
-  name: string;
-  created_at: string;
-  finished_at: string | null;
-  workout_exercises: {
+export type ExerciseLogDB = {
+  date: string;
+  exercise_id: string;
+  exercise_name: string;
+  sets: {
     id: string;
-    exercise_id: string;
-    exercise_name: string;
-    category: string;
-    order_index: number;
-    workout_sets: {
-      id: string;
-      set_number: number;
-      weight: number;
-      reps: number;
-      done: boolean;
-    }[];
+    set_number: number;
+    weight: number;
+    reps: number;
+    done: boolean;
   }[];
 };

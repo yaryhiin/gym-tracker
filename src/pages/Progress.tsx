@@ -20,7 +20,7 @@ const Progress = ({ unit }: ProgressProps) => {
       <div className={styles.header}>
         <h1 className={styles.title}>Progress</h1>
         <p className={styles.description}>
-          Track your strength and body changes over time.
+          Choose the Data that you want to check
         </p>
         <div className={styles.toggle}>
           <button

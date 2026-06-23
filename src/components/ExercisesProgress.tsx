@@ -6,14 +6,14 @@ import Chart from "./Chart";
 import { getExercises, getExercisesLogs } from "../services/exercises";
 
 import type { ChartBriefInfo, ChartData } from "../types/chart";
-import type { ExerciseDB, ExerciseLogsDB } from "../types/exercise";
+import type { ExerciseDB, ExerciseLogDB } from "../types/exercise";
 
 type ExercisesProgressProps = {
   unit: "lb" | "kg";
 };
 
 const ExercisesProgress = ({ unit }: ExercisesProgressProps) => {
-  const [exerciseLogs, setExerciseLogs] = useState<ExerciseLogsDB[]>();
+  const [exerciseLogs, setExerciseLogs] = useState<ExerciseLogDB[]>();
   const [exercises, setExercises] = useState<ExerciseDB[]>();
 
   const [chosenExercise, setChosenExercise] = useState<ExerciseDB>();
@@ -29,8 +29,17 @@ const ExercisesProgress = ({ unit }: ExercisesProgressProps) => {
         if (!list || !logs) {
           return;
         }
+
+        const formattedData = logs.flatMap((workout) =>
+          workout.workout_exercises.map((exercise) => ({
+            date: workout.finished_at ?? workout.created_at,
+            exercise_id: exercise.exercise_id,
+            exercise_name: exercise.exercise_name,
+            sets: exercise.workout_sets,
+          })),
+        );
         setExercises(list);
-        setExerciseLogs(logs);
+        setExerciseLogs(formattedData);
         setChosenExercise(list[0] ?? null);
       } catch (error) {
         console.error("Error fetching exercises data:", error);
@@ -47,15 +56,7 @@ const ExercisesProgress = ({ unit }: ExercisesProgressProps) => {
     if (!chosenExercise) return;
     if (!exerciseLogs) return;
 
-    const formattedData = exerciseLogs
-      .flatMap((workout) =>
-        workout.workout_exercises.map((exercise) => ({
-          date: workout.finished_at ?? workout.created_at,
-          exercise_id: exercise.exercise_id,
-          exercise_name: exercise.exercise_name,
-          sets: exercise.workout_sets,
-        })),
-      )
+    const filtered = exerciseLogs
       .filter((entry) => entry.exercise_id === chosenExercise.id)
       .map((entry) => {
         const completedSets = entry.sets.filter((set) => set.done);
@@ -76,12 +77,12 @@ const ExercisesProgress = ({ unit }: ExercisesProgressProps) => {
 
         return {
           date: entry.date.split("T")[0],
-          value: displayedWeight * bestSet.reps,
+          value: Math.round(displayedWeight * bestSet.reps * 10) / 10,
           label: `${displayedWeight} * ${bestSet.reps}`,
         };
       })
       .filter((entry) => entry !== null);
-    if (formattedData.length === 0) {
+    if (filtered.length === 0) {
       setFilteredData([]);
       setBriefData({
         current: 0,
@@ -92,18 +93,20 @@ const ExercisesProgress = ({ unit }: ExercisesProgressProps) => {
       return;
     }
 
-    const entries = formattedData.length;
+    const entries = filtered.length;
 
-    const firstEntry = formattedData[0];
-    const currentEntry = formattedData[formattedData.length - 1];
+    const firstEntry = filtered[0];
+    const currentEntry = filtered[filtered.length - 1];
 
     const current = currentEntry.value ?? 0;
 
     const change =
-      currentEntry && firstEntry ? currentEntry.value - firstEntry.value : 0;
+      currentEntry && firstEntry
+        ? Math.round((currentEntry.value - firstEntry.value) * 10) / 10
+        : 0;
 
     setBriefData({ current, change, entries });
-    setFilteredData(formattedData);
+    setFilteredData(filtered);
   }, [chosenExercise, exerciseLogs]);
 
   if (loading) {
@@ -112,8 +115,8 @@ const ExercisesProgress = ({ unit }: ExercisesProgressProps) => {
   return (
     <div className={styles.mainContainer}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Measurements</h1>
-        <p>Choose measurement</p>
+        <h2 className={styles.title}>Exercises</h2>
+        <p>Choose exercise</p>
         {exercises && exercises.length > 0 ? (
           <select
             value={chosenExercise?.id}

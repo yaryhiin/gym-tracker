@@ -75,7 +75,7 @@ const WeightCheckinModal = ({
         </div>
         <p className={styles.previous}>
           {unit === "lb"
-            ? Number(previousData.weight) * 2.204
+            ? Math.round(Number(previousData.weight) * 2.20462262 * 10) / 10
             : previousData.weight}
           {unit} - {previousData.date}
         </p>

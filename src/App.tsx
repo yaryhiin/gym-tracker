@@ -232,7 +232,7 @@ function App() {
                   />
                 }
               >
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<Home name={profile.name} />} />
                 <Route path="/workout" element={<ActiveWorkout />} />
                 <Route
                   path="/workout/routine/:routineId"
@@ -295,16 +295,6 @@ function App() {
         <MeasurementsCheckinModal
           name={profile.name}
           unit={profile?.preferred_unit === "kg" ? "cm" : "in"}
-          // previousDate="May 28"
-          // previousMeasurements={{
-          //   waist: "30",
-          //   chest: "20",
-          //   shoulders: "10",
-          //   hips: "50",
-          //   biceps: "40",
-          //   quads: "50",
-          //   calves: "20",
-          // }}
           onSkip={() => {
             localStorage.setItem(
               MEASUREMENTS_CHECKIN_SKIPPED_DATE_KEY,

@@ -13,7 +13,6 @@ import type {
   MeasurementLogDB,
 } from "../types/measurements";
 import type { ChartBriefInfo, ChartData } from "../types/chart";
-import { getExercisesLogs } from "../services/exercises";
 
 type MeasurementsProgressProps = {
   unit: "cm" | "in";
@@ -36,8 +35,6 @@ const MeasurementsProgress = ({ unit }: MeasurementsProgressProps) => {
       try {
         const types = await getMeasurementTypes();
         const logs = await getMeasurementsHistory();
-        const exerciseData = await getExercisesLogs();
-        console.log("Exercises logs:", exerciseData);
         if (!types || !logs) {
           return;
         }
@@ -93,7 +90,7 @@ const MeasurementsProgress = ({ unit }: MeasurementsProgressProps) => {
   return (
     <div className={styles.mainContainer}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Measurements</h1>
+        <h2 className={styles.title}>Measurements</h2>
         <p>Choose measurement</p>
         {measurementTypes && measurementTypes.length > 0 ? (
           <select
