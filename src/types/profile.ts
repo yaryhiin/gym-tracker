@@ -1,4 +1,5 @@
-export type PreferredUnit = "kg" | "lb";
+export type PreferredWeightUnit = "kg" | "lb";
+export type PreferredMeasurementUnit = "cm" | "in";
 
 export type CheckinFrequency =
   | "daily"
@@ -12,7 +13,9 @@ export type ProfileDB = {
   user_id: string;
   name: string;
   date_of_birth: string;
-  preferred_unit: PreferredUnit;
+  preferred_weight_unit: PreferredWeightUnit;
+  preferred_workout_unit: PreferredWeightUnit;
+  preferred_measurement_unit: PreferredMeasurementUnit;
   first_day_of_week: string;
   weight_checkin_frequency: CheckinFrequency;
   measurements_checkin_frequency: CheckinFrequency;
@@ -23,7 +26,9 @@ export type ProfileDB = {
 export type Profile = {
   name: string;
   date_of_birth: string;
-  preferred_unit: PreferredUnit;
+  preferred_weight_unit: PreferredWeightUnit;
+  preferred_workout_unit: PreferredWeightUnit;
+  preferred_measurement_unit: PreferredMeasurementUnit;
   first_day_of_week: string;
   weight_checkin_frequency: CheckinFrequency;
   measurements_checkin_frequency: CheckinFrequency;

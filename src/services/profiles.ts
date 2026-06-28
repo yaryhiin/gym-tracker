@@ -1,5 +1,9 @@
 import { supabase } from "../supabase";
-import type { PreferredUnit, Profile } from "../types/profile";
+import type {
+  PreferredWeightUnit,
+  PreferredMeasurementUnit,
+  Profile,
+} from "../types/profile";
 import { getCurrentUserId } from "./auth";
 
 export async function getProfile() {
@@ -19,7 +23,9 @@ export async function getProfile() {
 
 export async function createProfile(
   name: string,
-  preferred_unit: PreferredUnit,
+  preferred_weight_unit: PreferredWeightUnit,
+  preferred_workout_unit: PreferredWeightUnit,
+  preferred_measurement_unit: PreferredMeasurementUnit,
 ) {
   const userId = await getCurrentUserId();
   const { data: newProfile, error: createError } = await supabase
@@ -27,7 +33,9 @@ export async function createProfile(
     .insert({
       user_id: userId,
       name,
-      preferred_unit,
+      preferred_weight_unit,
+      preferred_workout_unit,
+      preferred_measurement_unit,
       first_day_of_week: "monday",
       weight_checkin_frequency: "off",
       measurements_checkin_frequency: "off",

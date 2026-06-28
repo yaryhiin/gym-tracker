@@ -23,3 +23,6 @@ export type ExerciseLogDB = {
     done: boolean;
   }[];
 };
+
+
+export type ExerciseCriteria = "best-set-volume" | "total-volume"

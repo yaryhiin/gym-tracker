@@ -128,9 +128,9 @@ const RoutineBuilder = () => {
   function deleteExercise() {
     setRoutineDraft((prev) => ({
       ...prev,
-      exercises: prev.exercises.filter(
-        (exercise) => exercise.exercise_id != chosenExerciseId,
-      ),
+      exercises: prev.exercises
+        .filter((exercise) => exercise.exercise_id !== chosenExerciseId)
+        .map((exercise, index) => ({ ...exercise, order_index: index + 1 })),
     }));
     setChosenExerciseId("");
     setShowDeleteModal(false);
@@ -159,7 +159,7 @@ const RoutineBuilder = () => {
 
       const reorderedExercises = updatedExercises.map((exercise, index) => ({
         ...exercise,
-        order_index: index,
+        order_index: index + 1,
       }));
 
       return {
@@ -211,7 +211,7 @@ const RoutineBuilder = () => {
         <h2 className={styles.title}>Routine Name: </h2>
         <div className={styles.input}>
           <input
-            className={cn(styles.input, errors.name && styles.error)}
+            className={cn(styles.input, errors.name && "error")}
             type="text"
             value={routineDraft.name}
             onChange={(e) =>
@@ -220,9 +220,7 @@ const RoutineBuilder = () => {
             placeholder="Enter name"
           />
           {errors.name && (
-            <p className={styles.errorMessage}>
-              You need to enter routine name
-            </p>
+            <p className="errorMessage">You need to enter routine name</p>
           )}
         </div>
       </div>
@@ -243,7 +241,9 @@ const RoutineBuilder = () => {
               <button
                 className={styles.orderBtn}
                 onClick={() => moveExercise(exercise.exercise_id, "down")}
-                hidden={exercise.order_index === routineDraft.exercises.length - 1}
+                hidden={
+                  exercise.order_index === routineDraft.exercises.length - 1
+                }
               >
                 ↓
               </button>
@@ -275,22 +275,17 @@ const RoutineBuilder = () => {
           </div>
         ))}
         <button
-          className={cn(
-            styles.addExerciseBtn,
-            errors.exercises && styles.error,
-          )}
+          className={cn(styles.addExerciseBtn, errors.exercises && "error")}
           onClick={() => setShowChooseExerciseModal(true)}
         >
           + Add Exercise
         </button>
         {errors.exercises && (
-          <p className={styles.errorMessage}>
-            You need to add at least 1 exercise
-          </p>
+          <p className="errorMessage">You need to add at least 1 exercise</p>
         )}
       </div>
 
-      <div className={styles.buttonContainer}>
+      <div className="buttonContainer">
         <button
           className={styles.saveRoutine}
           onClick={() => {
@@ -336,6 +331,7 @@ const RoutineBuilder = () => {
       )}
       {showChooseExerciseModal && (
         <ChooseExerciseModal
+          initialSelectedExerciseId={chosenExerciseId}
           exercises={exercises}
           onClose={() => {
             setChosenExerciseId("");

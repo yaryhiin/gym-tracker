@@ -30,7 +30,9 @@ const ProfilePage = ({
   const [profileForm, setProfileForm] = useState<Profile>({
     name: profile.name || "",
     date_of_birth: profile.date_of_birth || "",
-    preferred_unit: profile.preferred_unit || "kg",
+    preferred_weight_unit: profile.preferred_weight_unit || "kg",
+    preferred_workout_unit: profile.preferred_workout_unit || "kg",
+    preferred_measurement_unit: profile.preferred_measurement_unit || "cm",
     first_day_of_week: profile.first_day_of_week || "monday",
     weight_checkin_frequency: profile.weight_checkin_frequency || "off",
     measurements_checkin_frequency:
@@ -41,7 +43,9 @@ const ProfilePage = ({
     setProfileForm({
       name: profile.name ?? "",
       date_of_birth: profile.date_of_birth ?? "",
-      preferred_unit: profile.preferred_unit,
+      preferred_weight_unit: profile.preferred_weight_unit,
+      preferred_workout_unit: profile.preferred_workout_unit,
+      preferred_measurement_unit: profile.preferred_measurement_unit,
       first_day_of_week: profile.first_day_of_week,
       weight_checkin_frequency: profile.weight_checkin_frequency,
       measurements_checkin_frequency: profile.measurements_checkin_frequency,
@@ -71,10 +75,10 @@ const ProfilePage = ({
   return (
     <div className={styles.profileContainer}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Profile</h1>
         <button className={styles.saveBtn} onClick={handleSave}>
           Save Changes
         </button>
+        <h1 className={styles.title}>Profile</h1>
       </div>
       <div className={styles.sections}>
         <div className={styles.sectionContainer}>
@@ -112,17 +116,17 @@ const ProfilePage = ({
         <div className={styles.sectionContainer}>
           <h2 className={styles.title}>Preferences</h2>
           <div className={styles.inputContainer}>
-            <p className={styles.inputLabel}>Preferred units</p>
-            <div className={styles.toggle}>
+            <p className={styles.inputLabel}>Preferred weight unit</p>
+            <div className="toggle">
               <button
                 type="button"
                 className={
-                  profileForm.preferred_unit === "kg" ? styles.active : ""
+                  profileForm.preferred_weight_unit === "kg" ? "active" : ""
                 }
                 onClick={() =>
                   setProfileForm((prev) => ({
                     ...prev,
-                    preferred_unit: "kg",
+                    preferred_weight_unit: "kg",
                   }))
                 }
               >
@@ -132,12 +136,84 @@ const ProfilePage = ({
               <button
                 type="button"
                 className={
-                  profileForm.preferred_unit === "lb" ? styles.active : ""
+                  profileForm.preferred_weight_unit === "lb" ? "active" : ""
                 }
                 onClick={() =>
                   setProfileForm((prev) => ({
                     ...prev,
-                    preferred_unit: "lb",
+                    preferred_weight_unit: "lb",
+                  }))
+                }
+              >
+                lb
+              </button>
+            </div>
+          </div>
+          <div className={styles.inputContainer}>
+            <p className={styles.inputLabel}>Preferred measurements unit</p>
+            <div className="toggle">
+              <button
+                type="button"
+                className={
+                  profileForm.preferred_measurement_unit === "cm"
+                    ? "active"
+                    : ""
+                }
+                onClick={() =>
+                  setProfileForm((prev) => ({
+                    ...prev,
+                    preferred_measurement_unit: "cm",
+                  }))
+                }
+              >
+                cm
+              </button>
+
+              <button
+                type="button"
+                className={
+                  profileForm.preferred_measurement_unit === "in"
+                    ? "active"
+                    : ""
+                }
+                onClick={() =>
+                  setProfileForm((prev) => ({
+                    ...prev,
+                    preferred_measurement_unit: "in",
+                  }))
+                }
+              >
+                in
+              </button>
+            </div>
+          </div>
+          <div className={styles.inputContainer}>
+            <p className={styles.inputLabel}>Preferred workout weight unit</p>
+            <div className="toggle">
+              <button
+                type="button"
+                className={
+                  profileForm.preferred_workout_unit === "kg" ? "active" : ""
+                }
+                onClick={() =>
+                  setProfileForm((prev) => ({
+                    ...prev,
+                    preferred_workout_unit: "kg",
+                  }))
+                }
+              >
+                kg
+              </button>
+
+              <button
+                type="button"
+                className={
+                  profileForm.preferred_workout_unit === "lb" ? "active" : ""
+                }
+                onClick={() =>
+                  setProfileForm((prev) => ({
+                    ...prev,
+                    preferred_workout_unit: "lb",
                   }))
                 }
               >
@@ -168,7 +244,7 @@ const ProfilePage = ({
           </div>
           <div className={styles.inputContainer}>
             <p className={styles.inputLabel}>Theme</p>
-            <div className={styles.toggle}>
+            <div className="toggle">
               <button
                 onClick={toggleTheme}
                 className={cn(
@@ -198,12 +274,12 @@ const ProfilePage = ({
           <h2 className={styles.title}>Reminders</h2>
           <div className={styles.inputContainer}>
             <p className={styles.inputLabel}>Weight check-in</p>
-            <div className={styles.toggle}>
+            <div className="toggle">
               <button
                 type="button"
                 className={
                   profileForm.weight_checkin_frequency === "daily"
-                    ? styles.active
+                    ? "active"
                     : ""
                 }
                 onClick={() =>
@@ -220,7 +296,7 @@ const ProfilePage = ({
                 type="button"
                 className={
                   profileForm.weight_checkin_frequency === "weekly"
-                    ? styles.active
+                    ? "active"
                     : ""
                 }
                 onClick={() =>
@@ -235,9 +311,7 @@ const ProfilePage = ({
               <button
                 type="button"
                 className={
-                  profileForm.weight_checkin_frequency === "off"
-                    ? styles.active
-                    : ""
+                  profileForm.weight_checkin_frequency === "off" ? "active" : ""
                 }
                 onClick={() =>
                   setProfileForm((prev) => ({
@@ -252,12 +326,12 @@ const ProfilePage = ({
           </div>
           <div className={styles.inputContainer}>
             <p className={styles.inputLabel}>Measurments</p>
-            <div className={styles.toggle}>
+            <div className="toggle">
               <button
                 type="button"
                 className={
                   profileForm.measurements_checkin_frequency === "biweekly"
-                    ? styles.active
+                    ? "active"
                     : ""
                 }
                 onClick={() =>
@@ -274,7 +348,7 @@ const ProfilePage = ({
                 type="button"
                 className={
                   profileForm.measurements_checkin_frequency === "monthly"
-                    ? styles.active
+                    ? "active"
                     : ""
                 }
                 onClick={() =>
@@ -290,7 +364,7 @@ const ProfilePage = ({
                 type="button"
                 className={
                   profileForm.measurements_checkin_frequency === "off"
-                    ? styles.active
+                    ? "active"
                     : ""
                 }
                 onClick={() =>

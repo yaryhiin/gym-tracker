@@ -6,11 +6,18 @@ import WeightProgress from "../components/WeightProgress";
 import MeasurementsProgress from "../components/MeasurementsProgress";
 import ExercisesProgress from "../components/ExercisesProgress";
 
+import type {
+  PreferredMeasurementUnit,
+  PreferredWeightUnit,
+} from "../types/profile";
+
 type ProgressProps = {
-  unit: "kg" | "lb";
+  weight: PreferredWeightUnit;
+  workout: PreferredWeightUnit;
+  measurement: PreferredMeasurementUnit;
 };
 
-const Progress = ({ unit }: ProgressProps) => {
+const Progress = ({ weight, workout, measurement }: ProgressProps) => {
   const [progressType, setProgressType] = useState<
     "weight" | "measurements" | "exercises"
   >("weight");
@@ -19,38 +26,36 @@ const Progress = ({ unit }: ProgressProps) => {
     <div className={styles.progressContainer}>
       <div className={styles.header}>
         <h1 className={styles.title}>Progress</h1>
-        <p className={styles.description}>
-          Choose the Data that you want to check
-        </p>
-        <div className={styles.toggle}>
+        <p className={styles.description}>Choose what you want to track</p>
+        <div className="toggle">
           <button
             type="button"
-            className={progressType === "weight" ? styles.active : ""}
+            className={progressType === "weight" ? "active" : ""}
             onClick={() => setProgressType("weight")}
           >
             Weight
           </button>
           <button
             type="button"
-            className={progressType === "measurements" ? styles.active : ""}
+            className={progressType === "measurements" ? "active" : ""}
             onClick={() => setProgressType("measurements")}
           >
             Measurements
           </button>
           <button
             type="button"
-            className={progressType === "exercises" ? styles.active : ""}
+            className={progressType === "exercises" ? "active" : ""}
             onClick={() => setProgressType("exercises")}
           >
             Exercises
           </button>
         </div>
       </div>
-      {progressType === "weight" && <WeightProgress unit={unit} />}
+      {progressType === "weight" && <WeightProgress unit={weight} />}
       {progressType === "measurements" && (
-        <MeasurementsProgress unit={unit === "lb" ? "in" : "cm"} />
+        <MeasurementsProgress unit={measurement} />
       )}
-      {progressType === "exercises" && <ExercisesProgress unit={unit} />}
+      {progressType === "exercises" && <ExercisesProgress unit={workout} />}
     </div>
   );
 };

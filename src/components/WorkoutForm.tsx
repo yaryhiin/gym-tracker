@@ -1,14 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import cn from "classnames";
 
 import styles from "../styles/modules/WorkoutForm.module.scss";
 
 import type { Workout, WorkoutSet } from "../types/workout";
 import type { ExerciseDB } from "../types/exercise";
+import type { PreferredWeightUnit } from "../types/profile";
 import type { Dispatch, SetStateAction } from "react";
 
+import ExecuteModal from "./ExecuteModal";
 import ChooseExerciseModal from "../components/ChooseExerciseModal";
+
 import { createLocalId } from "../services/utils";
+import { getProfile } from "../services/profiles";
+
+const MODAL_TEXT =
+  "You sure you want to delete this exercise from workout \n All sets will be lost";
 
 type WorkoutFormProps = {
   workout: Workout;
@@ -20,6 +27,10 @@ type WorkoutFormProps = {
   addExercise?: (name: string, category: string) => Promise<void>;
 };
 
+type PreviousExercise = {
+  workout_sets: WorkoutSet[];
+};
+
 const WorkoutForm = ({
   workout,
   readonly,
@@ -29,10 +40,28 @@ const WorkoutForm = ({
   addExercise,
 }: WorkoutFormProps) => {
   const [showModal, setShowModal] = useState(false);
+  const [showRemoveExerciseModal, setShowRemoveExerciseModal] = useState(false);
+  const [chosenExerciseId, setChosenExerciseId] = useState("");
+  const [preferredUnit, setPreferredUnit] = useState<PreferredWeightUnit>();
+  const [loading, setLoading] = useState(true);
 
-  type PreviousExercise = {
-    workout_sets: WorkoutSet[];
-  };
+  useEffect(() => {
+    async function loadData() {
+      setLoading(true);
+      try {
+        const data = await getProfile();
+        if (data) {
+          setPreferredUnit(data.preferred_workout_unit);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadData();
+  }, []);
 
   function formatPreviousSets(previousExercise?: PreviousExercise | null) {
     if (!previousExercise) return "No previous data";
@@ -41,6 +70,8 @@ const WorkoutForm = ({
 
     [...previousExercise.workout_sets]
       .sort((a, b) => a.set_number - b.set_number)
+      .filter((set) => set.done)
+      .filter((set) => set.reps > 0)
       .forEach((set) => {
         const reps = grouped.get(set.weight) ?? [];
         reps.push(set.reps);
@@ -50,10 +81,10 @@ const WorkoutForm = ({
     return [...grouped.entries()]
       .map(([weight, reps]) => {
         if (weight === 0) {
-          return `BW x ${reps.join(", ")}`;
+          return `BW × ${reps.join(", ")}`;
         }
 
-        return `${weight}kg x ${reps.join(", ")}`;
+        return `${preferredUnit === "lb" ? Math.round(weight * 2.20462262 * 10) / 10 : weight}${preferredUnit} x ${reps.join(", ")}`;
       })
       .join(", ");
   }
@@ -77,6 +108,24 @@ const WorkoutForm = ({
                   done: false,
                 },
               ],
+            }
+          : exercise,
+      ),
+    }));
+  }
+
+  function deleteSet(exerciseId: string, setNumber: number) {
+    if (!setWorkout) return;
+
+    setWorkout((prev) => ({
+      ...prev,
+      exercises: prev.exercises.map((exercise) =>
+        exercise.id === exerciseId
+          ? {
+              ...exercise,
+              sets: exercise.sets
+                .filter((set) => set.set_number !== setNumber)
+                .map((set, index) => ({ ...set, set_number: index + 1 })),
             }
           : exercise,
       ),
@@ -135,6 +184,24 @@ const WorkoutForm = ({
     setShowModal(false);
   }
 
+  function removeExercise(exerciseId: string) {
+    if (exerciseId === "" || !setWorkout) return;
+    setWorkout((prev) => ({
+      ...prev,
+      exercises: [
+        ...prev.exercises
+          .filter((exercise) => exercise.id !== exerciseId)
+          .map((exercise, index) => ({ ...exercise, order_index: index + 1 })),
+      ],
+    }));
+    setChosenExerciseId("");
+    setShowRemoveExerciseModal(false);
+  }
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <div className={styles.exerciseContainer}>
       {workout.exercises.map((exercise) => (
@@ -151,9 +218,9 @@ const WorkoutForm = ({
               <thead>
                 <tr>
                   <th>Set</th>
-                  <th>Weight (kg)</th>
+                  <th>Weight ({preferredUnit})</th>
                   <th>Reps</th>
-                  <th>Done</th>
+                  <th className={styles.actionsTitle}>Done</th>
                 </tr>
               </thead>
 
@@ -165,7 +232,7 @@ const WorkoutForm = ({
                       <input
                         disabled={readonly}
                         type="number"
-                        placeholder="Enter weight"
+                        placeholder="0"
                         onChange={(e) =>
                           updateSet(
                             exercise.id,
@@ -181,7 +248,7 @@ const WorkoutForm = ({
                       <input
                         disabled={readonly}
                         type="number"
-                        placeholder="Enter reps"
+                        placeholder="0"
                         onChange={(e) =>
                           updateSet(
                             exercise.id,
@@ -193,7 +260,7 @@ const WorkoutForm = ({
                         value={set.reps === 0 ? "" : set.reps}
                       />
                     </td>
-                    <td>
+                    <td className={styles.actionsColumn}>
                       <input
                         disabled={readonly}
                         type="checkbox"
@@ -207,18 +274,36 @@ const WorkoutForm = ({
                         }
                         checked={set.done}
                       />
+                      <button
+                        hidden={readonly || exercise.sets.length < 2}
+                        className={styles.deleteSet}
+                        onClick={() => deleteSet(exercise.id, set.set_number)}
+                      >
+                        ×
+                      </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
             {!readonly && (
-              <button
-                className={cn(styles.addSet, styles.button)}
-                onClick={() => addSet(exercise.id)}
-              >
-                Add Set
-              </button>
+              <div className={styles.buttons}>
+                <button
+                  className={styles.addSet}
+                  onClick={() => addSet(exercise.id)}
+                >
+                  Add Set
+                </button>
+                <button
+                  className={styles.removeExercise}
+                  onClick={() => {
+                    setShowRemoveExerciseModal(true);
+                    setChosenExerciseId(exercise.id);
+                  }}
+                >
+                  Remove Exercise
+                </button>
+              </div>
             )}
           </div>
         </div>
@@ -232,7 +317,14 @@ const WorkoutForm = ({
           Add Exercise
         </button>
       )}
-
+      {showRemoveExerciseModal && (
+        <ExecuteModal
+          text={MODAL_TEXT}
+          btnText="Delete"
+          onClose={() => setShowRemoveExerciseModal(false)}
+          onDelete={() => removeExercise(chosenExerciseId)}
+        />
+      )}
       {showModal && exercises && addExercise && (
         <ChooseExerciseModal
           exercises={exercises}

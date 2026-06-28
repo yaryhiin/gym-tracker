@@ -71,14 +71,14 @@ const Login = () => {
           <div className={styles.inputContainer}>
             <p className={styles.inputText}>Email</p>
             <input
-              className={cn(styles.input, errors.email && styles.error)}
+              className={cn(styles.input, errors.email && "error")}
               type="email"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
             {authError && (
-              <p className={cn(styles.errorMessage, styles.fullWidth)}>
+              <p className={cn("errorMessage", styles.fullWidth)}>
                 {authError}
               </p>
             )}
@@ -86,14 +86,14 @@ const Login = () => {
           <div className={styles.inputContainer}>
             <p className={styles.inputText}>Password</p>
             <input
-              className={cn(styles.input, errors.password && styles.error)}
+              className={cn(styles.input, errors.password && "error")}
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
             {authError && (
-              <p className={cn(styles.errorMessage, styles.fullWidth)}>
+              <p className={cn("errorMessage", styles.fullWidth)}>
                 {authError}
               </p>
             )}

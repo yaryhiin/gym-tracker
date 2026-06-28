@@ -7,7 +7,7 @@
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 18px;
-  padding: 16px;
+  padding: 5px 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -66,6 +66,7 @@ input {
 
 input[type="checkbox"] {
   width: auto;
+  opacity: 0.65;
 }
 
 input:focus {
@@ -74,8 +75,7 @@ input:focus {
 }
 
 .addExercise {
-  background: var(--button-bg);
-  color: var(--button-text);
+  border: 1px solid var(--button-bg);
   margin-top: 15px;
   margin-bottom: 60px;
 }
@@ -85,9 +85,48 @@ input:focus {
   background: var(--button-hover);
 }
 
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 10px;
+}
+
 .addSet {
   margin-top: 12px;
   background: transparent;
   color: var(--accent);
   border: 1px solid var(--border);
+  font-size: 15px;
+  width: 100px;
+  height: 50px;
+}
+
+.removeExercise {
+  border: 1px dashed var(--danger);
+  margin-top: 12px;
+  width: 100px;
+  height: 50px;
+}
+
+.actionsTitle {
+  text-align: left;
+}
+
+.actionsColumn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.deleteSet {
+  border: none;
+  color: var(--danger);
+  font-size: 20px;
+  margin: 0;
+  width: 30px;
+  height: 36px;
+  margin-left: 10px;
 }

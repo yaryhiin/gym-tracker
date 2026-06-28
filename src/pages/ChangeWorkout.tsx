@@ -120,9 +120,7 @@ const ChangeWorkout = () => {
   return (
     <div className={styles.workoutContainer}>
       <div className={styles.header}>
-        <button className={styles.saveBtn} onClick={handleUpdate}>
-          Save Changes
-        </button>
+        <div></div>
         <div>
           <h3 className={styles.title}>{workout?.name}</h3>
           <p className={styles.stopwatch}>
@@ -142,7 +140,12 @@ const ChangeWorkout = () => {
           onDelete={handleDelete}
         />
       )}
-      <div className={styles.buttonContainerChange}>
+      <div className={styles.buttonContainer}>
+        <button className={styles.saveBtn} onClick={handleUpdate}>
+          Save Changes
+        </button>
+      </div>
+      <div className="buttonContainer">
         <button
           className={styles.backBtn}
           onClick={() => {

@@ -15,7 +15,7 @@ table {
 
 .tableWrapper {
   width: 100%;
-  max-height: 50vh;
+  max-height: 60dvh;
   overflow-y: auto;
 }
 
@@ -29,13 +29,37 @@ thead {
 
 th,
 td {
+  font-size: 14px;
+  font-weight: normal;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: var(--card-bg);
   padding: 8px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 3px solid var(--border);
+  border-top: 1px solid var(--border);
   text-align: center;
+  cursor: pointer;
+  &:hover {
+    background-color: var(--card-hover);
+  }
+
+  &:last-child:hover {
+    background-color: var(--card-bg);
+    cursor: default;
+  }
+}
+
+.tableHeaderContent {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
 }
 
 th {
   padding: 12px 16px;
+  width: fit-content;
   font-weight: 600;
 }
 

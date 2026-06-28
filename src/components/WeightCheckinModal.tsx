@@ -58,9 +58,9 @@ const WeightCheckinModal = ({
   }
 
   return (
-    <div className={styles.modal}>
-      <div className={styles.modalContent}>
-        <h1 className={styles.heading}>Weight check-in</h1>
+    <div className="modal">
+      <div className="modalContent">
+        <h1 className="heading">Weight check-in</h1>
         <div className={styles.message}>
           <p className={styles.messageContainer}>
             {new Date().getHours()
@@ -73,16 +73,19 @@ const WeightCheckinModal = ({
           </p>
           <p className={styles.message}>What`s your weight today?</p>
         </div>
-        <p className={styles.previous}>
-          {unit === "lb"
-            ? Math.round(Number(previousData.weight) * 2.20462262 * 10) / 10
-            : previousData.weight}
-          {unit} - {previousData.date}
-        </p>
+        {previousData && (
+          <p className={styles.previous}>
+            {unit === "lb"
+              ? Math.round(Number(previousData.weight) * 2.20462262 * 10) / 10
+              : previousData.weight}
+            {unit} - {previousData.date}
+          </p>
+        )}
+
         <div className={styles.inputContainer}>
           <p className={styles.inputLabel}>New weight</p>
           <input
-            className={`${styles.input} ${errors.weight && styles.error}`}
+            className={`${styles.input} ${errors.weight && "error"}`}
             type="number"
             inputMode="decimal"
             step="0.01"
@@ -93,12 +96,12 @@ const WeightCheckinModal = ({
           />{" "}
           {unit}
           {errors.weight && (
-            <p className={`${styles.errorMessage} ${styles.fullWidth}`}>
+            <p className={`errorMessage ${styles.fullWidth}`}>
               Please put in new weight
             </p>
           )}
         </div>
-        <div className={styles.buttonContainer}>
+        <div className="buttonContainer">
           <button
             className={styles.continueBtn}
             onClick={handleCreateWeightLog}

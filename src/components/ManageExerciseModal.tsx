@@ -49,23 +49,21 @@ const ManageExerciseModal = ({
   }
 
   return (
-    <div className={styles.modal}>
-      <div className={styles.modalContent}>
-        <h2 className={styles.heading}>
+    <div className="modal">
+      <div className="modalContent">
+        <h2 className="heading">
           {exercise ? "Edit Exercise" : "Create New Exercise"}
         </h2>
-        <div className={styles.input}>
+        <div className={styles.inputContainer}>
           <input
-            className={cn(styles.input, errors.name && styles.error)}
+            className={cn(styles.input, errors.name && "error")}
             type="text"
             value={newExerciseName}
             onChange={(e) => setNewExerciseName(e.target.value)}
             placeholder="Exercise name"
           />
           {errors.name && (
-            <p className={styles.errorMessage}>
-              You need to enter exercise name
-            </p>
+            <p className="errorMessage">You need to enter exercise name</p>
           )}
         </div>
         <div className={styles.categoryContainer}>
@@ -77,8 +75,8 @@ const ManageExerciseModal = ({
                 type="button"
                 className={cn(
                   styles.categoryBtn,
-                  newExerciseCategory === category && styles.active,
-                  errors.category && styles.error,
+                  newExerciseCategory === category && "active",
+                  errors.category && "error",
                 )}
                 onClick={() => setNewExerciseCategory(category)}
               >
@@ -86,13 +84,13 @@ const ManageExerciseModal = ({
               </button>
             ))}
             {errors.category && (
-              <p className={styles.errorMessage}>
+              <p className="errorMessage">
                 You need to choose exercise category
               </p>
             )}
           </div>
         </div>
-        <div className={styles.buttons}>
+        <div className="buttonContainer">
           <button
             className={cn(styles.addBtn, "button")}
             onClick={handleSubmit}

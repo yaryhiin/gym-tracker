@@ -10,13 +10,13 @@ type MessageModalProps = {
 
 const MessageModal = ({ title, text, onClose }: MessageModalProps) => {
   return (
-    <div className={styles.modal}>
-      <div className={styles.modalContent}>
-        <h2 className={styles.heading}>{title}</h2>
+    <div className="modal">
+      <div className="modalContent">
+        <h2 className="heading">{title}</h2>
         <p style={{ whiteSpace: "pre-line" }} className={styles.message}>
           {text}
         </p>
-        <div className={styles.buttons}>
+        <div className="buttonContainer">
           <button
             className={cn(styles.backBtn, "button")}
             onClick={() => onClose()}

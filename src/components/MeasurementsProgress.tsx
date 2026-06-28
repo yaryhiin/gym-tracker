@@ -63,11 +63,6 @@ const MeasurementsProgress = ({ unit }: MeasurementsProgressProps) => {
         unit === "in"
           ? Math.round((data.value_cm / 2.54) * 10) / 10
           : data.value_cm,
-      label: `${
-        unit === "in"
-          ? Math.round((data.value_cm / 2.54) * 10) / 10
-          : data.value_cm
-      } ${unit}`,
     }));
 
     const entries = chosenData.length;
@@ -91,39 +86,57 @@ const MeasurementsProgress = ({ unit }: MeasurementsProgressProps) => {
     <div className={styles.mainContainer}>
       <div className={styles.header}>
         <h2 className={styles.title}>Measurements</h2>
-        <p>Choose measurement</p>
-        {measurementTypes && measurementTypes.length > 0 ? (
-          <select
-            value={chosenType?.id}
-            onChange={(e) => {
-              const selectedType = measurementTypes.find(
-                (type) => type.id === e.target.value,
-              );
+        <div className={styles.selectGroup}>
+          <label>Choose measurement</label>
+          {measurementTypes && measurementTypes.length > 0 ? (
+            <select
+              value={chosenType?.id}
+              onChange={(e) => {
+                const selectedType = measurementTypes.find(
+                  (type) => type.id === e.target.value,
+                );
 
-              setChosenType(selectedType);
-            }}
-          >
-            {measurementTypes?.map((type) => (
-              <option key={type.id} value={type.id}>
-                {type.name}
-              </option>
-            ))}
-          </select>
-        ) : (
-          <p>You dont have any data saved</p>
-        )}
+                setChosenType(selectedType);
+              }}
+            >
+              {measurementTypes?.map((type) => (
+                <option key={type.id} value={type.id}>
+                  {type.name}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <p>You dont have any data saved</p>
+          )}
+        </div>
       </div>
-      <Chart chartData={filteredData} yPadding={2} />
+      <Chart
+        chartData={filteredData}
+        yPadding={2}
+        label={chosenType?.name ?? "Measurement"}
+        unit={unit}
+      />
       <div className={styles.briefInfo}>
-        <p>
-          Current: <b>{briefData?.current}</b>
-          {unit}
-        </p>
-        <p>
-          Change: <b>{briefData?.change}</b>
-          {unit}
-        </p>
-        <p>Entries: {briefData?.entries}</p>
+        <div>
+          <p>Current:</p>
+          <p>
+            {briefData?.current}
+            {unit}
+          </p>
+        </div>
+
+        <div>
+          <p>Change:</p>
+          <p>
+            {briefData && briefData.change >= 0 && "+"}
+            {briefData?.change}
+            {unit}
+          </p>
+        </div>
+        <div>
+          <p>Entries:</p>
+          <p>{briefData?.entries}</p>
+        </div>
       </div>
     </div>
   );

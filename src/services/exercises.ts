@@ -44,7 +44,7 @@ export async function getExercisesLogs() {
     `,
     )
     .eq("user_id", userId)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: true });
 
   if (error) throw error;
 

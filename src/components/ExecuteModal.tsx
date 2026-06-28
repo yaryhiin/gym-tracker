@@ -16,13 +16,13 @@ const ExecuteModal = ({
   btnText,
 }: ExecuteModalProps) => {
   return (
-    <div className={styles.modal}>
-      <div className={styles.modalContent}>
-        <h2 className={styles.heading}>Confirm Action</h2>
+    <div className="modal">
+      <div className="modalContent">
+        <h2 className="heading">Confirm Action</h2>
         <p style={{ whiteSpace: "pre-line" }} className={styles.message}>
           {text}
         </p>
-        <div className={styles.buttons}>
+        <div className="buttonContainer">
           <button
             className={cn(styles.deleteBtn, "button")}
             onClick={() => onDelete()}

@@ -48,7 +48,14 @@ const Routines = () => {
     <div className={styles.routinesContainer}>
       <div className={styles.header}>
         <h1 className={styles.title}>Routines</h1>
-        <p>Manage your workout routines</p>
+        {routines.length > 0 ? (
+          <p>Manage your workout routines</p>
+        ) : (
+          <div className="emptyState">
+            <p>No routines yet</p>
+            <p>Create your first routine</p>
+          </div>
+        )}
       </div>
       <div className={styles.routinesList}>
         {routines.map((routine) => (

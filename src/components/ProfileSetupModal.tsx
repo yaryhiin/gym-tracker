@@ -2,20 +2,33 @@ import { useState } from "react";
 
 import styles from "../styles/modules/Modal.module.scss";
 
-import type { PreferredUnit } from "../types/profile";
+import type {
+  PreferredWeightUnit,
+  PreferredMeasurementUnit,
+} from "../types/profile";
 
 type ProfileSetupModal = {
-  onCreate: (name: string, preferedUnit: PreferredUnit) => void;
+  onCreate: (
+    name: string,
+    preferedWeightUnit: PreferredWeightUnit,
+    preferredWorkoutUnit: PreferredWeightUnit,
+    prefferedMeasurementUnit: PreferredMeasurementUnit,
+  ) => void;
 };
 
 const ProfileSetupModal = ({ onCreate }: ProfileSetupModal) => {
   const [name, setName] = useState("");
-  const [preferredUnit, setPreferredUnit] = useState<PreferredUnit>("kg");
+  const [preferredWeightUnit, setPreferredWeightUnit] =
+    useState<PreferredWeightUnit>("kg");
+  const [preferredWorkoutUnit, setPreferredWorkoutUnit] =
+    useState<PreferredWeightUnit>("kg");
+  const [preferredMeasurementUnit, setPreferredMeasurementUnit] =
+    useState<PreferredMeasurementUnit>("cm");
 
   return (
-    <div className={styles.modal}>
-      <div className={styles.modalContent}>
-        <h2 className={styles.heading}>Welcome</h2>
+    <div className="modal">
+      <div className="modalContent">
+        <h2 className="heading">Welcome</h2>
         <p className={styles.message}>Please setup your profile</p>
         <div className={styles.inputContainer}>
           <p className={styles.inputLabel}>Name:</p>
@@ -28,35 +41,89 @@ const ProfileSetupModal = ({ onCreate }: ProfileSetupModal) => {
           />
         </div>
         <div className={styles.inputContainer}>
-          <p className={styles.inputLabel}>Preferred units</p>
-          <div className={styles.toggle}>
+          <p className={styles.inputLabel}>Preferred weight unit</p>
+          <div className="toggle">
             <button
               type="button"
-              className={preferredUnit === "kg" ? styles.active : ""}
-              onClick={() => setPreferredUnit("kg")}
+              className={preferredWeightUnit === "kg" ? "active" : ""}
+              onClick={() => setPreferredWeightUnit("kg")}
             >
               kg
             </button>
 
             <button
               type="button"
-              className={preferredUnit === "lb" ? styles.active : ""}
-              onClick={() => setPreferredUnit("lb")}
+              className={preferredWeightUnit === "lb" ? "active" : ""}
+              onClick={() => setPreferredWeightUnit("lb")}
             >
               lb
             </button>
           </div>
         </div>
-        <div className={styles.buttonContainer}>
+        <div className={styles.inputContainer}>
+          <p className={styles.inputLabel}>Preferred measurement unit</p>
+          <div className="toggle">
+            <button
+              type="button"
+              className={preferredMeasurementUnit === "cm" ? "active" : ""}
+              onClick={() => setPreferredMeasurementUnit("cm")}
+            >
+              cm
+            </button>
+
+            <button
+              type="button"
+              className={preferredMeasurementUnit === "in" ? "active" : ""}
+              onClick={() => setPreferredMeasurementUnit("in")}
+            >
+              in
+            </button>
+          </div>
+        </div>
+        <div className={styles.inputContainer}>
+          <p className={styles.inputLabel}>Preferred workout weight unit</p>
+          <div className="toggle">
+            <button
+              type="button"
+              className={preferredWorkoutUnit === "kg" ? "active" : ""}
+              onClick={() => setPreferredWorkoutUnit("kg")}
+            >
+              kg
+            </button>
+
+            <button
+              type="button"
+              className={preferredWorkoutUnit === "lb" ? "active" : ""}
+              onClick={() => setPreferredWorkoutUnit("lb")}
+            >
+              lb
+            </button>
+          </div>
+        </div>
+        <div className="buttonContainer">
           <button
             className={styles.skipBtn}
-            onClick={() => onCreate(name, preferredUnit)}
+            onClick={() =>
+              onCreate(
+                name,
+                preferredWeightUnit,
+                preferredWorkoutUnit,
+                preferredMeasurementUnit,
+              )
+            }
           >
             Skip for now
           </button>
           <button
             className={styles.continueBtn}
-            onClick={() => onCreate(name, preferredUnit)}
+            onClick={() =>
+              onCreate(
+                name,
+                preferredWeightUnit,
+                preferredWorkoutUnit,
+                preferredMeasurementUnit,
+              )
+            }
           >
             Continue
           </button>

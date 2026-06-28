@@ -77,7 +77,6 @@ const ChangeWorkout = () => {
         </button>
         <div>
           <h3 className={styles.title}>{workout?.name}</h3>
-
           <p className={styles.stopwatch}>
             {formatTime(workout?.duration_seconds)}
           </p>

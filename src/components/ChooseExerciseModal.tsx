@@ -1,13 +1,14 @@
 import cn from "classnames";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-import styles from "../styles//modules/ChooseExerciseModal.module.scss";
+import styles from "../styles/modules/ChooseExerciseModal.module.scss";
 
 import type { ExerciseDB } from "../types/exercise";
 
 import CreateExerciseModal from "./ManageExerciseModal";
 
 type ChooseExerciseModalProps = {
+  initialSelectedExerciseId?: string;
   exercises: ExerciseDB[];
   onClose: () => void;
   addExercise: (name: string, category: string) => void;
@@ -15,6 +16,7 @@ type ChooseExerciseModalProps = {
 };
 
 const ChooseExerciseModal = ({
+  initialSelectedExerciseId,
   exercises,
   onClose,
   addExercise,
@@ -26,17 +28,26 @@ const ChooseExerciseModal = ({
   const [chosenExerciseCategory, setChosenExerciseCategory] = useState("");
   const [chosenExercise, setChosenExercise] = useState<ExerciseDB>();
 
+  useEffect(() => {
+    if (!initialSelectedExerciseId) return;
+    setChosenExercise(
+      exercises.find((exercise) => exercise.id === initialSelectedExerciseId),
+    );
+  }, []);
+
   const [showModal, setShowModal] = useState(false);
   return (
-    <div className={styles.modal}>
-      <div className={styles.modalContent}>
-        <h2 className={styles.heading}>Choose Exercise</h2>
+    <div className="modal">
+      <div className="modalContent">
+        <h2 className="heading">
+          {initialSelectedExerciseId ? "Replace Exercise" : "Choose Exercise"}
+        </h2>
         <div className={styles.categoryContainer}>
           <p>Filter by Category</p>
           <div className={styles.categories}>
             <button
               type="button"
-              className={`${styles.categoryBtn} ${chosenExerciseCategory === "" && styles.active}`}
+              className={`${styles.categoryBtn} ${chosenExerciseCategory === "" && "active"}`}
               onClick={() => setChosenExerciseCategory("")}
             >
               All
@@ -45,7 +56,7 @@ const ChooseExerciseModal = ({
               <button
                 key={category}
                 type="button"
-                className={`${styles.categoryBtn} ${chosenExerciseCategory === category && styles.active}`}
+                className={`${styles.categoryBtn} ${chosenExerciseCategory === category ? "active" : ""}`}
                 onClick={() => setChosenExerciseCategory(category)}
               >
                 {category}
@@ -81,9 +92,18 @@ const ChooseExerciseModal = ({
                 ))
             )}
           </div>
-          <p className={styles.hint}>
-            Selected exercise: {chosenExercise?.name}
-          </p>
+          <div className={styles.hint}>
+            <p className={styles.hint}>Selected exercise:</p>
+            <p
+              className={
+                chosenExercise
+                  ? styles.selectedExerciseName
+                  : styles.selectedExerciseEmpty
+              }
+            >
+              {chosenExercise ? chosenExercise.name : "Tap an exercise above"}
+            </p>
+          </div>
         </div>
         <button
           className={styles.createExerciseBtn}
@@ -91,14 +111,14 @@ const ChooseExerciseModal = ({
         >
           + Create Exercise
         </button>
-        <div className={styles.buttons}>
+        <div className="buttonContainer">
           <button
             className={cn(styles.addBtn, "button")}
             onClick={() => {
               if (chosenExercise) chooseExercise(chosenExercise);
             }}
           >
-            Add
+            {initialSelectedExerciseId ? "Save Changes" : "Add"}
           </button>
           <button className={cn(styles.backBtn, "button")} onClick={onClose}>
             Back

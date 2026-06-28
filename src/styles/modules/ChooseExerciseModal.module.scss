@@ -1,64 +1,8 @@
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1001;
-  text-align: center;
-}
-
-.modalContent {
-  background-color: var(--bg);
-  border: 1px solid var(--border);
-  padding: 25px;
-  border-radius: 8px;
-  min-width: 300px;
-  max-width: 400px;
-  height: 90dvh;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
-}
-
-.heading {
-  margin: 0;
-  font-size: 32px;
-}
-
-.modalContent .buttons {
-  display: flex;
-  justify-content: center;
-  gap: 25px;
-}
-
-.addBtn,
-.backBtn,
-.deleteBtn {
-  color: var(--text);
-  width: 80px;
-}
-
 .addBtn {
   background-color: var(--accent);
 
   &:hover {
-    background-color: var(--save-btn-hover-bg);
-  }
-}
-
-.backBtn {
-  background-color: var(--bg-secondary);
-  border: 1px solid var(--border);
-  &:hover {
-    background-color: var(--back-btn-hover-bg);
+    background-color: var(--accent-hover);
   }
 }
 
@@ -78,12 +22,12 @@
 
 .categories {
   display: grid;
-  grid-template-columns: auto auto auto auto;
+  grid-template-columns: auto auto auto;
   gap: 8px;
 }
 
 .categoryBtn {
-  width: 75px;
+  width: 85px;
   height: 35px;
   padding: 8px 10px;
   border-radius: 50px;
@@ -91,12 +35,6 @@
   background: var(--card);
   color: var(--text-secondary);
   font-weight: 600;
-}
-
-.active {
-  background: var(--accent);
-  color: var(--button-text);
-  border-color: var(--accent);
 }
 
 .exerciseContainer {
@@ -119,6 +57,27 @@
   gap: 8px;
   max-height: 360px;
   overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.exerciseList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.exerciseList::-webkit-scrollbar-thumb {
+  background: #64748b;
+  border-radius: 10px;
+}
+
+.selectedExerciseEmpty {
+  opacity: 0.6;
+  font-style: italic;
+  margin: 0;
+}
+
+.selectedExerciseName {
+  font-weight: 700;
+  margin: 0;
 }
 
 .exerciseElement {
@@ -143,12 +102,12 @@
 }
 
 .exerciseElement:hover {
-  background: var(--card-hover);
+  background: var(--secondary-bg);
 }
 
 .selected {
   border-color: #4f8cff;
-  background: #172033;
+  background: var(--secondary-bg);
 }
 
 .exerciseCategory {

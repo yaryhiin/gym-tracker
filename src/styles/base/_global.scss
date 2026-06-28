@@ -12,4 +12,106 @@ button {
   background-color: var(--bg--secondary);
   color: var(--text);
   border: 1px solid var(--border);
+
+  &:hover {
+    background-color: var(--card);
+  }
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100dvw;
+  height: 100dvh;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+  text-align: center;
+}
+
+.modalContent {
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  padding: 15px 20px;
+  border-radius: 8px;
+  min-width: 300px;
+  max-width: 350px;
+  max-height: 95dvh;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.heading {
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.toggle {
+  background-color: var(--card);
+  button {
+    width: 90px;
+    height: 45px;
+    padding: 6px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    border-radius: 0;
+
+    &:first-child {
+      border-radius: 8px 0 0 8px;
+    }
+    &:last-child {
+      border-radius: 0 8px 8px 0;
+    }
+    transition:
+      background 320ms,
+      transform 320ms;
+  }
+
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  width: fit-content;
+}
+
+button.active {
+  background-color: var(--accent);
+  color: var(--button-text);
+}
+
+.error {
+  border: 1px solid var(--danger);
+}
+
+.errorMessage {
+  color: var(--danger);
+  margin: 3px;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 40px;
+}
+
+.emptyState {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  p {
+    font-size: 18px;
+    margin: 5px;
+  }
 }

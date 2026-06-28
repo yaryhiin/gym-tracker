@@ -54,8 +54,9 @@ const SignUp = () => {
     if (!password) newErrors.password = true;
     if (password.length < 6) {
       setAuthError("Password must be at least 6 characters");
-      setErrors((prev) => ({ ...prev, password: true, confirmPassword: true }));
-      return;
+      newErrors.password = true;
+      newErrors.confirmPassword = true;
+      console.log(newErrors.password);
     }
 
     if (Object.values(newErrors).some(Boolean)) {
@@ -100,7 +101,7 @@ const SignUp = () => {
             <div className={styles.inputContainer}>
               <p className={styles.inputText}>Email</p>
               <input
-                className={cn(styles.input, errors.email && styles.error)}
+                className={cn(styles.input, errors.email && "error")}
                 type="email"
                 placeholder="Email"
                 value={email}
@@ -110,28 +111,24 @@ const SignUp = () => {
             <div className={styles.inputContainer}>
               <p className={styles.inputText}>Password</p>
               <input
-                className={cn(styles.input, errors.password && styles.error)}
+                className={cn(styles.input, errors.password && "error")}
                 type="password"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+              {authError && <p className="errorMessage">{authError}</p>}
             </div>
             <div className={cn(styles.inputContainer, styles.fullWidth)}>
               <p className={styles.inputText}>Confirm Password</p>
               <input
-                className={cn(
-                  styles.input,
-                  errors.confirmPassword && styles.error,
-                )}
+                className={cn(styles.input, errors.confirmPassword && "error")}
                 type="password"
                 placeholder="Confirm Password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
-              {authError && (
-                <p className={cn(styles.errorMessage)}>{authError}</p>
-              )}
+              {authError && <p className="errorMessage">{authError}</p>}
             </div>
             {showModal && (
               <MessageModal

@@ -27,7 +27,12 @@ import ProfileSetupModal from "./components/ProfileSetupModal";
 import WeightCheckinModal from "./components/WeightCheckinModal";
 import MeasurementsCheckinModal from "./components/MeasurementsCheckinModal";
 
-import type { PreferredUnit, Profile, ProfileDB } from "./types/profile";
+import type {
+  PreferredWeightUnit,
+  PreferredMeasurementUnit,
+  Profile,
+  ProfileDB,
+} from "./types/profile";
 
 import { getProfile, createProfile, updateProfile } from "./services/profiles";
 import { getLatestWeightLog } from "./services/weightLogs";
@@ -181,9 +186,16 @@ function App() {
 
   async function handleCreateProfile(
     name: string,
-    preferredUnit: PreferredUnit,
+    preferredWeightUnit: PreferredWeightUnit,
+    preferredWorkoutUnit: PreferredWeightUnit,
+    preferredMeasurementUnit: PreferredMeasurementUnit,
   ) {
-    const profileData = await createProfile(name, preferredUnit);
+    const profileData = await createProfile(
+      name,
+      preferredWeightUnit,
+      preferredWorkoutUnit,
+      preferredMeasurementUnit,
+    );
     setProfile(profileData);
     setShowProfileSetup(false);
   }
@@ -269,7 +281,13 @@ function App() {
 
                 <Route
                   path="/progress"
-                  element={<Progress unit={profile.preferred_unit} />}
+                  element={
+                    <Progress
+                      weight={profile.preferred_weight_unit}
+                      workout={profile.preferred_workout_unit}
+                      measurement={profile.preferred_measurement_unit}
+                    />
+                  }
                 />
               </Route>
             )
@@ -280,7 +298,7 @@ function App() {
       {showWeightCheckinModal && profile && (
         <WeightCheckinModal
           name={profile.name}
-          unit={profile.preferred_unit}
+          unit={profile.preferred_weight_unit}
           onSkip={() => {
             localStorage.setItem(
               WEIGHT_CHECKIN_SKIPPED_DATE_KEY,
@@ -294,7 +312,7 @@ function App() {
       {showMeasurementsCheckinModal && profile && (
         <MeasurementsCheckinModal
           name={profile.name}
-          unit={profile?.preferred_unit === "kg" ? "cm" : "in"}
+          unit={profile?.preferred_measurement_unit}
           onSkip={() => {
             localStorage.setItem(
               MEASUREMENTS_CHECKIN_SKIPPED_DATE_KEY,

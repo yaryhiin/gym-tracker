@@ -28,11 +28,6 @@ const WeightProgress = ({ unit }: WeightProgressProps) => {
             unit === "lb"
               ? Math.round(log.weight_kg * 2.20462262 * 10) / 10
               : log.weight_kg,
-          label: `${
-            unit === "lb"
-              ? Math.round(log.weight_kg * 2.20462262 * 10) / 10
-              : log.weight_kg
-          } ${unit}`,
         }));
 
         const entries = data.length;
@@ -67,17 +62,32 @@ const WeightProgress = ({ unit }: WeightProgressProps) => {
       <div className={styles.header}>
         <h2 className={styles.title}>Body Weight</h2>
       </div>
-      <Chart chartData={weightData} yPadding={5} />
+      <Chart
+        chartData={weightData}
+        yPadding={5}
+        label="Body Weight"
+        unit={unit}
+      />
       <div className={styles.briefInfo}>
-        <p>
-          Current: <b>{briefData?.current}</b>
-          {unit}
-        </p>
-        <p>
-          Change: <b>{briefData?.change}</b>
-          {unit}
-        </p>
-        <p>Entries: {briefData?.entries}</p>
+        <div>
+          <p>Current:</p>
+          <p>
+            {briefData?.current}
+            {unit}
+          </p>
+        </div>
+        <div>
+          <p>Change:</p>
+          <p>
+            {briefData && briefData.change >= 0 && "+"}
+            {briefData?.change}
+            {unit}
+          </p>
+        </div>
+        <div>
+          <p>Entries:</p>
+          <p>{briefData?.entries}</p>
+        </div>
       </div>
     </div>
   );

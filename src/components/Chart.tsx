@@ -20,11 +20,13 @@ function parseLocalDate(dateString: string) {
 type ChartProps = {
   chartData: ChartData[];
   yPadding: number;
+  label: string;
+  unit: string;
 };
 
 type Range = "1w" | "1m" | "3m" | "all";
 
-const Chart = ({ chartData, yPadding }: ChartProps) => {
+const Chart = ({ chartData, yPadding, label, unit }: ChartProps) => {
   const [range, setRange] = useState<Range>("all");
   const [filteredData, setFilteredData] = useState<ChartData[]>();
 
@@ -55,7 +57,16 @@ const Chart = ({ chartData, yPadding }: ChartProps) => {
       <div className={styles.chart}>
         <ResponsiveContainer width="100%" height={260}>
           <LineChart data={filteredData}>
-            <XAxis dataKey="date" />
+            <XAxis
+              dataKey="date"
+              tickFormatter={(date) => {
+                return new Date(date).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                });
+              }}
+              minTickGap={25}
+            />
             <YAxis
               domain={[`dataMin - ${yPadding}`, `dataMax + ${yPadding}`]}
               tick={{ fill: "var(--text-secondary)", fontSize: 12 }}
@@ -72,6 +83,14 @@ const Chart = ({ chartData, yPadding }: ChartProps) => {
               labelStyle={{
                 color: "var(--text)",
               }}
+              labelFormatter={(date) =>
+                new Date(date).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })
+              }
+              formatter={(value) => [`${value}${unit}`, label]}
             />
             <Line type="monotone" dataKey="value" />
           </LineChart>

@@ -64,7 +64,20 @@ const Exercises = () => {
     <div className={styles.exercisesContainer}>
       <div className={styles.header}>
         <h1 className={styles.title}>Exercises</h1>
-        <p>Manage your exercises</p>
+        {exercises.length > 0 ? (
+          <p>Manage your exercises</p>
+        ) : (
+          <div className="emptyState">
+            <p>No exercises yet</p>
+            <p>Create your first exercise</p>
+          </div>
+        )}
+        <button
+          className={styles.createExerciseBtn}
+          onClick={() => setShowCreateModal(true)}
+        >
+          + Create Exercise
+        </button>
       </div>
       <div className={styles.exercisesList}>
         {exercises.map((exercise) => (
@@ -96,14 +109,7 @@ const Exercises = () => {
           </div>
         ))}
       </div>
-      <div className={styles.buttonContainer}>
-        <button
-          className={styles.createExerciseBtn}
-          onClick={() => setShowCreateModal(true)}
-        >
-          + Create Exercise
-        </button>
-      </div>
+
       {showCreateModal && (
         <ManageExerciseModal
           onClose={() => setShowCreateModal(false)}

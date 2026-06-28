@@ -9,7 +9,9 @@ import type { WorkoutDB } from "../types/workout";
 import { getWorkoutsHistory } from "../services/workouts";
 import { getRoutines } from "../services/routines";
 
-import { formatDate, formatTime } from "../services/utils";
+import { formatDate, formatDuration } from "../services/utils";
+
+import ChooseRoutineModal from "../components/ChooseRoutineModal";
 
 type HomeProps = {
   name: string;
@@ -21,6 +23,8 @@ const Home = ({ name }: HomeProps) => {
   const [workouts, setWorkouts] = useState<WorkoutDB[]>([]);
   const [routines, setRoutines] = useState<RoutineDB[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const [showChooseRoutineModal, setShowChooseRoutineModal] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -55,32 +59,18 @@ const Home = ({ name }: HomeProps) => {
               : "Good evening"}
         , {name}
       </h1>
-      <div className={styles.routinesContainer}>
-        <h2 className={styles.routinesTitle}>Choose Routine:</h2>
-        <div className={styles.routinesList}>
-          {routines.map((routine) => (
-            <button
-              className={styles.routineElement}
-              key={routine.id}
-              onClick={() => navigate(`/workout/routine/${routine.id}`)}
-            >
-              {routine.name}
-            </button>
-          ))}
-          <button
-            className={styles.routineElement}
-            onClick={() => navigate("/workout")}
-          >
-            Custom Workout
-          </button>
-          <button
-            className={styles.routineElement}
-            onClick={() => navigate("/routines/new")}
-          >
-            + Create Routine
-          </button>
-        </div>
-      </div>
+      <button
+        className={styles.startBtn}
+        onClick={() => setShowChooseRoutineModal(true)}
+      >
+        Start Workout
+      </button>
+      {showChooseRoutineModal && (
+        <ChooseRoutineModal
+          routines={routines}
+          onClose={() => setShowChooseRoutineModal(false)}
+        />
+      )}
       <div className={styles.history}>
         <h2 className={styles.title}>Recent workouts</h2>
 
@@ -101,13 +91,13 @@ const Home = ({ name }: HomeProps) => {
                 {workout.name} - {formatDate(workout.created_at)}
               </p>
               <div className={styles.descWorkout}>
-                <p>Duration: {formatTime(workout.duration_seconds)}</p>
+                <p>Duration: {formatDuration(workout.duration_seconds)}</p>
               </div>
             </div>
           ))}
 
         <button
-          className={styles.routineElement}
+          className={styles.viewAllBtn}
           onClick={() => navigate("/history")}
         >
           View All

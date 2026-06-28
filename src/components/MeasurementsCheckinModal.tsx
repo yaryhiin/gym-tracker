@@ -144,9 +144,9 @@ const MeasurementsCheckinModal = ({
     return <p>Loading...</p>;
   }
   return (
-    <div className={styles.modal}>
-      <div className={styles.modalContent}>
-        <h1 className={styles.heading}>Measurements {<br></br>} check-in</h1>
+    <div className="modal">
+      <div className="modalContent">
+        <h1 className="heading">Measurements {<br></br>} check-in</h1>
         <div className={styles.message}>
           <p className={styles.messageContainer}>
             {new Date().getHours()
@@ -194,24 +194,18 @@ const MeasurementsCheckinModal = ({
                   ✕
                 </button>
               </div>
-              {/* <p className={styles.message}>
-                {previousMeasurements[key as keyof typeof previousMeasurements]}
-                {unit} - {previousDate}
-              </p> */}
             </div>
           ))}
           {isAddingMeasurement ? (
             <div className={`${styles.addType} ${styles.inputContainer}`}>
               <input
-                className={error ? styles.error : ""}
+                className={error ? "error" : ""}
                 type="text"
                 placeholder="e.g. Neck, Forearm"
                 value={newMeasurementName}
                 onChange={(e) => setNewMeasurementName(e.target.value)}
               ></input>
-              {error && (
-                <p className={styles.errorMessage}>Please enter a name</p>
-              )}
+              {error && <p className="errorMessage">Please enter a name</p>}
 
               <button
                 className={styles.addTypeBtn}
@@ -245,7 +239,7 @@ const MeasurementsCheckinModal = ({
             onDelete={handleDeleteType}
           />
         )}
-        <div className={styles.buttonContainer}>
+        <div className="buttonContainer">
           <button
             className={styles.continueBtn}
             onClick={handleCreateMeasurementLog}
