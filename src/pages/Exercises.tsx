@@ -6,6 +6,8 @@ import type { ExerciseDB } from "../types/exercise";
 
 import ManageExerciseModal from "../components/ManageExerciseModal";
 import ExecuteModal from "../components/ExecuteModal";
+import InfoModal from "../components/InfoModal";
+
 import {
   createExercise,
   getExercises,
@@ -21,6 +23,10 @@ const Exercises = () => {
     exercises[0],
   );
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -43,18 +49,63 @@ const Exercises = () => {
   }
 
   async function addExercise(name: string, category: string) {
-    await createExercise({ name, category });
-    await loadData();
+    setSaving(true);
+    try {
+      await createExercise({ name, category });
+      await loadData();
+      setShowSuccessModal(true);
+      setTimeout(() => {
+        setShowSuccessModal(false);
+      }, 1000);
+    } catch (error) {
+      console.error("Error adding exercise:", error);
+      setShowErrorModal(true);
+      setTimeout(() => {
+        setShowErrorModal(false);
+      }, 3000);
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function handleUpdateExercise(name: string, category: string) {
-    await updateExercise(name, category, chosenExercise.id);
-    await loadData();
+    setSaving(true);
+    try {
+      await updateExercise(name, category, chosenExercise.id);
+      await loadData();
+      setShowSuccessModal(true);
+      setTimeout(() => {
+        setShowSuccessModal(false);
+      }, 1000);
+    } catch (error) {
+      console.error("Error updating exercise:", error);
+      setShowErrorModal(true);
+      setTimeout(() => {
+        setShowErrorModal(false);
+      }, 3000);
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function handleDeleteExercise(exercise: ExerciseDB) {
-    await deleteExercise(exercise.id);
-    setExercises((prev) => prev.filter((ex) => ex.id != exercise.id));
+    setDeleting(true);
+    try {
+      await deleteExercise(exercise.id);
+      setExercises((prev) => prev.filter((ex) => ex.id != exercise.id));
+      setShowSuccessModal(true);
+      setTimeout(() => {
+        setShowSuccessModal(false);
+      }, 1000);
+    } catch (error) {
+      console.error("Error deleting exercise:", error);
+      setShowErrorModal(true);
+      setTimeout(() => {
+        setShowErrorModal(false);
+      }, 3000);
+    } finally {
+      setDeleting(false);
+    }
   }
 
   if (loading) {
@@ -134,6 +185,10 @@ const Exercises = () => {
           }}
         />
       )}
+      {saving && <InfoModal type={"saving"} />}
+      {deleting && <InfoModal type={"deleting"} />}
+      {showErrorModal && <InfoModal type={"error"} />}
+      {showSuccessModal && <InfoModal type={"success"} />}
     </div>
   );
 };

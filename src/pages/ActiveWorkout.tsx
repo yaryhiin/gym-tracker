@@ -320,7 +320,7 @@ const ActiveWorkout = () => {
           Finish Workout
         </button>
       </div>
-      {saving && <InfoModal type={"loading"} />}
+      {saving && <InfoModal type={"saving"} />}
       {showErrorModal && <InfoModal type={"error"} />}
       {showSuccessModal && <InfoModal type={"success"} />}
     </div>

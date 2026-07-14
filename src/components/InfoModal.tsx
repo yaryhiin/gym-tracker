@@ -1,12 +1,6 @@
 import styles from "../styles/modules/InfoModal.module.scss";
 
 const INFO_MODAL_MESSAGES = {
-  loading: {
-    icon: "⏳",
-    title: "Loading",
-    text: "Please wait...",
-  },
-
   saving: {
     icon: "💾",
     title: "Saving",

@@ -42,7 +42,7 @@ const ChooseRoutineModal = ({ routines, onClose }: ChooseRoutineModal) => {
             className={`${styles.backBtn} button`}
             onClick={() => onClose()}
           >
-            Back
+            Close
           </button>
         </div>
       </div>

@@ -13,24 +13,25 @@ import {
 import { createLocalId } from "../services/utils";
 
 import ExecuteModal from "./ExecuteModal";
+import InfoModal from "../components/InfoModal";
 
 type MeasurementsCheckinModalProps = {
   unit: "cm" | "in";
-  // previousMeasurements: MeasurementTypeDB[];
-  // previousDate: string;
   name: string;
   onSkip: () => void;
 };
 
 const MeasurementsCheckinModal = ({
   unit,
-  // previousMeasurements,
-  // previousDate,
   name,
   onSkip,
 }: MeasurementsCheckinModalProps) => {
   const [newMeasurements, setNewMeasurements] = useState<MeasurementType[]>([]);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [error, setError] = useState(false);
   const [chosenType, setChosenType] = useState<MeasurementType>();
 
@@ -70,7 +71,7 @@ const MeasurementsCheckinModal = ({
       setError(true);
       return;
     }
-
+    setSaving(true);
     try {
       setAddingMeasurement(true);
       const createdType = await createMeasurementType(trimmedName);
@@ -83,16 +84,26 @@ const MeasurementsCheckinModal = ({
           value: "",
         },
       ]);
+      setShowSuccessModal(true);
+      setTimeout(() => {
+        setShowSuccessModal(false);
+      }, 1000);
       setNewMeasurementName("");
       setIsAddingMeasurement(false);
     } catch (error) {
       console.error("Error creating measurement type:", error);
+      setShowErrorModal(true);
+      setTimeout(() => {
+        setShowErrorModal(false);
+      }, 3000);
     } finally {
       setAddingMeasurement(false);
+      setSaving(false);
     }
   }
 
   async function handleDeleteType() {
+    setDeleting(true);
     try {
       if (!chosenType) return;
       const deletedType = await deleteMeasurementType(
@@ -102,10 +113,19 @@ const MeasurementsCheckinModal = ({
       setNewMeasurements((prev) =>
         prev.filter((measurement) => measurement.id != chosenType.id),
       );
+      setShowSuccessModal(true);
+      setTimeout(() => {
+        setShowSuccessModal(false);
+      }, 1000);
     } catch (error) {
       console.error("Error deleting type:", error);
+      setShowErrorModal(true);
+      setTimeout(() => {
+        setShowErrorModal(false);
+      }, 3000);
     } finally {
       setShowModal(false);
+      setDeleting(false);
     }
   }
 
@@ -124,12 +144,21 @@ const MeasurementsCheckinModal = ({
           measured_at: new Date().toISOString().split("T")[0],
         };
       });
+    setSaving(true);
     try {
       await createMeasurementLog(formatedMeasurements);
+      setShowSuccessModal(true);
+      setTimeout(() => {
+        onSkip();
+      }, 1000);
     } catch (error) {
       console.error("Error creating weight log:", error);
+      setShowErrorModal(true);
+      setTimeout(() => {
+        setShowErrorModal(false);
+      }, 3000);
     } finally {
-      onSkip();
+      setSaving(false);
     }
   }
 
@@ -251,6 +280,10 @@ const MeasurementsCheckinModal = ({
           </button>
         </div>
       </div>
+      {saving && <InfoModal type={"saving"} />}
+      {deleting && <InfoModal type={"deleting"} />}
+      {showErrorModal && <InfoModal type={"error"} />}
+      {showSuccessModal && <InfoModal type={"success"} />}
     </div>
   );
 };

@@ -9,6 +9,7 @@ import type { ProfileDB, Profile } from "../types/profile";
 import { supabase } from "../supabase";
 
 import ExecuteModal from "../components/ExecuteModal";
+import InfoModal from "../components/InfoModal";
 
 type ProfilePageProps = {
   toggleTheme: () => void;
@@ -26,6 +27,10 @@ const ProfilePage = ({
   handleUpdateProfile,
 }: ProfilePageProps) => {
   const navigate = useNavigate();
+
+  const [saving, setSaving] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const [profileForm, setProfileForm] = useState<Profile>({
     name: profile.name || "",
@@ -68,8 +73,22 @@ const ProfilePage = ({
   }
 
   async function handleSave() {
-    await handleUpdateProfile(profileForm);
-    navigate("/");
+    setSaving(true);
+    try {
+      await handleUpdateProfile(profileForm);
+      setShowSuccessModal(true);
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      setShowErrorModal(true);
+      setTimeout(() => {
+        setShowErrorModal(false);
+      }, 3000);
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -397,6 +416,9 @@ const ProfilePage = ({
           onDelete={handleLogout}
         />
       )}
+      {saving && <InfoModal type={"saving"} />}
+      {showErrorModal && <InfoModal type={"error"} />}
+      {showSuccessModal && <InfoModal type={"success"} />}
     </div>
   );
 };

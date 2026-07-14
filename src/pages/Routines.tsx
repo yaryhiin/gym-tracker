@@ -6,6 +6,7 @@ import styles from "../styles/modules/Routines.module.scss";
 import type { RoutineDB } from "../types/routine";
 
 import ExecuteModal from "../components/ExecuteModal";
+import InfoModal from "../components/InfoModal";
 
 import { getRoutines, deleteRoutine } from "../services/routines";
 
@@ -17,6 +18,9 @@ const Routines = () => {
   const [routines, setRoutines] = useState<RoutineDB[]>([]);
   const [chosenRoutineId, setChosenRoutineId] = useState("");
   const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const [showMessageModal, setShowMessageModal] = useState(false);
 
@@ -37,8 +41,23 @@ const Routines = () => {
   }
 
   async function handleDeleteRoutine(id: string) {
-    await deleteRoutine(id);
-    setRoutines((prev) => prev.filter((routine) => routine.id != id));
+    setDeleting(true);
+    try {
+      await deleteRoutine(id);
+      setRoutines((prev) => prev.filter((routine) => routine.id != id));
+      setShowSuccessModal(true);
+      setTimeout(() => {
+        setShowSuccessModal(false);
+      }, 1000);
+    } catch (error) {
+      console.error("Error deleting routine:", error);
+      setShowErrorModal(true);
+      setTimeout(() => {
+        setShowErrorModal(false);
+      }, 3000);
+    } finally {
+      setDeleting(false);
+    }
   }
 
   if (loading) {
@@ -110,6 +129,9 @@ const Routines = () => {
           }}
         />
       )}
+      {deleting && <InfoModal type={"deleting"} />}
+      {showErrorModal && <InfoModal type={"error"} />}
+      {showSuccessModal && <InfoModal type={"success"} />}
     </div>
   );
 };

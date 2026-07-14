@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import styles from "../styles/modules/Modal.module.scss";
+import styles from "../styles/modules/Profile.module.scss";
 
 import type {
   PreferredWeightUnit,

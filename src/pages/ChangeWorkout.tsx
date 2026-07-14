@@ -134,6 +134,9 @@ const ChangeWorkout = () => {
     } catch (error) {
       console.error("Error deleting workout:", error);
       setShowErrorModal(true);
+      setTimeout(() => {
+        setShowErrorModal(false);
+      }, 3000);
     } finally {
       setDeleting(false);
     }

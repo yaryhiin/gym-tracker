@@ -10,6 +10,7 @@ import type { RoutineErrors } from "../types/errors";
 
 import ExecuteModal from "../components/ExecuteModal";
 import ChooseExerciseModal from "../components/ChooseExerciseModal";
+import InfoModal from "../components/InfoModal";
 
 import {
   getRoutineDetails,
@@ -50,6 +51,9 @@ const RoutineBuilder = () => {
   const [exercises, setExercises] = useState<ExerciseDB[]>([]);
   const [chosenExerciseId, setChosenExerciseId] = useState("");
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [errors, setErrors] = useState<RoutineErrors>({
     name: false,
     exercises: false,
@@ -177,10 +181,24 @@ const RoutineBuilder = () => {
       setErrors(newErrors);
       return;
     }
-    await createRoutine(routine);
-    await loadData();
-    localStorage.removeItem(draftKey);
-    navigate("/routines");
+    setSaving(true);
+    try {
+      await createRoutine(routine);
+      await loadData();
+      localStorage.removeItem(draftKey);
+      setShowSuccessModal(true);
+      setTimeout(() => {
+        navigate("/routines");
+      }, 1000);
+    } catch (error) {
+      console.error("Error creating routine:", error);
+      setShowErrorModal(true);
+      setTimeout(() => {
+        setShowErrorModal(false);
+      }, 3000);
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function handleUpdateRoutine(routine: Routine, routineId: string) {
@@ -191,15 +209,44 @@ const RoutineBuilder = () => {
       setErrors(newErrors);
       return;
     }
-    await updateRoutine(routine, routineId);
-    await loadData();
-    localStorage.removeItem(draftKey);
-    navigate("/routines");
+    setSaving(true);
+    try {
+      await updateRoutine(routine, routineId);
+      await loadData();
+      localStorage.removeItem(draftKey);
+      setShowSuccessModal(true);
+      setTimeout(() => {
+        navigate("/routines");
+      }, 1000);
+    } catch (error) {
+      console.error("Error updating routine:", error);
+      setShowErrorModal(true);
+      setTimeout(() => {
+        setShowErrorModal(false);
+      }, 3000);
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function addExercise(name: string, category: string) {
-    await createExercise({ name, category });
-    await loadData();
+    setSaving(true);
+    try {
+      await createExercise({ name, category });
+      await loadData();
+      setShowSuccessModal(true);
+      setTimeout(() => {
+        setShowSuccessModal(false);
+      }, 1000);
+    } catch (error) {
+      console.error("Error adding exercise:", error);
+      setShowErrorModal(true);
+      setTimeout(() => {
+        setShowErrorModal(false);
+      }, 3000);
+    } finally {
+      setSaving(false);
+    }
   }
 
   if (loading) {
@@ -234,16 +281,14 @@ const RoutineBuilder = () => {
               <button
                 className={styles.orderBtn}
                 onClick={() => moveExercise(exercise.exercise_id, "up")}
-                hidden={exercise.order_index === 0}
+                hidden={exercise.order_index === 1}
               >
                 ↑
               </button>
               <button
                 className={styles.orderBtn}
                 onClick={() => moveExercise(exercise.exercise_id, "down")}
-                hidden={
-                  exercise.order_index === routineDraft.exercises.length - 1
-                }
+                hidden={exercise.order_index === routineDraft.exercises.length}
               >
                 ↓
               </button>
@@ -353,6 +398,9 @@ const RoutineBuilder = () => {
           }}
         />
       )}
+      {saving && <InfoModal type={"saving"} />}
+      {showErrorModal && <InfoModal type={"error"} />}
+      {showSuccessModal && <InfoModal type={"success"} />}
     </div>
   );
 };
