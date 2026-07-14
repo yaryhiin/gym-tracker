@@ -14,6 +14,9 @@ import { getRoutineDetails } from "../services/routines";
 import { createExercise, getExercises } from "../services/exercises";
 import { createWorkout, getPreviousExerciseData } from "../services/workouts";
 import { formatTime } from "../services/utils";
+import InfoModal from "../components/InfoModal";
+import type { PreferredWeightUnit } from "../types/profile";
+import { getProfile } from "../services/profiles";
 
 const ACTIVE_WORKOUT_KEY = "activeWorkout";
 const ACTIVE_WORKOUT_SECONDS_KEY = "activeWorkoutSeconds";
@@ -60,15 +63,19 @@ const ActiveWorkout = () => {
   const [workout, setWorkout] = useState<Workout>(getInitialWorkout);
   const [seconds, setSeconds] = useState(getInitialSeconds);
   const [exercises, setExercises] = useState<ExerciseDB[]>([]);
+  const [preferredUnit, setPreferredUnit] = useState<PreferredWeightUnit>();
   const [previousData, setPreviousData] = useState<Record<string, any>>({});
   const exerciseIdsKey = workout.exercises
     .map((exercise) => exercise.exercise_id)
     .join(",");
   const [isRunning, setIsRunning] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   const [showBackModal, setShowBackModal] = useState(false);
   const [showFinishModal, setShowFinishModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -163,7 +170,13 @@ const ActiveWorkout = () => {
     setLoading(true);
     try {
       const exercisesData = await getExercises();
-      setExercises(exercisesData);
+      if (exercisesData.length) {
+        setExercises(exercisesData);
+      }
+      const data = await getProfile();
+      if (data) {
+        setPreferredUnit(data.preferred_workout_unit);
+      }
     } catch (error) {
       console.error("Error loading data:", error);
     } finally {
@@ -172,26 +185,65 @@ const ActiveWorkout = () => {
   }
 
   async function addExercise(name: string, category: string) {
-    await createExercise({ name, category });
-    await loadData();
+    setSaving(true);
+    try {
+      await createExercise({ name, category });
+      await loadData();
+      setShowSuccessModal(true);
+      setTimeout(() => {
+        setShowSuccessModal(false);
+      }, 1000);
+    } catch (error) {
+      console.error("Error adding exercise:", error);
+      setShowErrorModal(true);
+      setTimeout(() => {
+        setShowErrorModal(false);
+      }, 3000);
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function finishWorkout() {
-    setShowFinishModal(false);
-    setIsRunning(false);
+    setSaving(true);
 
+    const formattedWorkoutExercises = workout.exercises.map((exercise) => ({
+      ...exercise,
+      sets: exercise.sets.map((set) => ({
+        ...set,
+        weight:
+          preferredUnit === "lb"
+            ? Math.round((set.weight / 2.20462262) * 100) / 100
+            : set.weight,
+      })),
+    }));
     const finishedWorkout: Workout = {
       ...workout,
-      finished_at: Date.now().toString(),
+      exercises: formattedWorkoutExercises,
+      finished_at: new Date().toISOString(),
       duration_seconds: seconds,
     };
+    try {
+      await createWorkout(finishedWorkout);
 
-    await createWorkout(finishedWorkout);
+      localStorage.removeItem(ACTIVE_WORKOUT_KEY);
+      localStorage.removeItem(ACTIVE_WORKOUT_SECONDS_KEY);
 
-    localStorage.removeItem(ACTIVE_WORKOUT_KEY);
-    localStorage.removeItem(ACTIVE_WORKOUT_SECONDS_KEY);
-
-    navigate("/");
+      setShowFinishModal(false);
+      setIsRunning(false);
+      setShowSuccessModal(true);
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    } catch (error) {
+      setShowFinishModal(false);
+      setShowErrorModal(true);
+      setTimeout(() => {
+        setShowErrorModal(false);
+      }, 3000);
+    } finally {
+      setSaving(false);
+    }
   }
 
   if (loading) {
@@ -218,6 +270,7 @@ const ActiveWorkout = () => {
         previousData={previousData}
         addExercise={addExercise}
         readonly={false}
+        preferredUnit={preferredUnit}
       />
       {showBackModal && (
         <ExecuteModal
@@ -267,6 +320,9 @@ const ActiveWorkout = () => {
           Finish Workout
         </button>
       </div>
+      {saving && <InfoModal type={"loading"} />}
+      {showErrorModal && <InfoModal type={"error"} />}
+      {showSuccessModal && <InfoModal type={"success"} />}
     </div>
   );
 };

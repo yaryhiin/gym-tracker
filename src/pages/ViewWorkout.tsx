@@ -9,6 +9,8 @@ import WorkoutForm from "../components/WorkoutForm";
 
 import { getWorkoutDetails } from "../services/workouts";
 import { formatTime } from "../services/utils";
+import type { PreferredWeightUnit } from "../types/profile";
+import { getProfile } from "../services/profiles";
 
 const ChangeWorkout = () => {
   const { workoutId } = useParams();
@@ -21,6 +23,7 @@ const ChangeWorkout = () => {
     duration_seconds: 0,
     exercises: [],
   });
+  const [preferredUnit, setPreferredUnit] = useState<PreferredWeightUnit>();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,6 +31,14 @@ const ChangeWorkout = () => {
       setLoading(true);
       try {
         const workoutDetails = await getWorkoutDetails(String(workoutId));
+        if (!workoutDetails) {
+          console.error("Workout details not found");
+          return;
+        }
+        const preferredUnitData = await getProfile();
+        if (preferredUnitData) {
+          setPreferredUnit(preferredUnitData.preferred_workout_unit);
+        }
         setWorkout({
           name: workoutDetails.name,
           started_at: workoutDetails.started_at,
@@ -46,7 +57,10 @@ const ChangeWorkout = () => {
                 .sort((a, b) => a.set_number - b.set_number)
                 .map((item) => ({
                   set_number: item.set_number,
-                  weight: item.weight,
+                  weight:
+                    preferredUnitData.preferred_workout_unit === "lb"
+                      ? Math.round(item.weight * 2.20462262 * 10) / 10
+                      : item.weight,
                   reps: item.reps,
                   rest_seconds: item.rest_seconds,
                   done: item.done,
@@ -82,17 +96,11 @@ const ChangeWorkout = () => {
           </p>
         </div>
       </div>
-      <WorkoutForm workout={workout} readonly={true} />
-      <div className={styles.buttonContainerChange}>
-        <button
-          className={styles.backBtn}
-          onClick={() => {
-            navigate("/");
-          }}
-        >
-          Back
-        </button>
-      </div>
+      <WorkoutForm
+        workout={workout}
+        readonly={true}
+        preferredUnit={preferredUnit}
+      />
     </div>
   );
 };

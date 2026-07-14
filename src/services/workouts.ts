@@ -50,42 +50,46 @@ export async function createWorkout(workout: Workout) {
       user_id: userId,
       name: workout.name,
       duration_seconds: workout.duration_seconds,
-      finished_at: new Date().toISOString(),
+      finished_at: workout.finished_at ?? new Date().toISOString(),
     })
     .select()
     .single();
 
   if (workoutError) throw workoutError;
 
-  for (const exercise of workout.exercises) {
-    const { data: createdExercise, error: exerciseError } = await supabase
-      .from("workout_exercises")
-      .insert({
-        workout_id: createdWorkout.id,
-        exercise_name: exercise.exercise_name,
-        exercise_id: exercise.exercise_id,
-        category: exercise.category,
-        order_index: exercise.order_index,
-        notes: exercise.notes,
-      })
-      .select()
-      .single();
+  try {
+    for (const exercise of workout.exercises) {
+      const { data: createdExercise, error: exerciseError } = await supabase
+        .from("workout_exercises")
+        .insert({
+          workout_id: createdWorkout.id,
+          exercise_name: exercise.exercise_name,
+          exercise_id: exercise.exercise_id,
+          category: exercise.category,
+          order_index: exercise.order_index,
+          notes: exercise.notes,
+        })
+        .select()
+        .single();
 
-    if (exerciseError) throw exerciseError;
+      if (exerciseError) throw exerciseError;
 
-    const setsToInsert = exercise.sets.map((set) => ({
-      workout_exercise_id: createdExercise.id,
-      set_number: set.set_number,
-      weight: set.weight,
-      reps: set.reps,
-      done: set.done,
-    }));
+      const setsToInsert = exercise.sets.map((set) => ({
+        workout_exercise_id: createdExercise.id,
+        set_number: set.set_number,
+        weight: set.weight,
+        reps: set.reps,
+        done: set.done,
+      }));
 
-    const { error: setsError } = await supabase
-      .from("workout_sets")
-      .insert(setsToInsert);
+      const { error: setsError } = await supabase
+        .from("workout_sets")
+        .insert(setsToInsert);
 
-    if (setsError) throw setsError;
+      if (setsError) throw setsError;
+    }
+  } catch (error) {
+    deleteWorkout(createdWorkout.id);
   }
 
   return createdWorkout;
@@ -99,7 +103,7 @@ export async function updateWorkout(workout: Workout, workoutId: string) {
     .update({
       name: workout.name,
       duration_seconds: workout.duration_seconds,
-      finished_at: workout.finished_at || new Date().toISOString(),
+      finished_at: workout.finished_at ?? new Date().toISOString(),
     })
     .eq("id", workoutId)
     .eq("user_id", userId)

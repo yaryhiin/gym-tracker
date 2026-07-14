@@ -116,7 +116,8 @@ const MeasurementsCheckinModal = ({
       .filter((measurement) => measurement.value.trim() !== "")
       .map((measurement) => {
         const value = Number(measurement.value);
-        const formatedValue = unit === "in" ? value * 2.54 : value;
+        const formatedValue =
+          unit === "in" ? Math.round(value * 2.54 * 100) / 100 : value;
         return {
           measurement_type_id: measurement.measurement_type_id,
           value_cm: formatedValue,
@@ -175,7 +176,6 @@ const MeasurementsCheckinModal = ({
                 <input
                   className={styles.input}
                   type="number"
-                  inputMode="decimal"
                   step="0.01"
                   min="0"
                   max="1000"

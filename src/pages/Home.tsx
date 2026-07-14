@@ -74,34 +74,43 @@ const Home = ({ name }: HomeProps) => {
       <div className={styles.history}>
         <h2 className={styles.title}>Recent workouts</h2>
 
-        {workouts
-          .toSorted(
-            (a, b) =>
-              new Date(b.created_at).getTime() -
-              new Date(a.created_at).getTime(),
-          )
-          .slice(0, 3)
-          .map((workout) => (
-            <div
-              className={styles.historyElement}
-              onClick={() => navigate(`/history/${workout.id}`)}
-              key={workout.id}
-            >
-              <p className={styles.descName}>
-                {workout.name} - {formatDate(workout.created_at)}
-              </p>
-              <div className={styles.descWorkout}>
-                <p>Duration: {formatDuration(workout.duration_seconds)}</p>
+        {workouts.length > 0 ? (
+          workouts
+            .toSorted(
+              (a, b) =>
+                new Date(b.created_at).getTime() -
+                new Date(a.created_at).getTime(),
+            )
+            .slice(0, 3)
+            .map((workout) => (
+              <div
+                className={styles.historyElement}
+                onClick={() => navigate(`/history/${workout.id}`)}
+                key={workout.id}
+              >
+                <p className={styles.descName}>
+                  {workout.name} - {formatDate(workout.finished_at)}
+                </p>
+                <div className={styles.descWorkout}>
+                  <p>Duration: {formatDuration(workout.duration_seconds)}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+        ) : (
+          <div className={styles.emptyText}>
+            <h3>No recent workouts.</h3>
+            <p>Finish your first workout to see it here.</p>
+          </div>
+        )}
 
-        <button
-          className={styles.viewAllBtn}
-          onClick={() => navigate("/history")}
-        >
-          View All
-        </button>
+        {workouts.length > 3 && (
+          <button
+            className={styles.viewAllBtn}
+            onClick={() => navigate("/history")}
+          >
+            View All
+          </button>
+        )}
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import cn from "classnames";
 
 import styles from "../styles/modules/WorkoutForm.module.scss";
@@ -12,7 +12,6 @@ import ExecuteModal from "./ExecuteModal";
 import ChooseExerciseModal from "../components/ChooseExerciseModal";
 
 import { createLocalId } from "../services/utils";
-import { getProfile } from "../services/profiles";
 
 const MODAL_TEXT =
   "You sure you want to delete this exercise from workout \n All sets will be lost";
@@ -20,6 +19,7 @@ const MODAL_TEXT =
 type WorkoutFormProps = {
   workout: Workout;
   readonly: boolean;
+  preferredUnit?: PreferredWeightUnit;
 
   setWorkout?: Dispatch<SetStateAction<Workout>>;
   exercises?: ExerciseDB[];
@@ -38,30 +38,11 @@ const WorkoutForm = ({
   exercises,
   previousData,
   addExercise,
+  preferredUnit,
 }: WorkoutFormProps) => {
   const [showModal, setShowModal] = useState(false);
   const [showRemoveExerciseModal, setShowRemoveExerciseModal] = useState(false);
   const [chosenExerciseId, setChosenExerciseId] = useState("");
-  const [preferredUnit, setPreferredUnit] = useState<PreferredWeightUnit>();
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadData() {
-      setLoading(true);
-      try {
-        const data = await getProfile();
-        if (data) {
-          setPreferredUnit(data.preferred_workout_unit);
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadData();
-  }, []);
 
   function formatPreviousSets(previousExercise?: PreviousExercise | null) {
     if (!previousExercise) return "No previous data";
@@ -198,10 +179,6 @@ const WorkoutForm = ({
     setShowRemoveExerciseModal(false);
   }
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
   return (
     <div className={styles.exerciseContainer}>
       {workout.exercises.map((exercise) => (
@@ -232,6 +209,9 @@ const WorkoutForm = ({
                       <input
                         disabled={readonly}
                         type="number"
+                        step="0.01"
+                        min="0"
+                        max="1000"
                         placeholder="0"
                         onChange={(e) =>
                           updateSet(
@@ -248,6 +228,9 @@ const WorkoutForm = ({
                       <input
                         disabled={readonly}
                         type="number"
+                        step="1"
+                        min="0"
+                        max="1000"
                         placeholder="0"
                         onChange={(e) =>
                           updateSet(

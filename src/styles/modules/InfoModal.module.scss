@@ -1,0 +1,39 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100dvw;
+  height: 100dvh;
+  background-color: rgba(0, 0, 0, 0.25);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  z-index: 1001;
+  text-align: center;
+}
+
+.content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--card);
+  color: var(--text);
+  padding: 8px 20px;
+  border-radius: 15px;
+  border: 1px solid var(--border);
+  margin-top: 20px;
+
+  p, h3 {
+    margin: 0;
+  }
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-left: 20px;
+  text-align: left;
+}

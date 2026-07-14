@@ -14,16 +14,13 @@ export default function Layout({ toggleTheme, theme, session }: LayoutProps) {
 
   const isActiveWorkout =
     matchPath("/workout", location.pathname) ||
-    matchPath("/workout/*", location.pathname);
+    matchPath("/workout/*", location.pathname) ||
+    matchPath("history/:id/edit", location.pathname);
 
   return (
     <div className={"appShell"}>
       {!isActiveWorkout && (
-        <Header
-          toggleTheme={toggleTheme}
-          theme={theme}
-          session={session}
-        />
+        <Header toggleTheme={toggleTheme} theme={theme} session={session} />
       )}
       <main className="container">
         <Outlet />

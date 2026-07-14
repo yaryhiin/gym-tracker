@@ -3,17 +3,23 @@ import { useEffect, useState } from "react";
 
 import styles from "../styles/modules/ActiveWorkout.module.scss";
 
+import type { ExerciseDB } from "../types/exercise";
 import type { Workout } from "../types/workout";
 
 import ExecuteModal from "../components/ExecuteModal";
 import WorkoutForm from "../components/WorkoutForm";
 
+import InfoModal from "../components/InfoModal";
+
+import { createExercise, getExercises } from "../services/exercises";
 import {
   getWorkoutDetails,
   deleteWorkout,
   updateWorkout,
 } from "../services/workouts";
 import { formatTime } from "../services/utils";
+import { getProfile } from "../services/profiles";
+import type { PreferredWeightUnit } from "../types/profile";
 
 const CHANGE_WORKOUT_KEY = "changeWorkout";
 
@@ -48,9 +54,20 @@ const ChangeWorkout = () => {
   const navigate = useNavigate();
 
   const [workout, setWorkout] = useState<Workout>(getInitialWorkout);
+  const [exercises, setExercises] = useState<ExerciseDB[]>([]);
+  const [preferredUnit, setPreferredUnit] = useState<PreferredWeightUnit>();
+
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   useEffect(() => {
     const savedWorkout = localStorage.getItem(CHANGE_WORKOUT_KEY);
@@ -80,7 +97,10 @@ const ChangeWorkout = () => {
                 .sort((a, b) => a.set_number - b.set_number)
                 .map((item) => ({
                   set_number: item.set_number,
-                  weight: item.weight,
+                  weight:
+                    preferredUnit === "lb"
+                      ? Math.round(item.weight * 2.20462262 * 10) / 10
+                      : item.weight,
                   reps: item.reps,
                   rest_seconds: item.rest_seconds,
                   done: item.done,
@@ -102,16 +122,92 @@ const ChangeWorkout = () => {
   }, [workout]);
 
   async function handleDelete() {
-    await deleteWorkout(String(workoutId));
-    localStorage.removeItem(CHANGE_WORKOUT_KEY);
-    setShowModal(false);
-    navigate("/");
+    setDeleting(true);
+    try {
+      await deleteWorkout(String(workoutId));
+      localStorage.removeItem(CHANGE_WORKOUT_KEY);
+      setShowModal(false);
+      setShowSuccessModal(true);
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    } catch (error) {
+      console.error("Error deleting workout:", error);
+      setShowErrorModal(true);
+    } finally {
+      setDeleting(false);
+    }
+  }
+
+  async function loadData() {
+    setLoading(true);
+    try {
+      const exercisesData = await getExercises();
+      if (exercisesData) {
+        setExercises(exercisesData);
+      }
+      const data = await getProfile();
+      if (data) {
+        setPreferredUnit(data.preferred_workout_unit);
+      }
+    } catch (error) {
+      console.error("Error loading data:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function addExercise(name: string, category: string) {
+    setSaving(true);
+    try {
+      await createExercise({ name, category });
+      await loadData();
+      setShowSuccessModal(true);
+      setTimeout(() => {
+        setShowSuccessModal(false);
+      }, 1000);
+    } catch (error) {
+      console.error("Error adding exercise:", error);
+      setShowErrorModal(true);
+      setTimeout(() => {
+        setShowErrorModal(false);
+      }, 3000);
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function handleUpdate() {
-    await updateWorkout(workout, String(workoutId));
-    localStorage.removeItem(CHANGE_WORKOUT_KEY);
-    navigate("/");
+    const formattedWorkoutExercises = workout.exercises.map((exercise) => ({
+      ...exercise,
+      sets: exercise.sets.map((set) => ({
+        ...set,
+        weight:
+          preferredUnit === "lb"
+            ? Math.round((set.weight / 2.20462262) * 100) / 100
+            : set.weight,
+      })),
+    }));
+    setSaving(true);
+    try {
+      await updateWorkout(
+        { ...workout, exercises: formattedWorkoutExercises },
+        String(workoutId),
+      );
+      localStorage.removeItem(CHANGE_WORKOUT_KEY);
+      setShowSuccessModal(true);
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    } catch (error) {
+      console.error("Error updating workout:", error);
+      setShowErrorModal(true);
+      setTimeout(() => {
+        setShowErrorModal(false);
+      }, 3000);
+    } finally {
+      setSaving(false);
+    }
   }
 
   if (loading) {
@@ -120,7 +216,17 @@ const ChangeWorkout = () => {
   return (
     <div className={styles.workoutContainer}>
       <div className={styles.header}>
-        <div></div>
+        <div>
+          <button
+            className={styles.backBtn}
+            onClick={() => {
+              navigate("/");
+              localStorage.removeItem(CHANGE_WORKOUT_KEY);
+            }}
+          >
+            Back
+          </button>
+        </div>
         <div>
           <h3 className={styles.title}>{workout?.name}</h3>
           <p className={styles.stopwatch}>
@@ -129,7 +235,14 @@ const ChangeWorkout = () => {
         </div>
       </div>
 
-      <WorkoutForm workout={workout} readonly={false} setWorkout={setWorkout} />
+      <WorkoutForm
+        workout={workout}
+        readonly={false}
+        setWorkout={setWorkout}
+        exercises={exercises}
+        addExercise={addExercise}
+        preferredUnit={preferredUnit}
+      />
       {showModal && (
         <ExecuteModal
           text={MODAL_TEXT}
@@ -141,24 +254,17 @@ const ChangeWorkout = () => {
         />
       )}
       <div className={styles.buttonContainer}>
+        <button className={styles.deleteBtn} onClick={() => setShowModal(true)}>
+          Delete
+        </button>
         <button className={styles.saveBtn} onClick={handleUpdate}>
           Save Changes
         </button>
       </div>
-      <div className="buttonContainer">
-        <button
-          className={styles.backBtn}
-          onClick={() => {
-            navigate("/");
-            localStorage.removeItem(CHANGE_WORKOUT_KEY);
-          }}
-        >
-          Back
-        </button>
-        <button className={styles.deleteBtn} onClick={() => setShowModal(true)}>
-          Delete
-        </button>
-      </div>
+      {saving && <InfoModal type={"saving"} />}
+      {deleting && <InfoModal type={"deleting"} />}
+      {showErrorModal && <InfoModal type={"error"} />}
+      {showSuccessModal && <InfoModal type={"success"} />}
     </div>
   );
 };

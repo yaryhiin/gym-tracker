@@ -43,13 +43,10 @@ const WeightCheckinModal = ({
     }
 
     const weight = Number(newWeight);
-    const weightInKg = unit === "lb" ? weight / 2.20462262 : weight;
-    const roundedWeight = Math.round(weightInKg * 10) / 10;
+    const weightInKg =
+      unit === "lb" ? Math.round((weight / 2.20462262) * 100) / 100 : weight;
     try {
-      await createWeightLog(
-        roundedWeight,
-        new Date().toISOString().split("T")[0],
-      );
+      await createWeightLog(weightInKg, new Date().toISOString().split("T")[0]);
     } catch (error) {
       console.error("Error creating weight log:", error);
     } finally {
@@ -87,7 +84,6 @@ const WeightCheckinModal = ({
           <input
             className={`${styles.input} ${errors.weight && "error"}`}
             type="number"
-            inputMode="decimal"
             step="0.01"
             min="0"
             max="1000"
