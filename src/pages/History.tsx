@@ -8,7 +8,7 @@ import type { WorkoutDB } from "../types/workout";
 import { formatDate, formatDuration } from "../services/utils";
 import { getWorkoutsHistory } from "../services/workouts";
 
-type SortKey = "duration_seconds" | "started_at" | "name";
+type SortKey = "duration_seconds" | "finished_at" | "name";
 
 type SortDirection = "asc" | "desc";
 
@@ -24,7 +24,7 @@ const History = () => {
   const [loading, setLoading] = useState(true);
 
   const [sortConfig, setSortConfig] = useState<SortConfig>({
-    key: "started_at",
+    key: "finished_at",
     direction: "desc",
   });
   const arrow = sortConfig.direction === "asc" ? "▴" : "▾";
@@ -35,9 +35,9 @@ const History = () => {
     let aValue: string | number | Date;
     let bValue: string | number | Date;
 
-    if (key === "started_at") {
-      aValue = new Date(a.started_at ?? a.created_at);
-      bValue = new Date(b.started_at ?? b.created_at);
+    if (key === "finished_at") {
+      aValue = new Date(a.finished_at ?? a.created_at);
+      bValue = new Date(b.finished_at ?? b.created_at);
     } else if (key === "duration_seconds") {
       aValue = Number(a.duration_seconds);
       bValue = Number(b.duration_seconds);
@@ -84,9 +84,9 @@ const History = () => {
         <table className={styles.workouts}>
           <thead>
             <tr>
-              <th onClick={() => handleSort("started_at")}>
+              <th onClick={() => handleSort("finished_at")}>
                 <span className={styles.tableHeaderContent}>
-                  Date <span>{sortConfig.key === "started_at" && arrow}</span>
+                  Date <span>{sortConfig.key === "finished_at" && arrow}</span>
                 </span>
               </th>
               <th onClick={() => handleSort("name")}>

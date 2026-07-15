@@ -78,8 +78,8 @@ const Home = ({ name }: HomeProps) => {
           workouts
             .toSorted(
               (a, b) =>
-                new Date(b.created_at).getTime() -
-                new Date(a.created_at).getTime(),
+                new Date(b.finished_at).getTime() -
+                new Date(a.finished_at).getTime(),
             )
             .slice(0, 3)
             .map((workout) => (
