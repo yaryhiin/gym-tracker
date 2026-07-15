@@ -94,7 +94,7 @@ const Chart = ({ chartData, yPadding, label, unit }: ChartProps) => {
 
     const change =
       currentEntry && firstEntry
-        ? Math.round((currentEntry.value - firstEntry.value) * 10) / 10
+        ? Math.round((currentEntry.value - firstEntry.value) * 100) / 100
         : 0;
 
     setBriefData({ current, change, entries });
