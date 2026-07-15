@@ -1,6 +1,8 @@
 import cn from "classnames";
 import { useNavigate } from "react-router-dom";
 
+import { UserRound } from "lucide-react";
+
 import styles from "../styles/modules/Header.module.scss";
 
 type HeaderProps = {
@@ -20,7 +22,7 @@ const Header = ({ toggleTheme, theme, session }: HeaderProps) => {
             className={styles.profileLogo}
             onClick={() => navigate("/profile")}
           >
-            👤
+            <UserRound size={20}/>
           </button>
         </div>
       ) : (

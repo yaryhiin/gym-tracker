@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import cn from "classnames";
+import { ChevronUp, ChevronDown } from "lucide-react";
 
 import styles from "../styles/modules/RoutineBuilder.module.scss";
 
@@ -283,14 +284,14 @@ const RoutineBuilder = () => {
                 onClick={() => moveExercise(exercise.exercise_id, "up")}
                 hidden={exercise.order_index === 1}
               >
-                ↑
+                <ChevronUp size={17} strokeWidth={2} />
               </button>
               <button
                 className={styles.orderBtn}
                 onClick={() => moveExercise(exercise.exercise_id, "down")}
                 hidden={exercise.order_index === routineDraft.exercises.length}
               >
-                ↓
+                <ChevronDown size={17} strokeWidth={2} />
               </button>
             </div>
             <div className={styles.selectedExerciseElementTop}>

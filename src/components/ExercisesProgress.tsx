@@ -5,7 +5,7 @@ import styles from "../styles/modules/ProgressComponents.module.scss";
 import Chart from "./Chart";
 import { getExercises, getExercisesLogs } from "../services/exercises";
 
-import type { ChartBriefInfo, ChartData } from "../types/chart";
+import type { ChartData } from "../types/chart";
 import type { ExerciseDB, ExerciseLogDB } from "../types/exercise";
 
 type ExercisesProgressProps = {
@@ -20,7 +20,6 @@ const ExercisesProgress = ({ unit }: ExercisesProgressProps) => {
   const [filterCriteria, setFilterCriteria] = useState("best-set-volume");
   const [chosenExercise, setChosenExercise] = useState<ExerciseDB>();
   const [filteredData, setFilteredData] = useState<ChartData[]>([]);
-  const [briefData, setBriefData] = useState<ChartBriefInfo>();
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     async function getData() {
@@ -143,28 +142,10 @@ const ExercisesProgress = ({ unit }: ExercisesProgressProps) => {
     }
     if (filtered.length === 0) {
       setFilteredData([]);
-      setBriefData({
-        current: 0,
-        change: 0,
-        entries: 0,
-      });
-
       return;
     }
 
-    const entries = filtered.length;
-
-    const firstEntry = filtered[0];
-    const currentEntry = filtered[filtered.length - 1];
-
-    const current = currentEntry.value ?? 0;
-
-    const change =
-      currentEntry && firstEntry
-        ? Math.round((currentEntry.value - firstEntry.value) * 10) / 10
-        : 0;
-
-    setBriefData({ current, change, entries });
+    
     setFilteredData(filtered);
   }, [chosenExercise, exerciseLogs, filterCriteria]);
 
@@ -213,27 +194,7 @@ const ExercisesProgress = ({ unit }: ExercisesProgressProps) => {
         </div>
       </div>
       <Chart chartData={filteredData} yPadding={2} label={label} unit={unit} />
-      <div className={styles.briefInfo}>
-        <div>
-          <p>Current:</p>
-          <p>
-            {briefData?.current}
-            {unit}
-          </p>
-        </div>
-        <div>
-          <p>Change:</p>
-          <p>
-            {briefData && briefData.change >= 0 && "+"}
-            {briefData?.change}
-            {unit}
-          </p>
-        </div>
-        <div>
-          <p>Total Workouts:</p>
-          <p>{briefData?.entries}</p>
-        </div>
-      </div>
+      
     </div>
   );
 };

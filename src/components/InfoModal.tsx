@@ -1,30 +1,36 @@
+import { CircleCheck, CircleX, LoaderCircle, Info } from "lucide-react";
+
 import styles from "../styles/modules/InfoModal.module.scss";
 
 const INFO_MODAL_MESSAGES = {
   saving: {
-    icon: "💾",
+    icon: LoaderCircle,
     title: "Saving",
     text: "Saving your changes...",
+    loading: true,
   },
 
   deleting: {
-    icon: "🗑️",
+    icon: LoaderCircle,
     title: "Deleting",
     text: "Deleting item...",
+    loading: true,
   },
 
   success: {
-    icon: "✅",
+    icon: CircleCheck,
     title: "Success",
-    text: "Completed successfully.",
+    text: "Completed successfully",
+    loading: false,
   },
 
   error: {
-    icon: "❌",
+    icon: CircleX,
     title: "Error",
     text: "Something went wrong. Please try again.",
+    loading: false,
   },
-} as const;
+};
 
 export type InfoModalType = keyof typeof INFO_MODAL_MESSAGES;
 
@@ -34,14 +40,20 @@ type InfoModalProps = {
 
 const InfoModal = ({ type }: InfoModalProps) => {
   const message = INFO_MODAL_MESSAGES[type as InfoModalType] || {
-    icon: "❓",
-    title: "Unknown",
-    text: "Unknown modal type.",
+    icon: Info,
+    title: "Information",
+    text: "Here is something you should know.",
+    loading: false,
   };
+
+  const Icon = message.icon;
+  
   return (
     <div className={styles.modal}>
       <div className={styles.content}>
-        <h2 className={styles.icon}>{message.icon}</h2>
+        <h2 className={styles.icon}>
+          {<Icon size={32} strokeWidth={2} className={message.loading ? styles.infoModal__spinner : ""} />}
+        </h2>
         <div className={styles.message}>
           <h3 className={styles.title}>{message.title}</h3>
           <p className={styles.text}>{message.text}</p>

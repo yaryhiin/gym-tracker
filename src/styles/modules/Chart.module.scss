@@ -23,3 +23,20 @@
 .active {
   background: var(--card-hover);
 }
+
+.briefInfo {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  p {
+    margin: 0;
+    font-size: 18px;
+  }
+}

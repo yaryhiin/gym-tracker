@@ -243,27 +243,29 @@ const WorkoutForm = ({
                         value={set.reps === 0 ? "" : set.reps}
                       />
                     </td>
-                    <td className={styles.actionsColumn}>
-                      <input
-                        disabled={readonly}
-                        type="checkbox"
-                        onChange={(e) =>
-                          updateSet(
-                            exercise.id,
-                            set.set_number,
-                            "done",
-                            e.target.checked,
-                          )
-                        }
-                        checked={set.done}
-                      />
-                      <button
-                        hidden={readonly || exercise.sets.length < 2}
-                        className={styles.deleteSet}
-                        onClick={() => deleteSet(exercise.id, set.set_number)}
-                      >
-                        ×
-                      </button>
+                    <td>
+                      <div className={styles.actionsColumn}>
+                        <input
+                          disabled={readonly}
+                          type="checkbox"
+                          onChange={(e) =>
+                            updateSet(
+                              exercise.id,
+                              set.set_number,
+                              "done",
+                              e.target.checked,
+                            )
+                          }
+                          checked={set.done}
+                        />
+                        <button
+                          hidden={readonly || exercise.sets.length < 2}
+                          className={styles.deleteSet}
+                          onClick={() => deleteSet(exercise.id, set.set_number)}
+                        >
+                          ×
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

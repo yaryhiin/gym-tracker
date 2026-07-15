@@ -67,11 +67,7 @@ input {
 input[type="checkbox"] {
   width: auto;
   opacity: 0.65;
-}
-
-input:focus {
-  outline: none;
-  border-color: var(--input-focus);
+  border: none;
 }
 
 .addExercise {

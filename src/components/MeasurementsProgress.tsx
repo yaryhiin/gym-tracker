@@ -12,7 +12,7 @@ import type {
   MeasurementTypeDB,
   MeasurementLogDB,
 } from "../types/measurements";
-import type { ChartBriefInfo, ChartData } from "../types/chart";
+import type { ChartData } from "../types/chart";
 
 type MeasurementsProgressProps = {
   unit: "cm" | "in";
@@ -27,7 +27,6 @@ const MeasurementsProgress = ({ unit }: MeasurementsProgressProps) => {
 
   const [chosenType, setChosenType] = useState<MeasurementTypeDB>();
   const [filteredData, setFilteredData] = useState<ChartData[]>([]);
-  const [briefData, setBriefData] = useState<ChartBriefInfo>();
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     async function getData() {
@@ -65,18 +64,7 @@ const MeasurementsProgress = ({ unit }: MeasurementsProgressProps) => {
           : data.value_cm,
     }));
 
-    const entries = chosenData.length;
-
-    const firstEntry = formattedData[0];
-    const currentEntry = formattedData[formattedData.length - 1];
-
-    const current = currentEntry.value ?? 0;
-
-    const change =
-      currentEntry && firstEntry ? currentEntry.value - firstEntry.value : 0;
-
     setFilteredData(formattedData);
-    setBriefData({ current, change, entries });
   }, [chosenType]);
 
   if (loading) {
@@ -116,28 +104,6 @@ const MeasurementsProgress = ({ unit }: MeasurementsProgressProps) => {
         label={chosenType?.name ?? "Measurement"}
         unit={unit}
       />
-      <div className={styles.briefInfo}>
-        <div>
-          <p>Current:</p>
-          <p>
-            {briefData?.current}
-            {unit}
-          </p>
-        </div>
-
-        <div>
-          <p>Change:</p>
-          <p>
-            {briefData && briefData.change >= 0 && "+"}
-            {briefData?.change}
-            {unit}
-          </p>
-        </div>
-        <div>
-          <p>Entries:</p>
-          <p>{briefData?.entries}</p>
-        </div>
-      </div>
     </div>
   );
 };

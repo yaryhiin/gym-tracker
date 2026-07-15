@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 
 import styles from "../styles/modules/Chart.module.scss";
 
-import type { ChartData } from "../types/chart";
+import type { ChartBriefInfo, ChartData } from "../types/chart";
 
 function parseLocalDate(dateString: string) {
   const [year, month, day] = dateString.split("-").map(Number);
@@ -29,6 +29,31 @@ type Range = "1w" | "1m" | "3m" | "all";
 const Chart = ({ chartData, yPadding, label, unit }: ChartProps) => {
   const [range, setRange] = useState<Range>("all");
   const [filteredData, setFilteredData] = useState<ChartData[]>();
+  const [briefData, setBriefData] = useState<ChartBriefInfo>();
+
+  useEffect(() => {
+    if (!chartData || chartData.length === 0) {
+      setBriefData({
+        current: 0,
+        change: 0,
+        entries: 0,
+      });
+      return;
+    }
+    const entries = chartData.length;
+
+    const firstEntry = chartData[0];
+    const currentEntry = chartData[chartData.length - 1];
+
+    const current = currentEntry.value ?? 0;
+
+    const change =
+      currentEntry && firstEntry
+        ? Math.round((currentEntry.value - firstEntry.value) * 10) / 10
+        : 0;
+
+    setBriefData({ current, change, entries });
+  }, [chartData]);
 
   useEffect(() => {
     if (range === "all") {
@@ -50,6 +75,29 @@ const Chart = ({ chartData, yPadding, label, unit }: ChartProps) => {
     });
 
     setFilteredData(formatted);
+
+    if (formatted.length === 0) {
+      setBriefData({
+        current: 0,
+        change: 0,
+        entries: 0,
+      });
+      return;
+    }
+
+    const entries = formatted.length;
+
+    const firstEntry = formatted[0];
+    const currentEntry = formatted[formatted.length - 1];
+
+    const current = currentEntry.value ?? 0;
+
+    const change =
+      currentEntry && firstEntry
+        ? Math.round((currentEntry.value - firstEntry.value) * 10) / 10
+        : 0;
+
+    setBriefData({ current, change, entries });
   }, [range, chartData]);
 
   return (
@@ -121,6 +169,27 @@ const Chart = ({ chartData, yPadding, label, unit }: ChartProps) => {
         >
           All
         </button>
+      </div>
+      <div className={styles.briefInfo}>
+        <div>
+          <p>Current:</p>
+          <p>
+            {briefData?.current}
+            {unit}
+          </p>
+        </div>
+        <div>
+          <p>Change:</p>
+          <p>
+            {briefData && briefData.change >= 0 && "+"}
+            {briefData?.change}
+            {unit}
+          </p>
+        </div>
+        <div>
+          <p>Entries:</p>
+          <p>{briefData?.entries}</p>
+        </div>
       </div>
     </div>
   );
