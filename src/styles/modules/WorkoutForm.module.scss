@@ -54,6 +54,70 @@
   margin-top: 20px;
 }
 
+.exerciseNote {
+  width: 100%;
+  margin-top: 8px;
+  padding: 6px;
+
+  color: #d7e2f0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #3a4960;
+  font: inherit;
+  font-size: 16px;
+
+  &::placeholder {
+    color: #7f8da3;
+  }
+
+  &:focus {
+    outline: none;
+    border-bottom-color: #6b8cff;
+  }
+}
+
+.addNoteBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  margin-top: 10px;
+  padding: 5px 9px;
+
+  color: #aebbd0;
+  background: transparent;
+  border: 1px solid #3a4960;
+  border-radius: 7px;
+
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  height: 36px;
+  width: 92px;
+
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+
+  &:hover {
+    color: #ffffff;
+    background: #263349;
+    border-color: #536681;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #6b8cff;
+    outline-offset: 2px;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
 input {
   background: var(--input-bg);
   border: 1px solid var(--input-border);
@@ -94,16 +158,17 @@ input[type="checkbox"] {
   background: transparent;
   color: var(--accent);
   border: 1px solid var(--border);
-  font-size: 15px;
-  width: 100px;
-  height: 50px;
+  font-size: 13px;
+  width: 90px;
+  height: 45px;
 }
 
 .removeExercise {
   border: 1px dashed var(--danger);
   margin-top: 12px;
-  width: 100px;
-  height: 50px;
+  width: 90px;
+  height: 45px;
+  font-size: 11px;
 }
 
 .actionsTitle {

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import cn from "classnames";
+import { MessageSquarePlus } from "lucide-react";
 
 import styles from "../styles/modules/WorkoutForm.module.scss";
 
@@ -43,6 +44,8 @@ const WorkoutForm = ({
   const [showModal, setShowModal] = useState(false);
   const [showRemoveExerciseModal, setShowRemoveExerciseModal] = useState(false);
   const [chosenExerciseId, setChosenExerciseId] = useState("");
+
+  const [showNotes, setShowNotes] = useState<Record<string, boolean>>({});
 
   function formatPreviousSets(previousExercise?: PreviousExercise | null) {
     if (!previousExercise) return "No previous data";
@@ -179,6 +182,17 @@ const WorkoutForm = ({
     setShowRemoveExerciseModal(false);
   }
 
+  function updateExerciseNote(exerciseId: string, note: string) {
+    if (!setWorkout) return;
+
+    setWorkout((prev) => ({
+      ...prev,
+      exercises: prev.exercises.map((exercise) =>
+        exercise.id === exerciseId ? { ...exercise, notes: note } : exercise,
+      ),
+    }));
+  }
+
   return (
     <div className={styles.exerciseContainer}>
       {workout.exercises.map((exercise) => (
@@ -189,6 +203,28 @@ const WorkoutForm = ({
               Last time:{" "}
               {formatPreviousSets(previousData[exercise.exercise_id])}
             </p>
+          )}
+          {showNotes[exercise.id] || exercise.notes ? (
+            <input
+              className={styles.exerciseNote}
+              type="text"
+              placeholder="Exercise note..."
+              readOnly={readonly}
+              value={exercise.notes}
+              onChange={(e) => updateExerciseNote(exercise.id, e.target.value)}
+            />
+          ) : (
+            !readonly && (
+              <button
+                className={styles.addNoteBtn}
+                onClick={() =>
+                  setShowNotes((prev) => ({ ...prev, [exercise.id]: true }))
+                }
+              >
+                <MessageSquarePlus size={15} />
+                Add note
+              </button>
+            )
           )}
           <div className={styles.exercises}>
             <table className={styles.sets}>

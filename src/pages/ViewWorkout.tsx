@@ -52,7 +52,7 @@ const ChangeWorkout = () => {
               exercise_name: item.exercise_name,
               category: item.exercise_category,
               order_index: item.order_index,
-              notes: "",
+              notes: item.notes,
               sets: [...item.workout_sets]
                 .sort((a, b) => a.set_number - b.set_number)
                 .map((item) => ({
