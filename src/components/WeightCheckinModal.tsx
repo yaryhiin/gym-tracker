@@ -57,7 +57,7 @@ const WeightCheckinModal = ({
       await createWeightLog(weightInKg, new Date().toISOString().split("T")[0]);
       setShowSuccessModal(true);
       setTimeout(() => {
-        onSkip();
+        setShowSuccessModal(false);
       }, 1000);
     } catch (error) {
       console.error("Error creating weight log:", error);
@@ -66,6 +66,7 @@ const WeightCheckinModal = ({
         setShowErrorModal(false);
       }, 3000);
     } finally {
+      onSkip();
       setSaving(false);
     }
   }

@@ -169,33 +169,61 @@ export async function deleteWorkout(workoutId: string) {
   return true;
 }
 
+type WorkoutRelation = {
+  id: string;
+  name: string;
+  finished_at: string | null;
+  created_at: string;
+};
+
+type WorkoutSet = {
+  id: string;
+  set_number: number;
+  weight: number | null;
+  reps: number | null;
+  rest_seconds: number | null;
+  done: boolean;
+};
+
+type PreviousExerciseRow = {
+  id: string;
+  exercise_id: string;
+  exercise_name: string;
+  workout_id: string;
+  order_index: number;
+  workout_sets: WorkoutSet[];
+  workouts: WorkoutRelation | null;
+};
+
 export async function getPreviousExerciseData(exerciseIds: string[]) {
-  if (exerciseIds.length === 0) return {};
+  if (exerciseIds.length === 0) {
+    return {};
+  }
 
   const { data, error } = await supabase
     .from("workout_exercises")
     .select(
       `
-      id,
-      exercise_id,
-      exercise_name,
-      workout_id,
-      order_index,
-      workout_sets (
         id,
-        set_number,
-        weight,
-        reps,
-        rest_seconds,
-        done
-      ),
-      workouts (
-        id,
-        name,
-        finished_at,
-        created_at
-      )
-    `,
+        exercise_id,
+        exercise_name,
+        workout_id,
+        order_index,
+        workout_sets (
+          id,
+          set_number,
+          weight,
+          reps,
+          rest_seconds,
+          done
+        ),
+        workouts (
+          id,
+          name,
+          finished_at,
+          created_at
+        )
+      `,
     )
     .in("exercise_id", exerciseIds);
 
@@ -204,19 +232,23 @@ export async function getPreviousExerciseData(exerciseIds: string[]) {
     return {};
   }
 
-  const previousByExerciseId: Record<string, any> = {};
+  // Supabase currently infers `workouts` as an array here,
+  // but the actual runtime result is one workout object per row.
+  const rows = (data ?? []) as unknown as PreviousExerciseRow[];
 
-  const sortedData = [...(data || [])].sort((a, b) => {
+  const sortedData = [...rows].sort((a, b) => {
     const dateA = new Date(
-      a.workouts?.[0]?.finished_at || a.workouts?.[0]?.created_at || 0,
+      a.workouts?.finished_at ?? a.workouts?.created_at ?? 0,
     ).getTime();
 
     const dateB = new Date(
-      b.workouts?.[0]?.finished_at || b.workouts?.[0]?.created_at || 0,
+      b.workouts?.finished_at ?? b.workouts?.created_at ?? 0,
     ).getTime();
 
     return dateB - dateA;
   });
+
+  const previousByExerciseId: Record<string, PreviousExerciseRow> = {};
 
   for (const item of sortedData) {
     if (!previousByExerciseId[item.exercise_id]) {
