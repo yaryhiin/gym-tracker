@@ -22,23 +22,11 @@ const Header = ({ toggleTheme, theme, session }: HeaderProps) => {
             className={styles.profileLogo}
             onClick={() => navigate("/profile")}
           >
-            <UserRound size={20}/>
+            <UserRound size={20} />
           </button>
         </div>
       ) : (
         <div className={styles.sessionBox}>
-          <button
-            onClick={() => navigate("/login")}
-            className={cn("button", styles.logIn)}
-          >
-            Log In
-          </button>
-          <button
-            onClick={() => navigate("/signup")}
-            className={cn("button", styles.signUp)}
-          >
-            Sign Up
-          </button>
           <div className={styles.themeBox}>
             <button
               onClick={toggleTheme}

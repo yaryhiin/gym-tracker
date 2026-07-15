@@ -7,6 +7,7 @@ import type { WeightCheckinErrors } from "../types/errors";
 import { createWeightLog, getLatestWeightLog } from "../services/weightLogs";
 
 import InfoModal from "../components/InfoModal";
+import { formatDate } from "../services/utils";
 
 type WeightCheckinModalProps = {
   unit: "kg" | "lb";
@@ -90,7 +91,7 @@ const WeightCheckinModal = ({
             {unit === "lb"
               ? Math.round(Number(previousData.weight) * 2.20462262 * 10) / 10
               : previousData.weight}
-            {unit} - {previousData.date}
+            {unit} - {formatDate(previousData.date)}
           </p>
         )}
 

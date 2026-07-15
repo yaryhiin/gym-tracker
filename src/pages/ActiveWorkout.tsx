@@ -27,7 +27,7 @@ const FINISH_TEXT = `Are you sure you want to finish this workout?`;
 function createEmptyWorkout(): Workout {
   return {
     name: "Custom Workout",
-    started_at: Date.now().toString(),
+    started_at: new Date().toISOString(),
     finished_at: "",
     duration_seconds: 0,
     exercises: [],
@@ -93,7 +93,7 @@ const ActiveWorkout = () => {
           if (routine) {
             setWorkout({
               name: routine.name,
-              started_at: Date.now().toString(),
+              started_at: new Date().toISOString(),
               finished_at: "",
               duration_seconds: seconds,
               exercises: [...routine.routine_exercises]
@@ -126,7 +126,7 @@ const ActiveWorkout = () => {
     } else {
       setWorkout({
         name: "Custom Workout",
-        started_at: Date.now().toString(),
+        started_at: new Date().toISOString(),
         finished_at: "",
         duration_seconds: seconds,
         exercises: [],

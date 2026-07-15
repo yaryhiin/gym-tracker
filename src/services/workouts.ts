@@ -50,6 +50,7 @@ export async function createWorkout(workout: Workout) {
       user_id: userId,
       name: workout.name,
       duration_seconds: workout.duration_seconds,
+      started_at: workout.started_at ?? new Date().toISOString(),
       finished_at: workout.finished_at ?? new Date().toISOString(),
     })
     .select()
@@ -102,8 +103,6 @@ export async function updateWorkout(workout: Workout, workoutId: string) {
     .from("workouts")
     .update({
       name: workout.name,
-      duration_seconds: workout.duration_seconds,
-      finished_at: workout.finished_at ?? new Date().toISOString(),
     })
     .eq("id", workoutId)
     .eq("user_id", userId)
