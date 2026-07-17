@@ -20,7 +20,7 @@ const MODAL_TEXT =
 type WorkoutFormProps = {
   workout: Workout;
   readonly: boolean;
-  preferredUnit?: PreferredWeightUnit;
+  preferredUnit?: PreferredWeightUnit | null;
 
   setWorkout?: Dispatch<SetStateAction<Workout>>;
   exercises?: ExerciseDB[];

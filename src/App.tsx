@@ -42,11 +42,24 @@ import { getLatestMeasurementLog } from "./services/measurements";
 const WEIGHT_CHECKIN_SKIPPED_DATE_KEY = "weightCheckinSkippedDate";
 const MEASUREMENTS_CHECKIN_SKIPPED_DATE_KEY = "measurementsCheckinSkippedDate";
 
+function getInitialProfile(): ProfileDB | null {
+  const savedProfile = localStorage.getItem("profile");
+
+  if (!savedProfile) return null;
+
+  try {
+    return JSON.parse(savedProfile) as ProfileDB;
+  } catch {
+    localStorage.removeItem("profile");
+    return null;
+  }
+}
+
 function App() {
   const [session, setSession] = useState<Session | null>();
   const [authLoading, setAuthLoading] = useState(true);
   const [profileLoading, setProfileLoading] = useState(true);
-  const [profile, setProfile] = useState<ProfileDB>();
+  const [profile, setProfile] = useState<ProfileDB | null>(getInitialProfile);
 
   const [showProfileSetup, setShowProfileSetup] = useState(false);
   const [showWeightCheckinModal, setShowWeightCheckinModal] = useState(false);
@@ -64,7 +77,6 @@ function App() {
 
   useEffect(() => {
     async function loadSession() {
-      setAuthLoading(true);
       const { data, error } = await supabase.auth.getSession();
       if (error) {
         console.log("Error fetching session:", error);
@@ -89,16 +101,24 @@ function App() {
 
   useEffect(() => {
     if (!session) {
+      setProfile(null);
+      localStorage.removeItem("profile");
+      localStorage.removeItem("measurementsCheckinSkippedDate");
       setProfileLoading(false);
       return;
     }
 
     async function setupProfile() {
-      setProfileLoading(true);
+      if (!profile) {
+        setProfileLoading(true);
+      }
+
       try {
         const profileData = await getProfile();
+
         if (profileData) {
           setProfile(profileData);
+          localStorage.setItem("profile", JSON.stringify(profileData));
         } else {
           setShowProfileSetup(true);
         }
@@ -110,7 +130,7 @@ function App() {
     }
 
     setupProfile();
-  }, [session]);
+  }, [session?.user.id]);
 
   useEffect(() => {
     async function checkWeightReminder() {
@@ -178,6 +198,12 @@ function App() {
 
     checkMeasurementsReminder();
   }, [session?.user.id, profile?.measurements_checkin_frequency]);
+
+  useEffect(() => {
+    if (!profile) return;
+
+    localStorage.setItem("profile", JSON.stringify(profile));
+  }, [profile]);
 
   useEffect(() => {
     document.documentElement.setAttribute("theme", theme);

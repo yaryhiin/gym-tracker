@@ -20,6 +20,9 @@ import { getProfile } from "../services/profiles";
 
 const ACTIVE_WORKOUT_KEY = "activeWorkout";
 const ACTIVE_WORKOUT_SECONDS_KEY = "activeWorkoutSeconds";
+const ACTIVE_WORKOUT_EXERCISES_KEY = "activeWorkoutExercises";
+const ACTIVE_WORKOUT_PREFERRED_UNIT_KEY = "activeWorkoutPreferredUnit";
+const ACTIVE_WORKOUT_PREVIOUS_DATA_KEY = "activeWorkoutPreviousData";
 
 const BACK_TEXT = `Are you sure you want to exit workout? \n The data will be lost`;
 const FINISH_TEXT = `Are you sure you want to finish this workout?`;
@@ -56,20 +59,59 @@ function getInitialWorkout() {
   return createEmptyWorkout();
 }
 
+function getInitialExercises() {
+  const savedExercises = localStorage.getItem(ACTIVE_WORKOUT_EXERCISES_KEY);
+
+  if (savedExercises) {
+    try {
+      return JSON.parse(savedExercises) as ExerciseDB[];
+    } catch {
+      localStorage.removeItem(ACTIVE_WORKOUT_EXERCISES_KEY);
+    }
+  }
+
+  return [];
+}
+
+function getInitialPreviousData() {
+  const savedPreviousData = localStorage.getItem(
+    ACTIVE_WORKOUT_PREVIOUS_DATA_KEY,
+  );
+
+  if (savedPreviousData) {
+    try {
+      return JSON.parse(savedPreviousData) as Record<string, any>;
+    } catch {
+      localStorage.removeItem(ACTIVE_WORKOUT_PREVIOUS_DATA_KEY);
+    }
+  }
+
+  return {};
+}
+
+function getInitialPreferredUnit(): "kg" | "lb" | null {
+  const savedUnit = localStorage.getItem(ACTIVE_WORKOUT_PREFERRED_UNIT_KEY);
+
+  return savedUnit === "kg" || savedUnit === "lb" ? savedUnit : null;
+}
+
 const ActiveWorkout = () => {
   const navigate = useNavigate();
   const { routineId } = useParams();
 
   const [workout, setWorkout] = useState<Workout>(getInitialWorkout);
   const [seconds, setSeconds] = useState(getInitialSeconds);
-  const [exercises, setExercises] = useState<ExerciseDB[]>([]);
-  const [preferredUnit, setPreferredUnit] = useState<PreferredWeightUnit>();
-  const [previousData, setPreviousData] = useState<Record<string, any>>({});
+  const [exercises, setExercises] = useState<ExerciseDB[]>(getInitialExercises);
+  const [preferredUnit, setPreferredUnit] =
+    useState<PreferredWeightUnit | null>(getInitialPreferredUnit);
+  const [previousData, setPreviousData] = useState<Record<string, any>>(
+    getInitialPreviousData,
+  );
   const exerciseIdsKey = workout.exercises
     .map((exercise) => exercise.exercise_id)
     .join(",");
   const [isRunning, setIsRunning] = useState(true);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
   const [showBackModal, setShowBackModal] = useState(false);
@@ -78,8 +120,95 @@ const ActiveWorkout = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
-    loadData();
+    const savedExercises = localStorage.getItem(ACTIVE_WORKOUT_EXERCISES_KEY);
+    if (savedExercises) {
+      const parsedExercises = JSON.parse(savedExercises) as ExerciseDB[];
+      if (parsedExercises.length > 0) {
+        return;
+      }
+    }
+
+    async function loadExercises() {
+      try {
+        const exercisesData = await getExercises();
+        if (exercisesData.length) {
+          setExercises(exercisesData);
+        }
+      } catch (error) {
+        console.error("Error fetching exercises:", error);
+      }
+    }
+
+    loadExercises();
   }, []);
+
+  useEffect(() => {
+    const savedPreferredUnit = localStorage.getItem(
+      ACTIVE_WORKOUT_PREFERRED_UNIT_KEY,
+    );
+    if (savedPreferredUnit === "kg" || savedPreferredUnit === "lb") {
+      setPreferredUnit(savedPreferredUnit);
+      return;
+    }
+    async function loadProfile() {
+      try {
+        const data = await getProfile();
+        if (data) {
+          setPreferredUnit(data.preferred_workout_unit);
+        }
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      }
+    }
+
+    loadProfile();
+  }, []);
+
+  useEffect(() => {
+    const savedPreviousData = localStorage.getItem(
+      ACTIVE_WORKOUT_PREVIOUS_DATA_KEY,
+    );
+    if (savedPreviousData) {
+      const parsedData = JSON.parse(savedPreviousData);
+
+      if (Object.keys(parsedData).length > 0) {
+        return;
+      }
+    }
+    async function loadPreviousData() {
+      try {
+        const exerciseIds = workout.exercises
+          .map((exercise) => exercise.exercise_id)
+          .filter(Boolean);
+        if (exerciseIds.length === 0) return;
+
+        const data = await getPreviousExerciseData(exerciseIds);
+        setPreviousData(data);
+      } catch (error) {
+        console.error("Error fetching previous data:", error);
+      }
+    }
+
+    loadPreviousData();
+  }, [exerciseIdsKey]);
+
+  useEffect(() => {
+    async function loadPreviousData() {
+      try {
+        const exerciseIds = workout.exercises
+          .map((exercise) => exercise.exercise_id)
+          .filter(Boolean);
+        if (exerciseIds.length === 0) return;
+
+        const data = await getPreviousExerciseData(exerciseIds);
+        setPreviousData(data);
+      } catch (error) {
+        console.error("Error fetching previous data:", error);
+      }
+    }
+
+    loadPreviousData();
+  }, [workout.exercises.length]);
 
   useEffect(() => {
     const savedWorkout = localStorage.getItem(ACTIVE_WORKOUT_KEY);
@@ -88,6 +217,7 @@ const ActiveWorkout = () => {
     }
     if (routineId) {
       async function getDetails() {
+        setLoading(true);
         try {
           const routine = await getRoutineDetails(String(routineId));
           if (routine) {
@@ -119,6 +249,8 @@ const ActiveWorkout = () => {
           }
         } catch (error) {
           console.error("Error loading data: ", error);
+        } finally {
+          setLoading(false);
         }
       }
 
@@ -153,42 +285,35 @@ const ActiveWorkout = () => {
   }, [seconds]);
 
   useEffect(() => {
-    async function loadPreviousData() {
-      const exerciseIds = workout.exercises
-        .map((exercise) => exercise.exercise_id)
-        .filter(Boolean);
-      if (exerciseIds.length === 0) return;
+    localStorage.setItem(
+      ACTIVE_WORKOUT_EXERCISES_KEY,
+      JSON.stringify(exercises),
+    );
+  }, [exercises]);
 
-      const data = await getPreviousExerciseData(exerciseIds);
-      setPreviousData(data);
+  useEffect(() => {
+    if (preferredUnit === "kg" || preferredUnit === "lb") {
+      localStorage.setItem(
+        ACTIVE_WORKOUT_PREFERRED_UNIT_KEY,
+        String(preferredUnit),
+      );
     }
+  }, [preferredUnit]);
 
-    loadPreviousData();
-  }, [exerciseIdsKey]);
+  useEffect(() => {
+    if (Object.keys(previousData).length === 0) return;
 
-  async function loadData() {
-    setLoading(true);
-    try {
-      const exercisesData = await getExercises();
-      if (exercisesData.length) {
-        setExercises(exercisesData);
-      }
-      const data = await getProfile();
-      if (data) {
-        setPreferredUnit(data.preferred_workout_unit);
-      }
-    } catch (error) {
-      console.error("Error loading data:", error);
-    } finally {
-      setLoading(false);
-    }
-  }
+    localStorage.setItem(
+      ACTIVE_WORKOUT_PREVIOUS_DATA_KEY,
+      JSON.stringify(previousData),
+    );
+  }, [previousData]);
 
   async function addExercise(name: string, category: string) {
     setSaving(true);
     try {
-      await createExercise({ name, category });
-      await loadData();
+      const createdExercise = await createExercise({ name, category });
+      setExercises((prev) => [...prev, createdExercise]);
       setShowSuccessModal(true);
       setTimeout(() => {
         setShowSuccessModal(false);
@@ -228,6 +353,9 @@ const ActiveWorkout = () => {
 
       localStorage.removeItem(ACTIVE_WORKOUT_KEY);
       localStorage.removeItem(ACTIVE_WORKOUT_SECONDS_KEY);
+      localStorage.removeItem(ACTIVE_WORKOUT_EXERCISES_KEY);
+      localStorage.removeItem(ACTIVE_WORKOUT_PREVIOUS_DATA_KEY);
+      localStorage.removeItem(ACTIVE_WORKOUT_PREFERRED_UNIT_KEY);
 
       setShowFinishModal(false);
       setIsRunning(false);
@@ -247,7 +375,7 @@ const ActiveWorkout = () => {
   }
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <p>Loading Active Workout Page...</p>;
   }
   return (
     <div className={styles.workoutContainer}>
@@ -281,6 +409,9 @@ const ActiveWorkout = () => {
             setShowBackModal(false);
             localStorage.removeItem(ACTIVE_WORKOUT_KEY);
             localStorage.removeItem(ACTIVE_WORKOUT_SECONDS_KEY);
+            localStorage.removeItem(ACTIVE_WORKOUT_EXERCISES_KEY);
+            localStorage.removeItem(ACTIVE_WORKOUT_PREVIOUS_DATA_KEY);
+            localStorage.removeItem(ACTIVE_WORKOUT_PREFERRED_UNIT_KEY);
             navigate("/");
           }}
         />
