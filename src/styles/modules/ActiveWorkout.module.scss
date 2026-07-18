@@ -9,12 +9,17 @@ body {
 }
 
 .header {
+  z-index: 999;
+  position: fixed;
+  top: 10px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: auto auto auto;
+  gap: 10px;
   justify-items: center;
   align-items: center;
   padding: 5px 15px;
   background-color: var(--bg);
+  max-width: 420px;
   width: 100%;
   border-bottom: 1px solid var(--border);
 
@@ -24,6 +29,7 @@ body {
     width: 80px;
     height: 40px;
     margin-bottom: 15px;
+    align-self: flex-end;
   }
 }
 
@@ -33,6 +39,7 @@ body {
   align-items: center;
   justify-content: center;
   width: 100%;
+  margin-top: 90px;
 }
 
 .title {
