@@ -82,7 +82,7 @@ const ChangeWorkout = () => {
   }
   return (
     <div className={styles.workoutContainer}>
-      <div className={styles.header}>
+      <div className={styles.viewHeader}>
         <button
           className={styles.editBtn}
           onClick={() => navigate(`/history/${workoutId}/edit`)}

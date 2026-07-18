@@ -236,6 +236,7 @@ const ChangeWorkout = () => {
             {formatTime(workout?.duration_seconds)}
           </p>
         </div>
+        <div></div>
       </div>
 
       <WorkoutForm
