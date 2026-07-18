@@ -42,15 +42,28 @@ export function createLocalId() {
   return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
-export function getDaysSince(dateString: string) {
-  const today = new Date();
-  const [year, month, day] = dateString.split("-").map(Number);
-  const measuredDate = new Date(year, month - 1, day);
+export function getDaysSince(dateString: string): number {
+  const measuredDate = new Date(dateString);
 
-  today.setHours(0, 0, 0, 0);
-  measuredDate.setHours(0, 0, 0, 0);
-  const differenceMs = today.getTime() - measuredDate.getTime();
-  return Math.floor(differenceMs / (1000 * 60 * 60 * 24));
+  if (Number.isNaN(measuredDate.getTime())) {
+    throw new Error(`Invalid date: ${dateString}`);
+  }
+
+  const today = new Date();
+
+  const todayUtc = Date.UTC(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
+  );
+
+  const measuredUtc = Date.UTC(
+    measuredDate.getFullYear(),
+    measuredDate.getMonth(),
+    measuredDate.getDate(),
+  );
+
+  return Math.round((todayUtc - measuredUtc) / (1000 * 60 * 60 * 24));
 }
 
 export function getTodayDateString() {

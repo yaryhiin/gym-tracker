@@ -141,7 +141,7 @@ const MeasurementsCheckinModal = ({
         return {
           measurement_type_id: measurement.measurement_type_id,
           value_cm: formatedValue,
-          measured_at: new Date().toISOString().split("T")[0],
+          measured_at: new Date().toISOString(),
         };
       });
     setSaving(true);

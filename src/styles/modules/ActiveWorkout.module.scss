@@ -11,16 +11,16 @@ body {
 .header {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  justify-content: center;
+  justify-items: center;
   align-items: center;
   padding: 5px 15px;
-  align-items: center;
   background-color: var(--bg);
   width: 100%;
   border-bottom: 1px solid var(--border);
 
   .backBtn,
-  .editBtn {
+  .editBtn,
+  .finishBtn {
     width: 80px;
     height: 40px;
     margin-bottom: 15px;

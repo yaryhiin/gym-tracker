@@ -54,7 +54,7 @@ const WeightCheckinModal = ({
       unit === "lb" ? Math.round((weight / 2.20462262) * 100) / 100 : weight;
     setSaving(true);
     try {
-      await createWeightLog(weightInKg, new Date().toISOString().split("T")[0]);
+      await createWeightLog(weightInKg, new Date().toISOString());
       setShowSuccessModal(true);
       setTimeout(() => {
         setShowSuccessModal(false);

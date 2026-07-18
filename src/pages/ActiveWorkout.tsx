@@ -110,7 +110,6 @@ const ActiveWorkout = () => {
   const exerciseIdsKey = workout.exercises
     .map((exercise) => exercise.exercise_id)
     .join(",");
-  const [isRunning, setIsRunning] = useState(true);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -246,6 +245,7 @@ const ActiveWorkout = () => {
                   ],
                 })),
             });
+            console.log(workout.started_at);
           }
         } catch (error) {
           console.error("Error loading data: ", error);
@@ -267,14 +267,12 @@ const ActiveWorkout = () => {
   }, [routineId]);
 
   useEffect(() => {
-    if (!isRunning) return;
-
     const interval = setInterval(() => {
       setSeconds((prev) => prev + 1);
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isRunning]);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem(ACTIVE_WORKOUT_KEY, JSON.stringify(workout));
@@ -358,7 +356,6 @@ const ActiveWorkout = () => {
       localStorage.removeItem(ACTIVE_WORKOUT_PREFERRED_UNIT_KEY);
 
       setShowFinishModal(false);
-      setIsRunning(false);
       setShowSuccessModal(true);
       setTimeout(() => {
         navigate("/");
@@ -390,6 +387,12 @@ const ActiveWorkout = () => {
           <h3 className={styles.title}>{workout.name}</h3>
           <p className={styles.stopwatch}>{formatTime(seconds)}</p>
         </div>
+        <button
+          className={cn(styles.button, styles.finishBtn)}
+          onClick={() => setShowFinishModal(true)}
+        >
+          Finish
+        </button>
       </div>
       <WorkoutForm
         workout={workout}
@@ -427,30 +430,7 @@ const ActiveWorkout = () => {
         />
       )}
 
-      <div className={styles.buttonContainer}>
-        {!isRunning ? (
-          <button
-            className={cn(styles.button, styles.pauseBtn)}
-            onClick={() => setIsRunning(true)}
-          >
-            Resume Workout
-          </button>
-        ) : (
-          <button
-            className={cn(styles.button, styles.pauseBtn)}
-            onClick={() => setIsRunning(false)}
-          >
-            Pause Workout
-          </button>
-        )}
-
-        <button
-          className={cn(styles.button, styles.finishBtn)}
-          onClick={() => setShowFinishModal(true)}
-        >
-          Finish Workout
-        </button>
-      </div>
+      <div className={styles.buttonContainer}></div>
       {saving && <InfoModal type={"saving"} />}
       {showErrorModal && <InfoModal type={"error"} />}
       {showSuccessModal && <InfoModal type={"success"} />}
