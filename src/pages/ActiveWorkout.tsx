@@ -245,7 +245,6 @@ const ActiveWorkout = () => {
                   ],
                 })),
             });
-            console.log(workout.started_at);
           }
         } catch (error) {
           console.error("Error loading data: ", error);
@@ -267,12 +266,15 @@ const ActiveWorkout = () => {
   }, [routineId]);
 
   useEffect(() => {
+    if (!workout.started_at) return;
+
     const interval = setInterval(() => {
-      setSeconds((prev) => prev + 1);
+      const timePassed = Date.now() - new Date(workout.started_at).getTime();
+      setSeconds(Math.floor(timePassed / 1000));
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [workout.started_at]);
 
   useEffect(() => {
     localStorage.setItem(ACTIVE_WORKOUT_KEY, JSON.stringify(workout));
