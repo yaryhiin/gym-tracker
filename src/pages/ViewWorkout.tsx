@@ -92,13 +92,13 @@ const ChangeWorkout = () => {
         <div>
           <h3 className={styles.title}>{workout?.name}</h3>
           <p className={styles.stopwatch}>
-            {formatTime(workout?.duration_seconds)}
+            {formatTime(workout?.duration_seconds, "workout")}
           </p>
         </div>
       </div>
       <WorkoutForm
         workout={workout}
-        readonly={true}
+        pageType="view"
         preferredUnit={preferredUnit}
       />
     </div>

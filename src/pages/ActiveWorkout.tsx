@@ -23,6 +23,9 @@ const ACTIVE_WORKOUT_SECONDS_KEY = "activeWorkoutSeconds";
 const ACTIVE_WORKOUT_EXERCISES_KEY = "activeWorkoutExercises";
 const ACTIVE_WORKOUT_PREFERRED_UNIT_KEY = "activeWorkoutPreferredUnit";
 const ACTIVE_WORKOUT_PREVIOUS_DATA_KEY = "activeWorkoutPreviousData";
+const WORKOUT_SELECTED_EXERCISE_KEY = "workoutSelectedExercise";
+const WORKOUT_SELECTED_SET_KEY = "workoutSelectedSet";
+const WORKOUT_REST_START_KEY = "workoutRestStart";
 
 const BACK_TEXT = `Are you sure you want to exit workout? \n The data will be lost`;
 const FINISH_TEXT = `Are you sure you want to finish this workout?`;
@@ -356,6 +359,9 @@ const ActiveWorkout = () => {
       localStorage.removeItem(ACTIVE_WORKOUT_EXERCISES_KEY);
       localStorage.removeItem(ACTIVE_WORKOUT_PREVIOUS_DATA_KEY);
       localStorage.removeItem(ACTIVE_WORKOUT_PREFERRED_UNIT_KEY);
+      localStorage.removeItem(WORKOUT_SELECTED_EXERCISE_KEY);
+      localStorage.removeItem(WORKOUT_SELECTED_SET_KEY);
+      localStorage.removeItem(WORKOUT_REST_START_KEY);
 
       setShowFinishModal(false);
       setShowSuccessModal(true);
@@ -387,7 +393,7 @@ const ActiveWorkout = () => {
         </button>
         <div>
           <h3 className={styles.title}>{workout.name}</h3>
-          <p className={styles.stopwatch}>{formatTime(seconds)}</p>
+          <p className={styles.stopwatch}>{formatTime(seconds, "workout")}</p>
         </div>
         <button
           className={cn(styles.button, styles.finishBtn)}
@@ -402,7 +408,7 @@ const ActiveWorkout = () => {
         exercises={exercises}
         previousData={previousData}
         addExercise={addExercise}
-        readonly={false}
+        pageType="active"
         preferredUnit={preferredUnit}
       />
       {showBackModal && (
@@ -417,6 +423,9 @@ const ActiveWorkout = () => {
             localStorage.removeItem(ACTIVE_WORKOUT_EXERCISES_KEY);
             localStorage.removeItem(ACTIVE_WORKOUT_PREVIOUS_DATA_KEY);
             localStorage.removeItem(ACTIVE_WORKOUT_PREFERRED_UNIT_KEY);
+            localStorage.removeItem(WORKOUT_SELECTED_EXERCISE_KEY);
+            localStorage.removeItem(WORKOUT_SELECTED_SET_KEY);
+            localStorage.removeItem(WORKOUT_REST_START_KEY);
             navigate("/");
           }}
         />

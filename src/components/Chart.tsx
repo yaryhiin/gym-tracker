@@ -12,9 +12,13 @@ import styles from "../styles/modules/Chart.module.scss";
 
 import type { ChartBriefInfo, ChartData } from "../types/chart";
 
-function parseLocalDate(dateString: string) {
-  const [year, month, day] = dateString.split("-").map(Number);
-  return new Date(year, month - 1, day);
+function parseDate(value: string): Date {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    const [year, month, day] = value.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
+
+  return new Date(value);
 }
 
 type ChartProps = {
@@ -56,6 +60,7 @@ const Chart = ({ chartData, yPadding, label, unit }: ChartProps) => {
   }, [chartData]);
 
   useEffect(() => {
+    console.log(range);
     if (range === "all") {
       setFilteredData(chartData);
       return;
@@ -70,10 +75,9 @@ const Chart = ({ chartData, yPadding, label, unit }: ChartProps) => {
     cutOffDate.setDate(today.getDate() - days);
 
     const formatted = chartData.filter((entry) => {
-      const entryDate = parseLocalDate(entry.date);
+      const entryDate = parseDate(entry.date);
       return entryDate >= cutOffDate;
     });
-
     setFilteredData(formatted);
 
     if (formatted.length === 0) {
@@ -159,7 +163,10 @@ const Chart = ({ chartData, yPadding, label, unit }: ChartProps) => {
         </button>
         <button
           className={`${styles.rangeBtn} ${range === "3m" && styles.active}`}
-          onClick={() => setRange("3m")}
+          onClick={() => {
+            setRange("3m");
+            console.log("Yeaahh");
+          }}
         >
           3M
         </button>

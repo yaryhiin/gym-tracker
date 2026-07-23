@@ -233,15 +233,25 @@ const ChangeWorkout = () => {
         <div>
           <h3 className={styles.title}>{workout?.name}</h3>
           <p className={styles.stopwatch}>
-            {formatTime(workout?.duration_seconds)}
+            {formatTime(workout?.duration_seconds, "workout")}
           </p>
         </div>
-        <div></div>
+        <div>
+          <button
+            className={styles.deleteBtn}
+            onClick={() => setShowModal(true)}
+          >
+            Delete
+          </button>
+          <button className={styles.saveBtn} onClick={handleUpdate}>
+            Save Changes
+          </button>
+        </div>
       </div>
 
       <WorkoutForm
         workout={workout}
-        readonly={false}
+        pageType="change"
         setWorkout={setWorkout}
         exercises={exercises}
         addExercise={addExercise}
@@ -257,14 +267,6 @@ const ChangeWorkout = () => {
           onDelete={handleDelete}
         />
       )}
-      <div className={styles.buttonContainer}>
-        <button className={styles.deleteBtn} onClick={() => setShowModal(true)}>
-          Delete
-        </button>
-        <button className={styles.saveBtn} onClick={handleUpdate}>
-          Save Changes
-        </button>
-      </div>
       {saving && <InfoModal type={"saving"} />}
       {deleting && <InfoModal type={"deleting"} />}
       {showErrorModal && <InfoModal type={"error"} />}

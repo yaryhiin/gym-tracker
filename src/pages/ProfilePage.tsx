@@ -68,6 +68,7 @@ const ProfilePage = ({
       return;
     }
 
+    localStorage.clear();
     setShowLogOutModal(false);
     navigate("/");
   }

@@ -7,12 +7,18 @@ export const formatDate = (dateString: string) => {
   });
 };
 
-export function formatTime(totalSeconds: number): string {
+export function formatTime(totalSeconds: number, type: string): string {
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const secs = totalSeconds % 60;
 
-  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  if (type === "rest") {
+    return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  } else if (type === "workout") {
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  } else {
+    return "";
+  }
 }
 
 export function formatDuration(totalSeconds: number): string {
