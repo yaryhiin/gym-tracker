@@ -353,20 +353,18 @@ const ActiveWorkout = () => {
     };
     try {
       await createWorkout(finishedWorkout);
-
-      localStorage.removeItem(ACTIVE_WORKOUT_KEY);
-      localStorage.removeItem(ACTIVE_WORKOUT_SECONDS_KEY);
-      localStorage.removeItem(ACTIVE_WORKOUT_EXERCISES_KEY);
-      localStorage.removeItem(ACTIVE_WORKOUT_PREVIOUS_DATA_KEY);
-      localStorage.removeItem(ACTIVE_WORKOUT_PREFERRED_UNIT_KEY);
-      localStorage.removeItem(WORKOUT_SELECTED_EXERCISE_KEY);
-      localStorage.removeItem(WORKOUT_SELECTED_SET_KEY);
-      localStorage.removeItem(WORKOUT_REST_START_KEY);
-
       setShowFinishModal(false);
       setShowSuccessModal(true);
       setTimeout(() => {
         navigate("/");
+        localStorage.removeItem(ACTIVE_WORKOUT_KEY);
+        localStorage.removeItem(ACTIVE_WORKOUT_SECONDS_KEY);
+        localStorage.removeItem(ACTIVE_WORKOUT_EXERCISES_KEY);
+        localStorage.removeItem(ACTIVE_WORKOUT_PREVIOUS_DATA_KEY);
+        localStorage.removeItem(ACTIVE_WORKOUT_PREFERRED_UNIT_KEY);
+        localStorage.removeItem(WORKOUT_SELECTED_EXERCISE_KEY);
+        localStorage.removeItem(WORKOUT_SELECTED_SET_KEY);
+        localStorage.removeItem(WORKOUT_REST_START_KEY);
       }, 1000);
     } catch (error) {
       setShowFinishModal(false);
@@ -380,27 +378,27 @@ const ActiveWorkout = () => {
   }
 
   if (loading) {
-    return <p>Loading Active Workout Page...</p>;
+    return <p>Loading...</p>;
   }
   return (
     <div className={styles.workoutContainer}>
       <div className={styles.header}>
-        <button
-          className={cn(styles.backBtn, styles.button)}
-          onClick={() => setShowBackModal(true)}
-        >
-          Exit
-        </button>
+        <h3 className={styles.title}>{workout.name}</h3>
         <div>
-          <h3 className={styles.title}>{workout.name}</h3>
+          <button
+            className={cn(styles.backBtn, styles.button)}
+            onClick={() => setShowBackModal(true)}
+          >
+            Exit
+          </button>
           <p className={styles.stopwatch}>{formatTime(seconds, "workout")}</p>
+          <button
+            className={cn(styles.button, styles.finishBtn)}
+            onClick={() => setShowFinishModal(true)}
+          >
+            Finish
+          </button>
         </div>
-        <button
-          className={cn(styles.button, styles.finishBtn)}
-          onClick={() => setShowFinishModal(true)}
-        >
-          Finish
-        </button>
       </div>
       <WorkoutForm
         workout={workout}

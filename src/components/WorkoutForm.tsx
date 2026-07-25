@@ -31,6 +31,7 @@ type WorkoutFormProps = {
   exercises?: ExerciseDB[];
   previousData?: Record<string, any>;
   addExercise?: (name: string, category: string) => Promise<void>;
+  handleUpdate?: () => Promise<void>;
 };
 
 type PreviousExercise = {
@@ -45,6 +46,7 @@ const WorkoutForm = ({
   previousData,
   addExercise,
   preferredUnit,
+  handleUpdate,
 }: WorkoutFormProps) => {
   const [showModal, setShowModal] = useState(false);
   const [showRemoveExerciseModal, setShowRemoveExerciseModal] = useState(false);
@@ -72,6 +74,7 @@ const WorkoutForm = ({
   }, [workout.exercises]);
 
   useEffect(() => {
+    if (pageType === "view") return;
     localStorage.setItem(
       WORKOUT_SELECTED_EXERCISE_KEY,
       JSON.stringify(selectedExercise),
@@ -79,10 +82,12 @@ const WorkoutForm = ({
   }, [selectedExercise]);
 
   useEffect(() => {
+    if (pageType === "view") return;
     localStorage.setItem(WORKOUT_SELECTED_SET_KEY, JSON.stringify(selectedSet));
   }, [selectedSet]);
 
   useEffect(() => {
+    if (pageType === "view") return;
     localStorage.setItem(WORKOUT_REST_START_KEY, restStart);
   }, [restStart]);
 
@@ -246,6 +251,18 @@ const WorkoutForm = ({
           : exercise,
       ),
     }));
+    const updatedExercise = selectedExercise
+      ? {
+          ...selectedExercise,
+          sets: selectedExercise.sets
+            .filter((set) => set.set_number !== setNumber)
+            .map((set, index) => ({ ...set, set_number: index + 1 })),
+        }
+      : null;
+    setSelectedExercise(updatedExercise);
+    setSelectedSet(
+      updatedExercise?.sets[updatedExercise?.sets.length - 1] ?? null,
+    );
   }
 
   function updateSet(
@@ -328,9 +345,14 @@ const WorkoutForm = ({
 
   return (
     <div className={styles.workoutFormContainer}>
-      <div className={styles.exerciseContainer}>
+      <div
+        className={`${styles.exerciseContainer} ${pageType !== "view" ? styles.addTopMargin : ""}`}
+      >
         {workout.exercises.map((exercise) => (
-          <div className={styles.exerciseCard} key={exercise.id}>
+          <div
+            className={`${styles.exerciseCard} ${exercise.id === selectedExercise?.id ? styles.selected : ""}`}
+            key={exercise.id}
+          >
             <h2 className={styles.exerciseName}>{exercise.exercise_name}</h2>
             {previousData && (
               <p className={styles.exercisePrev}>
@@ -371,6 +393,7 @@ const WorkoutForm = ({
                     <th>Reps</th>
                     <th className={styles.actionsTitle}>Done</th>
                     <th>Rest</th>
+                    <th></th>
                   </tr>
                 </thead>
 
@@ -378,11 +401,10 @@ const WorkoutForm = ({
                   {exercise.sets.map((set) => (
                     <tr
                       key={set.set_number}
-                      className={styles.set}
+                      className={`${styles.set} ${exercise.id === selectedExercise?.id && set.set_number === selectedSet?.set_number ? styles.selected : ""}`}
                       onClick={() => {
                         setSelectedExercise(exercise);
                         setSelectedSet(set);
-                        console.log(set);
                         let restTime = 0;
                         let completedSetFound = false;
 
@@ -436,7 +458,10 @@ const WorkoutForm = ({
                             pageType === "view" || exercise.sets.length < 2
                           }
                           className={styles.deleteSet}
-                          onClick={() => deleteSet(exercise.id, set.set_number)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            deleteSet(exercise.id, set.set_number);
+                          }}
                         >
                           ×
                         </button>
@@ -485,8 +510,8 @@ const WorkoutForm = ({
             <div className={styles.barHeader}>
               <p>{selectedExercise.exercise_name}</p>
               <p>Set {selectedSet.set_number}</p>
-              <p>Rest: {formatTime(selectedSet.rest_seconds, "rest")}</p>
             </div>
+            <p>Rest: {formatTime(selectedSet.rest_seconds, "rest")}</p>
             <div className={styles.barInputs}>
               <label>
                 Weight ({preferredUnit})
@@ -584,19 +609,8 @@ const WorkoutForm = ({
                   </button>
                 ))}
               {pageType === "change" && (
-                <button
-                  className={styles.completeSet}
-                  hidden={selectedSet.done}
-                  onClick={() => {
-                    updateSet(
-                      selectedExercise.id,
-                      selectedSet.set_number,
-                      "done",
-                      true,
-                    );
-                  }}
-                >
-                  Change Set
+                <button className={styles.saveBtn} onClick={handleUpdate}>
+                  Save Changes
                 </button>
               )}
             </div>

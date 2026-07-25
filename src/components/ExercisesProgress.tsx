@@ -69,16 +69,20 @@ const ExercisesProgress = ({ unit }: ExercisesProgressProps) => {
           if (completedSets.length === 0) return null;
 
           const bestSet = completedSets.reduce((best, current) => {
-            const bestVolume = best.weight * best.reps;
-            const currentVolume = current.weight * current.reps;
+            const formattedBestWeight = best.weight === 0 ? 1 : best.weight;
+            const formattedCurrentWeight = best.weight === 0 ? 1 : best.weight;
+            const bestVolume = formattedBestWeight * best.reps;
+            const currentVolume = formattedCurrentWeight * current.reps;
 
             return currentVolume > bestVolume ? current : best;
           });
 
           const displayedWeight =
-            unit === "lb"
-              ? Math.round(bestSet.weight * 2.20462262 * 10) / 10
-              : bestSet.weight;
+            bestSet.weight === 0
+              ? 1
+              : unit === "lb"
+                ? Math.round(bestSet.weight * 2.20462262 * 10) / 10
+                : bestSet.weight;
 
           return {
             date: entry.date.split("T")[0],
@@ -98,7 +102,11 @@ const ExercisesProgress = ({ unit }: ExercisesProgressProps) => {
           let totalVolume = 0;
 
           for (const set of completedSets) {
-            totalVolume += set.weight * set.reps;
+            if (set.weight === 0) {
+              totalVolume += set.reps;
+            } else {
+              totalVolume += set.weight * set.reps;
+            }
           }
 
           const displayedWeight =
@@ -145,7 +153,6 @@ const ExercisesProgress = ({ unit }: ExercisesProgressProps) => {
       return;
     }
 
-    
     setFilteredData(filtered);
   }, [chosenExercise, exerciseLogs, filterCriteria]);
 
@@ -194,7 +201,6 @@ const ExercisesProgress = ({ unit }: ExercisesProgressProps) => {
         </div>
       </div>
       <Chart chartData={filteredData} yPadding={2} label={label} unit={unit} />
-      
     </div>
   );
 };

@@ -60,7 +60,6 @@ const Chart = ({ chartData, yPadding, label, unit }: ChartProps) => {
   }, [chartData]);
 
   useEffect(() => {
-    console.log(range);
     if (range === "all") {
       setFilteredData(chartData);
       return;
@@ -165,7 +164,6 @@ const Chart = ({ chartData, yPadding, label, unit }: ChartProps) => {
           className={`${styles.rangeBtn} ${range === "3m" && styles.active}`}
           onClick={() => {
             setRange("3m");
-            console.log("Yeaahh");
           }}
         >
           3M

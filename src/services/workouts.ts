@@ -81,6 +81,7 @@ export async function createWorkout(workout: Workout) {
         weight: set.weight,
         reps: set.reps,
         done: set.done,
+        rest_seconds: set.rest_seconds,
       }));
 
       const { error: setsError } = await supabase
@@ -140,6 +141,7 @@ export async function updateWorkout(workout: Workout, workoutId: string) {
       weight: set.weight,
       reps: set.reps,
       done: set.done,
+      rest_seconds: set.rest_seconds,
     }));
 
     const { error: setsError } = await supabase

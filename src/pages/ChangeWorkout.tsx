@@ -22,6 +22,9 @@ import { getProfile } from "../services/profiles";
 import type { PreferredWeightUnit } from "../types/profile";
 
 const CHANGE_WORKOUT_KEY = "changeWorkout";
+const WORKOUT_SELECTED_EXERCISE_KEY = "workoutSelectedExercise";
+const WORKOUT_SELECTED_SET_KEY = "workoutSelectedSet";
+const WORKOUT_REST_START_KEY = "workoutRestStart";
 
 const MODAL_TEXT = `Are you sure you want to delete this workout? \n This action cannot be undone.`;
 
@@ -57,7 +60,7 @@ const ChangeWorkout = () => {
   const [exercises, setExercises] = useState<ExerciseDB[]>([]);
   const [preferredUnit, setPreferredUnit] = useState<PreferredWeightUnit>();
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
@@ -72,12 +75,15 @@ const ChangeWorkout = () => {
   useEffect(() => {
     const savedWorkout = localStorage.getItem(CHANGE_WORKOUT_KEY);
     if (savedWorkout) {
-      setLoading(false);
       return;
     }
     async function loadData() {
       setLoading(true);
       try {
+        const preferredUnitData = await getProfile();
+        if (preferredUnitData) {
+          setPreferredUnit(preferredUnitData.preferred_workout_unit);
+        }
         const workoutDetails = await getWorkoutDetails(String(workoutId));
         setWorkout({
           name: workoutDetails.name,
@@ -98,7 +104,7 @@ const ChangeWorkout = () => {
                 .map((item) => ({
                   set_number: item.set_number,
                   weight:
-                    preferredUnit === "lb"
+                    preferredUnitData.preferred_workout_unit === "lb"
                       ? Math.round(item.weight * 2.20462262 * 10) / 10
                       : item.weight,
                   reps: item.reps,
@@ -125,11 +131,14 @@ const ChangeWorkout = () => {
     setDeleting(true);
     try {
       await deleteWorkout(String(workoutId));
-      localStorage.removeItem(CHANGE_WORKOUT_KEY);
       setShowModal(false);
       setShowSuccessModal(true);
       setTimeout(() => {
         navigate("/");
+        localStorage.removeItem(CHANGE_WORKOUT_KEY);
+        localStorage.removeItem(WORKOUT_SELECTED_EXERCISE_KEY);
+        localStorage.removeItem(WORKOUT_SELECTED_SET_KEY);
+        localStorage.removeItem(WORKOUT_REST_START_KEY);
       }, 1000);
     } catch (error) {
       console.error("Error deleting workout:", error);
@@ -143,20 +152,13 @@ const ChangeWorkout = () => {
   }
 
   async function loadData() {
-    setLoading(true);
     try {
       const exercisesData = await getExercises();
       if (exercisesData) {
         setExercises(exercisesData);
       }
-      const data = await getProfile();
-      if (data) {
-        setPreferredUnit(data.preferred_workout_unit);
-      }
     } catch (error) {
       console.error("Error loading data:", error);
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -197,10 +199,13 @@ const ChangeWorkout = () => {
         { ...workout, exercises: formattedWorkoutExercises },
         String(workoutId),
       );
-      localStorage.removeItem(CHANGE_WORKOUT_KEY);
       setShowSuccessModal(true);
       setTimeout(() => {
         navigate("/");
+        localStorage.removeItem(CHANGE_WORKOUT_KEY);
+        localStorage.removeItem(WORKOUT_SELECTED_EXERCISE_KEY);
+        localStorage.removeItem(WORKOUT_SELECTED_SET_KEY);
+        localStorage.removeItem(WORKOUT_REST_START_KEY);
       }, 1000);
     } catch (error) {
       console.error("Error updating workout:", error);
@@ -219,32 +224,28 @@ const ChangeWorkout = () => {
   return (
     <div className={styles.workoutContainer}>
       <div className={styles.header}>
+        <h3 className={styles.title}>{workout?.name}</h3>
         <div>
           <button
             className={styles.backBtn}
             onClick={() => {
               navigate("/");
               localStorage.removeItem(CHANGE_WORKOUT_KEY);
+              localStorage.removeItem(WORKOUT_SELECTED_EXERCISE_KEY);
+              localStorage.removeItem(WORKOUT_SELECTED_SET_KEY);
+              localStorage.removeItem(WORKOUT_REST_START_KEY);
             }}
           >
             Back
           </button>
-        </div>
-        <div>
-          <h3 className={styles.title}>{workout?.name}</h3>
           <p className={styles.stopwatch}>
             {formatTime(workout?.duration_seconds, "workout")}
           </p>
-        </div>
-        <div>
           <button
             className={styles.deleteBtn}
             onClick={() => setShowModal(true)}
           >
             Delete
-          </button>
-          <button className={styles.saveBtn} onClick={handleUpdate}>
-            Save Changes
           </button>
         </div>
       </div>
@@ -256,6 +257,7 @@ const ChangeWorkout = () => {
         exercises={exercises}
         addExercise={addExercise}
         preferredUnit={preferredUnit}
+        handleUpdate={handleUpdate}
       />
       {showModal && (
         <ExecuteModal
