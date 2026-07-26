@@ -24,6 +24,11 @@ const Header = ({ toggleTheme, theme, session }: HeaderProps) => {
           >
             <UserRound size={20} />
           </button>
+          <h2 className={styles.appName}>
+            <span className={styles.mainLetter}>S</span>
+            <span className={styles.restLetters}>etwise</span>
+          </h2>
+          <div></div>
         </div>
       ) : (
         <div className={styles.sessionBox}>
@@ -37,6 +42,11 @@ const Header = ({ toggleTheme, theme, session }: HeaderProps) => {
               {theme === "dark" ? "🌙 Dark" : "☀️ Light"}
             </button>
           </div>
+          <h2 className={styles.appName}>
+            <span className={styles.mainLetter}>S</span>
+            <span className={styles.restLetters}>etwise</span>
+          </h2>
+          <div></div>
         </div>
       )}
     </header>
