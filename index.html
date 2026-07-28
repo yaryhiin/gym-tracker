@@ -20,7 +20,7 @@
     <meta name="author" content="Tymofii Yaryhin" />
     <meta name="robots" content="index, follow" />
 
-    <link rel="canonical" href="https://gym-tracker-yaryhiin.netlify.app/" />
+    <link rel="canonical" href="https://setwise.yaryhin.com" />
 
     <!-- Open Graph: Facebook, LinkedIn, Discord, WhatsApp, Telegram -->
     <meta property="og:type" content="website" />
@@ -33,15 +33,12 @@
       property="og:description"
       content="Create workout routines, log every set, track body weight and measurements, and explore detailed progress charts."
     />
-    <meta
-      property="og:url"
-      content="https://gym-tracker-yaryhiin.netlify.app/"
-    />
-    <meta
+    <meta property="og:url" content="https://setwise.yaryhin.com" />
+    <!-- <meta
       property="og:image"
-      content="https://your-domain.com/images/gym-tracker-preview.png"
+      content="https://setwise.yaryhin.com/images/gym-tracker-preview.png"
     />
-    <!-- <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" /> -->
     <meta
@@ -68,13 +65,16 @@
       src="https://www.googletagmanager.com/gtag/js?id=G-HZFP4ZEFJT"
     ></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
+      if (!localStorage.getItem("admin")) {
+        console.log("Google analytic loading");
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        gtag("js", new Date());
 
-      gtag("config", "G-HZFP4ZEFJT");
+        gtag("config", "G-HZFP4ZEFJT");
+      }
     </script>
   </head>
   <body>
