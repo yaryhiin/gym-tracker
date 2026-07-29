@@ -106,7 +106,7 @@ const History = () => {
           <tbody>
             {sortedWorkouts.map((workout) => (
               <tr key={workout.id}>
-                <td>{formatDate(workout.finished_at)}</td>
+                <td>{formatDate(workout.started_at)}</td>
                 <td>{workout.name}</td>
                 <td>{formatDuration(workout.duration_seconds)} </td>
                 <td>

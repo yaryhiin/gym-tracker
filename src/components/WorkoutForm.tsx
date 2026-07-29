@@ -352,6 +352,7 @@ const WorkoutForm = ({
           <div
             className={`${styles.exerciseCard} ${exercise.id === selectedExercise?.id ? styles.selected : ""}`}
             key={exercise.id}
+            id={exercise.id}
           >
             <h2 className={styles.exerciseName}>{exercise.exercise_name}</h2>
             {previousData && (
@@ -521,6 +522,14 @@ const WorkoutForm = ({
                   min="0"
                   max="1000"
                   placeholder="0"
+                  onFocus={() => {
+                    document
+                      .getElementById(selectedExercise.id)
+                      ?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                  }}
                   onChange={(e) =>
                     updateSet(
                       selectedExercise.id,
@@ -540,6 +549,14 @@ const WorkoutForm = ({
                   min="0"
                   max="1000"
                   placeholder="0"
+                  onFocus={() => {
+                    document
+                      .getElementById(selectedExercise.id)
+                      ?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                  }}
                   onChange={(e) =>
                     updateSet(
                       selectedExercise.id,
@@ -563,21 +580,22 @@ const WorkoutForm = ({
                         "done",
                         true,
                       );
-                      setSelectedExercise(
-                        (prev) =>
-                          workout.exercises.find((exercise) =>
-                            prev
-                              ? prev?.order_index + 1 === exercise.order_index
-                              : null,
-                          ) ?? null,
-                      );
-                      setSelectedSet({
-                        set_number: 1,
-                        weight: 0,
-                        reps: 0,
-                        rest_seconds: 0,
-                        done: false,
-                      });
+                      const nextExercise =
+                        workout.exercises.find((exercise) =>
+                          selectedExercise
+                            ? selectedExercise?.order_index + 1 ===
+                              exercise.order_index
+                            : null,
+                        ) ?? null;
+                      if (nextExercise)
+                        document
+                          .getElementById(nextExercise.id)
+                          ?.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                          });
+                      setSelectedExercise(nextExercise);
+                      setSelectedSet(nextExercise?.sets[0] ?? null);
                       setRestStart(new Date().toISOString());
                     }}
                   >
@@ -594,6 +612,12 @@ const WorkoutForm = ({
                         "done",
                         true,
                       );
+                      document
+                        .getElementById(selectedExercise.id)
+                        ?.scrollIntoView({
+                          behavior: "smooth",
+                          block: "start",
+                        });
                       const newSet = {
                         set_number: selectedSet.set_number + 1,
                         weight: selectedSet.weight,

@@ -38,6 +38,7 @@ import { getProfile, createProfile, updateProfile } from "./services/profiles";
 import { getLatestWeightLog } from "./services/weightLogs";
 import { getDaysSince, getTodayDateString } from "./services/utils";
 import { getLatestMeasurementLog } from "./services/measurements";
+import { createDefaultExercises } from "./services/exercises";
 
 const WEIGHT_CHECKIN_SKIPPED_DATE_KEY = "weightCheckinSkippedDate";
 const MEASUREMENTS_CHECKIN_SKIPPED_DATE_KEY = "measurementsCheckinSkippedDate";
@@ -100,10 +101,13 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (authLoading) return;
+
     if (!session) {
       setProfile(null);
       localStorage.removeItem("profile");
-      localStorage.removeItem("measurementsCheckinSkippedDate");
+      localStorage.removeItem(WEIGHT_CHECKIN_SKIPPED_DATE_KEY);
+      localStorage.removeItem(MEASUREMENTS_CHECKIN_SKIPPED_DATE_KEY);
       setProfileLoading(false);
       return;
     }
@@ -120,6 +124,7 @@ function App() {
           setProfile(profileData);
           localStorage.setItem("profile", JSON.stringify(profileData));
         } else {
+          await createDefaultExercises();
           setShowProfileSetup(true);
         }
       } catch (error) {
@@ -130,7 +135,7 @@ function App() {
     }
 
     setupProfile();
-  }, [session?.user.id]);
+  }, [session?.user.id, session]);
 
   useEffect(() => {
     async function checkWeightReminder() {

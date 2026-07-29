@@ -8,6 +8,7 @@
   align-items: center;
   width: 100%;
   align-self: center;
+  scroll-margin-top: 110px;
 }
 
 .exerciseName {
@@ -217,7 +218,7 @@ input[type="checkbox"] {
   align-items: flex-start;
   justify-content: center;
   gap: 5px;
-  padding: 10px 40px 10px 35px;
+  padding: 10px 40px 25px 35px;
   width: 100%;
   max-width: 430px;
   justify-content: center;
@@ -240,10 +241,19 @@ input[type="checkbox"] {
   text-align: left;
   justify-content: space-between;
   margin-bottom: 0px;
+  gap: 30px;
 
   p {
     font-weight: bold;
     font-size: 18px;
+    &:first-child {
+      overflow-wrap: break-word;
+      display: -webkit-box;
+      line-clamp: 1;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
   }
 }
 

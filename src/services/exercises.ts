@@ -1,6 +1,7 @@
 import { supabase } from "../supabase";
 import { getCurrentUserId } from "./auth";
 import type { Exercise } from "../types/exercise";
+import { DEFAULT_EXERCISES } from "./defaults";
 
 export async function getExercises() {
   const { data, error } = await supabase
@@ -99,4 +100,22 @@ export async function deleteExercise(exercise_id: string) {
   }
 
   return true;
+}
+
+export async function createDefaultExercises() {
+  const userId = await getCurrentUserId();
+
+  const updatedList = DEFAULT_EXERCISES.map((exercise) => ({
+    ...exercise,
+    user_id: userId,
+  }));
+
+  const { error } = await supabase
+    .from("exercises")
+    .insert(updatedList)
+
+  if (error) {
+    console.error("Error creating exercise:", error);
+    return null;
+  }
 }

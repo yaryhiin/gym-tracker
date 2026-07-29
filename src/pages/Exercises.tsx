@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { EllipsisVertical, Pencil, Trash2 } from "lucide-react";
 
 import styles from "../styles/modules/Exercises.module.scss";
 
@@ -27,6 +28,7 @@ const Exercises = () => {
   const [deleting, setDeleting] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -137,30 +139,42 @@ const Exercises = () => {
               <h3>{exercise.name}</h3>
               <p>{exercise.category}</p>
             </div>
-            <div className={styles.exerciseElementButtons}>
+
+            {showOptions && chosenExercise.id === exercise.id ? (
+              <div className={styles.exerciseElementButtons}>
+                <button
+                  className={styles.editExerciseBtn}
+                  onClick={() => {
+                    setShowEditModal(true);
+                  }}
+                >
+                  <Pencil size={10} />
+                  Edit
+                </button>
+                <button
+                  className={styles.deleteExerciseBtn}
+                  onClick={() => {
+                    setShowMessageModal(true);
+                  }}
+                >
+                  <Trash2 size={10} />
+                  Delete
+                </button>
+              </div>
+            ) : (
               <button
-                className={styles.editExerciseBtn}
+                className={`${styles.accessBtn} rounded-md p-2 hover:bg-slate-700`}
                 onClick={() => {
-                  setShowEditModal(true);
+                  setShowOptions(true);
                   setChosenExercise(exercise);
                 }}
               >
-                Edit
+                <EllipsisVertical size={20} />
               </button>
-              <button
-                className={styles.deleteExerciseBtn}
-                onClick={() => {
-                  setShowMessageModal(true);
-                  setChosenExercise(exercise);
-                }}
-              >
-                Delete
-              </button>
-            </div>
+            )}
           </div>
         ))}
       </div>
-
       {showCreateModal && (
         <ManageExerciseModal
           onClose={() => setShowCreateModal(false)}

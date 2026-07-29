@@ -89,7 +89,7 @@ const Home = ({ name }: HomeProps) => {
                 key={workout.id}
               >
                 <p className={styles.descName}>
-                  {workout.name} - {formatDate(workout.finished_at)}
+                  {workout.name} - {formatDate(workout.started_at)}
                 </p>
                 <div className={styles.descWorkout}>
                   <p>Duration: {formatDuration(workout.duration_seconds)}</p>
