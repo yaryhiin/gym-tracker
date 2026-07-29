@@ -1,5 +1,5 @@
 import { supabase } from "./supabase";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -61,6 +61,7 @@ function App() {
   const [authLoading, setAuthLoading] = useState(true);
   const [profileLoading, setProfileLoading] = useState(true);
   const [profile, setProfile] = useState<ProfileDB | null>(getInitialProfile);
+  const isCreatingDefaultsRef = useRef(false);
 
   const [showProfileSetup, setShowProfileSetup] = useState(false);
   const [showWeightCheckinModal, setShowWeightCheckinModal] = useState(false);
@@ -124,13 +125,17 @@ function App() {
           setProfile(profileData);
           localStorage.setItem("profile", JSON.stringify(profileData));
         } else {
-          await createDefaultExercises();
           setShowProfileSetup(true);
+          if (!isCreatingDefaultsRef.current) {
+            await createDefaultExercises();
+            isCreatingDefaultsRef.current = true;
+          }
         }
       } catch (error) {
         console.error("Error loading profile:", error);
       } finally {
         setProfileLoading(false);
+        isCreatingDefaultsRef.current = false;
       }
     }
 
