@@ -187,8 +187,6 @@ const WorkoutForm = ({
   function formatPreviousSets(previousExercise?: PreviousExercise | null) {
     if (!previousExercise) return "No previous data";
 
-    if (exercises && previousData) console.log(previousData[exercises[1].id]);
-
     const grouped = new Map<number, number[]>();
 
     [...previousExercise.workout_sets]
@@ -211,6 +209,8 @@ const WorkoutForm = ({
       })
       .join(", ");
   }
+
+  // function formatPreviousNote
 
   function addSet(exerciseId: string) {
     if (!setWorkout || pageType === "view" || !selectedExercise) return;
@@ -357,13 +357,13 @@ const WorkoutForm = ({
             id={exercise.id}
           >
             <h2 className={styles.exerciseName}>{exercise.exercise_name}</h2>
-            {previousData && (
+            {previousData?.[exercise.exercise_id] && (
               <p className={styles.exercisePrev}>
                 Last time:{" "}
                 {formatPreviousSets(previousData[exercise.exercise_id])}
               </p>
             )}
-            {previousData && previousData[exercise.exercise_id].notes && (
+            {previousData?.[exercise.exercise_id]?.notes && (
               <p className={styles.exercisePrev}>
                 Previous note: {previousData[exercise.exercise_id].notes}
               </p>

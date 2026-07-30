@@ -18,6 +18,7 @@ import InfoModal from "../components/InfoModal";
 import type { PreferredWeightUnit } from "../types/profile";
 import { getProfile } from "../services/profiles";
 
+const ACTIVE_WORKOUT_ROUTINE_KEY = "activeWorkoutRoutine";
 const ACTIVE_WORKOUT_KEY = "activeWorkout";
 const ACTIVE_WORKOUT_SECONDS_KEY = "activeWorkoutSeconds";
 const ACTIVE_WORKOUT_EXERCISES_KEY = "activeWorkoutExercises";
@@ -218,6 +219,7 @@ const ActiveWorkout = () => {
       return;
     }
     if (routineId) {
+      localStorage.setItem(ACTIVE_WORKOUT_ROUTINE_KEY, routineId);
       async function getDetails() {
         setLoading(true);
         try {
