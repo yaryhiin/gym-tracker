@@ -303,6 +303,7 @@ const RoutineBuilder = () => {
                 className={styles.editExerciseBtn}
                 onClick={() => {
                   setChosenExerciseId(exercise.exercise_id);
+
                   setShowChooseExerciseModal(true);
                 }}
               >
@@ -379,6 +380,11 @@ const RoutineBuilder = () => {
         <ChooseExerciseModal
           initialSelectedExerciseId={chosenExerciseId}
           exercises={exercises}
+          existingExercises={
+            new Set(
+              routineDraft.exercises.map((exercise) => exercise.exercise_id),
+            )
+          }
           onClose={() => {
             setChosenExerciseId("");
             setShowChooseExerciseModal(false);

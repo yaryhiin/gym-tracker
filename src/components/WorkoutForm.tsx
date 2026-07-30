@@ -651,6 +651,9 @@ const WorkoutForm = ({
       {showModal && exercises && addExercise && (
         <ChooseExerciseModal
           exercises={exercises}
+          existingExercises={
+            new Set(workout.exercises.map((exercise) => exercise.exercise_id))
+          }
           onClose={() => setShowModal(false)}
           addExercise={addExercise}
           chooseExercise={chooseExercise}

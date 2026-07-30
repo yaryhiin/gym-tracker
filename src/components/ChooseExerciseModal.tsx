@@ -10,6 +10,7 @@ import CreateExerciseModal from "./ManageExerciseModal";
 type ChooseExerciseModalProps = {
   initialSelectedExerciseId?: string;
   exercises: ExerciseDB[];
+  existingExercises: Set<string>;
   onClose: () => void;
   addExercise: (name: string, category: string) => void;
   chooseExercise: (exercise: ExerciseDB) => void;
@@ -18,6 +19,7 @@ type ChooseExerciseModalProps = {
 const ChooseExerciseModal = ({
   initialSelectedExerciseId,
   exercises,
+  existingExercises,
   onClose,
   addExercise,
   chooseExercise,
@@ -27,6 +29,9 @@ const ChooseExerciseModal = ({
   ];
   const [chosenExerciseCategory, setChosenExerciseCategory] = useState("");
   const [chosenExercise, setChosenExercise] = useState<ExerciseDB>();
+  const availableExercises = exercises.filter(
+    (exercise) => !existingExercises.has(exercise.id),
+  );
 
   useEffect(() => {
     if (!initialSelectedExerciseId) return;
@@ -66,10 +71,10 @@ const ChooseExerciseModal = ({
         </div>
         <div className={styles.exerciseContainer}>
           <div className={styles.exerciseList}>
-            {exercises.length === 0 ? (
+            {availableExercises.length === 0 ? (
               <p>You dont have any exercises, add some first</p>
             ) : (
-              exercises
+              availableExercises
                 .filter((exercise) => {
                   if (chosenExerciseCategory === "") return true;
                   return exercise.category === chosenExerciseCategory;
