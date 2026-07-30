@@ -193,6 +193,7 @@ type PreviousExerciseRow = {
   exercise_name: string;
   workout_id: string;
   order_index: number;
+  notes: string;
   workout_sets: WorkoutSet[];
   workouts: WorkoutRelation | null;
 };
@@ -211,6 +212,7 @@ export async function getPreviousExerciseData(exerciseIds: string[]) {
         exercise_name,
         workout_id,
         order_index,
+        notes,
         workout_sets (
           id,
           set_number,

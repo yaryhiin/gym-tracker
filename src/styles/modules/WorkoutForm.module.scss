@@ -17,11 +17,15 @@
   margin-bottom: 6px;
 }
 
-.exercisePrev,
-.exerciseSuggest {
+.exercisePrev {
   font-size: 14px;
   color: var(--text-secondary);
   margin: 2px;
+  text-align: left;
+  overflow-wrap: break-word;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  max-width: 80%;
 }
 
 .exerciseSuggest {
