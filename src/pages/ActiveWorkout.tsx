@@ -367,6 +367,7 @@ const ActiveWorkout = () => {
         localStorage.removeItem(WORKOUT_SELECTED_EXERCISE_KEY);
         localStorage.removeItem(WORKOUT_SELECTED_SET_KEY);
         localStorage.removeItem(WORKOUT_REST_START_KEY);
+        localStorage.removeItem(ACTIVE_WORKOUT_ROUTINE_KEY);
       }, 1000);
     } catch (error) {
       setShowFinishModal(false);
@@ -426,6 +427,7 @@ const ActiveWorkout = () => {
             localStorage.removeItem(WORKOUT_SELECTED_EXERCISE_KEY);
             localStorage.removeItem(WORKOUT_SELECTED_SET_KEY);
             localStorage.removeItem(WORKOUT_REST_START_KEY);
+            localStorage.removeItem(ACTIVE_WORKOUT_ROUTINE_KEY);
             navigate("/");
           }}
         />
