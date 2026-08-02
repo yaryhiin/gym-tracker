@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { EllipsisVertical, Pencil, Trash2 } from "lucide-react";
 
 import styles from "../styles/modules/Exercises.module.scss";
@@ -29,6 +29,7 @@ const Exercises = () => {
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -49,6 +50,30 @@ const Exercises = () => {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    if (!showOptions) return;
+
+    function handleClickOutside(event: MouseEvent | TouchEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowOptions(false);
+      }
+    }
+
+    function handleScroll() {
+      setShowOptions(false);
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    window.addEventListener("scroll", handleScroll, true);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+      window.removeEventListener("scroll", handleScroll, true);
+    };
+  }, [showOptions]);
 
   async function addExercise(name: string, category: string) {
     setSaving(true);
@@ -136,42 +161,45 @@ const Exercises = () => {
         {exercises.map((exercise) => (
           <div key={exercise.id} className={styles.exerciseElement}>
             <div className={styles.exerciseElementTop}>
-              <h3>{exercise.name}</h3>
+              <div className={styles.exerciseElementHeader}>
+                <h3>{exercise.name}</h3>
+                <div className="exerciseMenuWrapper">
+                  {showOptions && chosenExercise.id === exercise.id ? (
+                    <div ref={menuRef} className="exerciseMenu">
+                      <button
+                        className={styles.editExerciseBtn}
+                        onClick={() => {
+                          setShowEditModal(true);
+                        }}
+                      >
+                        <Pencil size={15} />
+                        Edit
+                      </button>
+                      <button
+                        className={styles.deleteExerciseBtn}
+                        onClick={() => {
+                          setShowMessageModal(true);
+                        }}
+                      >
+                        <Trash2 size={15} />
+                        Delete
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      className="accessBtn"
+                      onClick={() => {
+                        setShowOptions(true);
+                        setChosenExercise(exercise);
+                      }}
+                    >
+                      <EllipsisVertical size={20} />
+                    </button>
+                  )}
+                </div>
+              </div>
               <p>{exercise.category}</p>
             </div>
-
-            {showOptions && chosenExercise.id === exercise.id ? (
-              <div className={styles.exerciseElementButtons}>
-                <button
-                  className={styles.editExerciseBtn}
-                  onClick={() => {
-                    setShowEditModal(true);
-                  }}
-                >
-                  <Pencil size={10} />
-                  Edit
-                </button>
-                <button
-                  className={styles.deleteExerciseBtn}
-                  onClick={() => {
-                    setShowMessageModal(true);
-                  }}
-                >
-                  <Trash2 size={10} />
-                  Delete
-                </button>
-              </div>
-            ) : (
-              <button
-                className={`${styles.accessBtn} rounded-md p-2 hover:bg-slate-700`}
-                onClick={() => {
-                  setShowOptions(true);
-                  setChosenExercise(exercise);
-                }}
-              >
-                <EllipsisVertical size={20} />
-              </button>
-            )}
           </div>
         ))}
       </div>

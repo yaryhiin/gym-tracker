@@ -17,10 +17,10 @@ export async function getExercises() {
   return data || [];
 }
 
-export async function getExercisesLogs() {
+export async function getExercisesLogs(exerciseId?: string) {
   const userId = await getCurrentUserId();
 
-  const { data, error } = await supabase
+  let query = supabase
     .from("workouts")
     .select(
       `
@@ -28,24 +28,33 @@ export async function getExercisesLogs() {
       name,
       created_at,
       finished_at,
-      workout_exercises (
+      workout_exercises!inner (
         id,
+        notes,
         exercise_id,
         exercise_name,
         category,
-        order_index,
         workout_sets (
           id,
           set_number,
           weight,
           reps,
-          done
+          done,
+          rest_seconds
         )
       )
     `,
     )
-    .eq("user_id", userId)
-    .order("created_at", { ascending: true });
+    .eq("user_id", userId);
+
+  if (exerciseId) {
+    query = query.eq("workout_exercises.exercise_id", exerciseId);
+    query = query.order("created_at", { ascending: false });
+  } else {
+    query = query.order("created_at", { ascending: true });
+  }
+
+  const { data, error } = await query;
 
   if (error) throw error;
 

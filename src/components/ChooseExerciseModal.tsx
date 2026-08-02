@@ -38,7 +38,7 @@ const ChooseExerciseModal = ({
     setChosenExercise(
       exercises.find((exercise) => exercise.id === initialSelectedExerciseId),
     );
-  }, []);
+  }, [initialSelectedExerciseId]);
 
   const [showModal, setShowModal] = useState(false);
   return (
@@ -123,7 +123,7 @@ const ChooseExerciseModal = ({
               if (chosenExercise) chooseExercise(chosenExercise);
             }}
           >
-            {initialSelectedExerciseId ? "Save Changes" : "Add"}
+            {initialSelectedExerciseId ? "Replace" : "Add"}
           </button>
           <button className={cn(styles.backBtn, "button")} onClick={onClose}>
             Back

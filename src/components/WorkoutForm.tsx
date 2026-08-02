@@ -1,6 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import cn from "classnames";
-import { MessageSquarePlus } from "lucide-react";
+import {
+  EllipsisVertical,
+  Pencil,
+  Trash2,
+  MessageSquarePlus,
+  History,
+} from "lucide-react";
 
 import styles from "../styles/modules/WorkoutForm.module.scss";
 
@@ -14,6 +20,7 @@ import ChooseExerciseModal from "../components/ChooseExerciseModal";
 
 import { createLocalId } from "../services/utils";
 import { formatTime } from "../services/utils";
+import ExerciseHistoryModal from "./ExerciseHistoryModal";
 
 const MODAL_TEXT =
   "You sure you want to delete this exercise from workout \n All sets will be lost";
@@ -48,8 +55,10 @@ const WorkoutForm = ({
   preferredUnit,
   handleUpdate,
 }: WorkoutFormProps) => {
-  const [showModal, setShowModal] = useState(false);
+  const [showChooseExerciseModal, setShowChooseExerciseModal] = useState(false);
   const [showRemoveExerciseModal, setShowRemoveExerciseModal] = useState(false);
+  const [showExerciseInfo, setShowExerciseInfoModal] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
   const [chosenExerciseId, setChosenExerciseId] = useState("");
   const [selectedSet, setSelectedSet] = useState<WorkoutSet | null>(
     getInitialSelectedSet,
@@ -59,6 +68,7 @@ const WorkoutForm = ({
     useState<WorkoutExercise | null>(getInitialSelectedExercise);
 
   const [showNotes, setShowNotes] = useState<Record<string, boolean>>({});
+  const [showOptions, setShowOptions] = useState(false);
 
   useEffect(() => {
     if (workout.exercises.length > 0) {
@@ -140,6 +150,30 @@ const WorkoutForm = ({
     return () => clearInterval(interval);
   }, [restStart, selectedExercise, selectedSet]);
 
+  useEffect(() => {
+    if (!showOptions) return;
+
+    function handleClickOutside(event: MouseEvent | TouchEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowOptions(false);
+      }
+    }
+
+    function handleScroll() {
+      setShowOptions(false);
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    window.addEventListener("scroll", handleScroll, true);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+      window.removeEventListener("scroll", handleScroll, true);
+    };
+  }, [showOptions]);
+
   function getInitialSelectedExercise() {
     const savedSelectedExercise = localStorage.getItem(
       WORKOUT_SELECTED_EXERCISE_KEY,
@@ -209,8 +243,6 @@ const WorkoutForm = ({
       })
       .join(", ");
   }
-
-  // function formatPreviousNote
 
   function addSet(exerciseId: string) {
     if (!setWorkout || pageType === "view" || !selectedExercise) return;
@@ -294,39 +326,67 @@ const WorkoutForm = ({
   function chooseExercise(exercise: ExerciseDB) {
     if (!setWorkout || pageType === "view") return;
 
-    setWorkout((prev) => ({
-      ...prev,
-      exercises: [
-        ...prev.exercises,
-        {
-          id: createLocalId(),
-          exercise_name: exercise.name,
-          exercise_id: exercise.id,
-          category: exercise.category,
-          order_index: prev.exercises.length + 1,
-          notes: "",
-          sets: [
-            {
-              set_number: 1,
-              weight: 0,
-              reps: 0,
-              rest_seconds: 0,
-              done: false,
-            },
-          ],
-        },
-      ],
-    }));
-    setShowModal(false);
+    if (chosenExerciseId !== "") {
+      setWorkout((prev) => ({
+        ...prev,
+        exercises: prev.exercises.map((e) =>
+          e.exercise_id === chosenExerciseId
+            ? {
+                id: createLocalId(),
+                exercise_name: exercise.name,
+                exercise_id: exercise.id,
+                category: exercise.category,
+                order_index: e.order_index,
+                notes: "",
+                sets: [
+                  {
+                    set_number: 1,
+                    weight: 0,
+                    reps: 0,
+                    rest_seconds: 0,
+                    done: false,
+                  },
+                ],
+              }
+            : e,
+        ),
+      }));
+    } else {
+      setWorkout((prev) => ({
+        ...prev,
+        exercises: [
+          ...prev.exercises,
+          {
+            id: createLocalId(),
+            exercise_name: exercise.name,
+            exercise_id: exercise.id,
+            category: exercise.category,
+            order_index: prev.exercises.length + 1,
+            notes: "",
+            sets: [
+              {
+                set_number: 1,
+                weight: 0,
+                reps: 0,
+                rest_seconds: 0,
+                done: false,
+              },
+            ],
+          },
+        ],
+      }));
+    }
+    setChosenExerciseId("");
+    setShowChooseExerciseModal(false);
   }
 
-  function removeExercise(exerciseId: string) {
-    if (exerciseId === "" || !setWorkout || pageType === "view") return;
+  function removeExercise() {
+    if (chosenExerciseId === "" || !setWorkout || pageType === "view") return;
     setWorkout((prev) => ({
       ...prev,
       exercises: [
         ...prev.exercises
-          .filter((exercise) => exercise.id !== exerciseId)
+          .filter((exercise) => exercise.exercise_id !== chosenExerciseId)
           .map((exercise, index) => ({ ...exercise, order_index: index + 1 })),
       ],
     }));
@@ -356,7 +416,59 @@ const WorkoutForm = ({
             key={exercise.id}
             id={exercise.id}
           >
-            <h2 className={styles.exerciseName}>{exercise.exercise_name}</h2>
+            <div className={styles.exerciseCardHeader}>
+              <h2 className={styles.exerciseName}>{exercise.exercise_name}</h2>
+              <div className="exerciseMenuWrapper">
+                {showOptions && chosenExerciseId === exercise.exercise_id ? (
+                  <div ref={menuRef} className="exerciseMenu">
+                    {pageType !== "view" && (
+                      <button
+                        className={styles.editExerciseBtn}
+                        onClick={() => {
+                          setChosenExerciseId(exercise.exercise_id);
+                          setShowChooseExerciseModal(true);
+                        }}
+                      >
+                        <Pencil size={15} />
+                        Replace
+                      </button>
+                    )}
+                    {pageType !== "view" && (
+                      <button
+                        className={styles.deleteExerciseBtn}
+                        onClick={() => {
+                          setShowRemoveExerciseModal(true);
+                          setChosenExerciseId(exercise.exercise_id);
+                        }}
+                      >
+                        <Trash2 size={15} />
+                        Delete
+                      </button>
+                    )}
+                    <button
+                      className={styles.deleteExerciseBtn}
+                      onClick={() => {
+                        setChosenExerciseId(exercise.exercise_id);
+                        setShowExerciseInfoModal(true);
+                      }}
+                    >
+                      <History size={15} />
+                      History
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    className="accessBtn"
+                    onClick={() => {
+                      setShowOptions(true);
+                      setChosenExerciseId(exercise.exercise_id);
+                    }}
+                  >
+                    <EllipsisVertical size={20} />
+                  </button>
+                )}
+              </div>
+            </div>
             {previousData?.[exercise.exercise_id] && (
               <p className={styles.exercisePrev}>
                 Last time:{" "}
@@ -487,15 +599,6 @@ const WorkoutForm = ({
                   >
                     Add Set
                   </button>
-                  <button
-                    className={styles.removeExercise}
-                    onClick={() => {
-                      setShowRemoveExerciseModal(true);
-                      setChosenExerciseId(exercise.id);
-                    }}
-                  >
-                    Remove Exercise
-                  </button>
                 </div>
               )}
             </div>
@@ -504,7 +607,7 @@ const WorkoutForm = ({
         {pageType !== "view" && (
           <button
             className={cn(styles.addExercise, styles.button)}
-            onClick={() => setShowModal(true)}
+            onClick={() => setShowChooseExerciseModal(true)}
           >
             Add Exercise
           </button>
@@ -648,21 +751,32 @@ const WorkoutForm = ({
             </div>
           </div>
         )}
+      {showExerciseInfo && (
+        <ExerciseHistoryModal
+          exerciseId={chosenExerciseId}
+          onClose={() => setShowExerciseInfoModal(false)}
+          preferredUnit={preferredUnit ?? "kg"}
+        />
+      )}
       {showRemoveExerciseModal && (
         <ExecuteModal
           text={MODAL_TEXT}
           btnText="Delete"
           onClose={() => setShowRemoveExerciseModal(false)}
-          onDelete={() => removeExercise(chosenExerciseId)}
+          onDelete={removeExercise}
         />
       )}
-      {showModal && exercises && addExercise && (
+      {showChooseExerciseModal && exercises && addExercise && (
         <ChooseExerciseModal
+          initialSelectedExerciseId={chosenExerciseId}
           exercises={exercises}
           existingExercises={
             new Set(workout.exercises.map((exercise) => exercise.exercise_id))
           }
-          onClose={() => setShowModal(false)}
+          onClose={() => {
+            setChosenExerciseId("");
+            setShowChooseExerciseModal(false);
+          }}
           addExercise={addExercise}
           chooseExercise={chooseExercise}
         />

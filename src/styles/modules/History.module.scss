@@ -24,19 +24,17 @@ thead {
   top: 0;
   z-index: 1;
   background-color: var(--card);
-  border-top: 1px solid var(--border);
+  box-shadow: 0 2px 0 var(--border);
 }
 
 th,
 td {
   font-size: 14px;
   font-weight: normal;
-  position: sticky;
   top: 0;
   z-index: 1;
   background-color: var(--card-bg);
   padding: 8px;
-  border-bottom: 3px solid var(--border);
   border-top: 1px solid var(--border);
   text-align: center;
   cursor: pointer;

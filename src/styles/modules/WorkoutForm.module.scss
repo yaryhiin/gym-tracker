@@ -14,7 +14,18 @@
 .exerciseName {
   font-size: 18px;
   font-weight: 700;
-  margin-bottom: 6px;
+  margin: 0;
+  grid-column: 2;
+}
+
+.exerciseCardHeader {
+  position: relative;
+  width: 90%;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  margin-top: 23px;
+  margin-bottom: 8px;
 }
 
 .exercisePrev {
@@ -26,10 +37,6 @@
   line-clamp: 2;
   -webkit-line-clamp: 2;
   max-width: 80%;
-}
-
-.exerciseSuggest {
-  color: var(--accent);
 }
 
 .exercises {

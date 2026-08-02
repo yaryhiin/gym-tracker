@@ -77,6 +77,16 @@
   overflow: hidden;
 }
 
+.exerciseElementHeader {
+  position: relative;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  height: 30px;
+  margin-top: 10px;
+}
+
 .selectedExerciseElement p {
   font-size: 0.9rem;
   opacity: 0.75;

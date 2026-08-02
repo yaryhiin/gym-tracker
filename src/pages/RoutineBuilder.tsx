@@ -1,7 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import cn from "classnames";
-import { ChevronUp, ChevronDown } from "lucide-react";
+import {
+  EllipsisVertical,
+  Pencil,
+  Trash2,
+  ChevronUp,
+  ChevronDown,
+} from "lucide-react";
 
 import styles from "../styles/modules/RoutineBuilder.module.scss";
 
@@ -55,6 +61,9 @@ const RoutineBuilder = () => {
   const [saving, setSaving] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
   const [errors, setErrors] = useState<RoutineErrors>({
     name: false,
     exercises: false,
@@ -99,6 +108,30 @@ const RoutineBuilder = () => {
     localStorage.setItem(draftKey, JSON.stringify(routineDraft));
   }, [routineDraft]);
 
+  useEffect(() => {
+    if (!showOptions) return;
+
+    function handleClickOutside(event: MouseEvent | TouchEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowOptions(false);
+      }
+    }
+
+    function handleScroll() {
+      setShowOptions(false);
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    window.addEventListener("scroll", handleScroll, true);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+      window.removeEventListener("scroll", handleScroll, true);
+    };
+  }, [showOptions]);
+
   async function loadData() {
     setLoading(true);
     try {
@@ -112,21 +145,35 @@ const RoutineBuilder = () => {
   }
 
   function chooseExercise(exercise: ExerciseDB) {
-    setRoutineDraft((prev) => ({
-      ...prev,
-      exercises: [
-        ...prev.exercises,
-        {
-          exercise_id: exercise.id,
-          exercise_name: exercise.name,
-          category: exercise.category,
-          order_index: prev.exercises.length + 1,
-        },
-      ],
-    }));
     if (chosenExerciseId != "") {
-      deleteExercise();
+      setRoutineDraft((prev) => ({
+        ...prev,
+        exercises: prev.exercises.map((e) =>
+          e.exercise_id === chosenExerciseId
+            ? {
+                exercise_id: exercise.id,
+                exercise_name: exercise.name,
+                category: exercise.category,
+                order_index: e.order_index,
+              }
+            : e,
+        ),
+      }));
+    } else {
+      setRoutineDraft((prev) => ({
+        ...prev,
+        exercises: [
+          ...prev.exercises,
+          {
+            exercise_id: exercise.id,
+            exercise_name: exercise.name,
+            category: exercise.category,
+            order_index: prev.exercises.length + 1,
+          },
+        ],
+      }));
     }
+    setChosenExerciseId("");
     setShowChooseExerciseModal(false);
   }
 
@@ -295,29 +342,46 @@ const RoutineBuilder = () => {
               </button>
             </div>
             <div className={styles.selectedExerciseElementTop}>
-              <h3>{exercise.exercise_name}</h3>
+              <div className={styles.exerciseElementHeader}>
+                <h3>{exercise.exercise_name}</h3>
+                <div className="exerciseMenuWrapper">
+                  {showOptions && chosenExerciseId === exercise.exercise_id ? (
+                    <div ref={menuRef} className="exerciseMenu">
+                      <button
+                        className={styles.editExerciseBtn}
+                        onClick={() => {
+                          setShowChooseExerciseModal(true);
+                          setChosenExerciseId(exercise.exercise_id);
+                        }}
+                      >
+                        <Pencil size={15} />
+                        Replace
+                      </button>
+                      <button
+                        className={styles.deleteExerciseBtn}
+                        onClick={() => {
+                          setShowDeleteModal(true);
+                          setChosenExerciseId(exercise.exercise_id);
+                        }}
+                      >
+                        <Trash2 size={15} />
+                        Delete
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      className="accessBtn"
+                      onClick={() => {
+                        setShowOptions(true);
+                        setChosenExerciseId(exercise.exercise_id);
+                      }}
+                    >
+                      <EllipsisVertical size={20} />
+                    </button>
+                  )}
+                </div>
+              </div>
               <p>{exercise.category}</p>
-            </div>
-            <div className={styles.selectedExerciseElementButtons}>
-              <button
-                className={styles.editExerciseBtn}
-                onClick={() => {
-                  setChosenExerciseId(exercise.exercise_id);
-
-                  setShowChooseExerciseModal(true);
-                }}
-              >
-                Edit
-              </button>
-              <button
-                className={styles.deleteExerciseBtn}
-                onClick={() => {
-                  setShowDeleteModal(true);
-                  setChosenExerciseId(exercise.exercise_id);
-                }}
-              >
-                Delete
-              </button>
             </div>
           </div>
         ))}

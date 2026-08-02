@@ -85,7 +85,6 @@ function App() {
       }
       setSession(data.session);
       setAuthLoading(false);
-      console.log("Session loaded:", data.session);
     }
 
     loadSession();
@@ -95,7 +94,6 @@ function App() {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setAuthLoading(false);
-      console.log("Auth state changed:", session);
     });
 
     return () => subscription.unsubscribe();

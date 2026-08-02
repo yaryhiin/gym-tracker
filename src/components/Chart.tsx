@@ -36,7 +36,8 @@ const Chart = ({ chartData, yPadding, label, unit }: ChartProps) => {
   const [briefData, setBriefData] = useState<ChartBriefInfo>();
 
   useEffect(() => {
-    if (!chartData || chartData.length === 0) {
+    if (chartData.length === 0) {
+      setFilteredData([]);
       setBriefData({
         current: 0,
         change: 0,
@@ -44,39 +45,22 @@ const Chart = ({ chartData, yPadding, label, unit }: ChartProps) => {
       });
       return;
     }
-    const entries = chartData.length;
+    let formatted: ChartData[] = [];
+    if (range === "all" || range === "3m") {
+      formatted = chartData;
+    } else {
+      const today = new Date();
 
-    const firstEntry = chartData[0];
-    const currentEntry = chartData[chartData.length - 1];
+      const days = range === "1w" ? 7 : range === "1m" ? 30 : 0;
 
-    const current = currentEntry.value ?? 0;
+      const cutOffDate = new Date();
+      cutOffDate.setDate(today.getDate() - days);
 
-    const change =
-      currentEntry && firstEntry
-        ? Math.round((currentEntry.value - firstEntry.value) * 10) / 10
-        : 0;
-
-    setBriefData({ current, change, entries });
-  }, [chartData]);
-
-  useEffect(() => {
-    if (range === "all") {
-      setFilteredData(chartData);
-      return;
+      formatted = chartData.filter((entry) => {
+        const entryDate = parseDate(entry.date);
+        return entryDate >= cutOffDate;
+      });
     }
-
-    const today = new Date();
-
-    const days =
-      range === "1w" ? 7 : range === "1m" ? 30 : range === "3m" ? 90 : 0;
-
-    const cutOffDate = new Date();
-    cutOffDate.setDate(today.getDate() - days);
-
-    const formatted = chartData.filter((entry) => {
-      const entryDate = parseDate(entry.date);
-      return entryDate >= cutOffDate;
-    });
     setFilteredData(formatted);
 
     if (formatted.length === 0) {
