@@ -90,7 +90,11 @@ const ExerciseHistoryModal = ({
                       <tr key={set.set_number} className={styles.set}>
                         <td>{set.set_number}</td>
                         <td>
-                          <p>{set.weight}</p>
+                          <p>
+                            {preferredUnit === "lb"
+                              ? Math.round(set.weight * 2.20462262 * 10) / 10
+                              : set.weight}
+                          </p>
                         </td>
                         <td>
                           <p>{set.reps}</p>
