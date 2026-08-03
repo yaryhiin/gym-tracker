@@ -211,7 +211,7 @@ const ActiveWorkout = () => {
     }
 
     loadPreviousData();
-  }, [workout.exercises.length]);
+  }, [workout.exercises]);
 
   useEffect(() => {
     const savedWorkout = localStorage.getItem(ACTIVE_WORKOUT_KEY);
