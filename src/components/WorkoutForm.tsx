@@ -175,7 +175,6 @@ const WorkoutForm = ({
   }, [showOptions]);
 
   useEffect(() => {
-    console.log("Selected Exercise:", selectedExercise);
     if (selectedExercise)
       document.getElementById(selectedExercise.id)?.scrollIntoView({
         behavior: "smooth",
