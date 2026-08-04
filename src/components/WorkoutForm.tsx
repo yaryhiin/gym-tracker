@@ -174,6 +174,15 @@ const WorkoutForm = ({
     };
   }, [showOptions]);
 
+  useEffect(() => {
+    console.log("Selected Exercise:", selectedExercise);
+    if (selectedExercise)
+      document.getElementById(selectedExercise.id)?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+  }, [selectedExercise?.exercise_id, selectedSet?.set_number]);
+
   function getInitialSelectedExercise() {
     const savedSelectedExercise = localStorage.getItem(
       WORKOUT_SELECTED_EXERCISE_KEY,
@@ -633,14 +642,6 @@ const WorkoutForm = ({
                   min="0"
                   max="1000"
                   placeholder="0"
-                  onFocus={() => {
-                    document
-                      .getElementById(selectedExercise.id)
-                      ?.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start",
-                      });
-                  }}
                   onChange={(e) =>
                     updateSet(
                       selectedExercise.id,
@@ -660,14 +661,6 @@ const WorkoutForm = ({
                   min="0"
                   max="1000"
                   placeholder="0"
-                  onFocus={() => {
-                    document
-                      .getElementById(selectedExercise.id)
-                      ?.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start",
-                      });
-                  }}
                   onChange={(e) =>
                     updateSet(
                       selectedExercise.id,
@@ -698,13 +691,6 @@ const WorkoutForm = ({
                               exercise.order_index
                             : null,
                         ) ?? null;
-                      if (nextExercise)
-                        document
-                          .getElementById(nextExercise.id)
-                          ?.scrollIntoView({
-                            behavior: "smooth",
-                            block: "start",
-                          });
                       setSelectedExercise(nextExercise);
                       setSelectedSet(nextExercise?.sets[0] ?? null);
                       setRestStart(new Date().toISOString());
@@ -723,12 +709,6 @@ const WorkoutForm = ({
                         "done",
                         true,
                       );
-                      document
-                        .getElementById(selectedExercise.id)
-                        ?.scrollIntoView({
-                          behavior: "smooth",
-                          block: "start",
-                        });
                       const newSet = {
                         set_number: selectedSet.set_number + 1,
                         weight: selectedSet.weight,
