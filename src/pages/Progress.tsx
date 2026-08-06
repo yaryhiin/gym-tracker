@@ -2,22 +2,17 @@ import { useState } from "react";
 
 import styles from "../styles/modules/Progress.module.scss";
 
+import type { ProfileDB } from "../types/profile";
+
 import WeightProgress from "../components/WeightProgress";
 import MeasurementsProgress from "../components/MeasurementsProgress";
 import ExercisesProgress from "../components/ExercisesProgress";
 
-import type {
-  PreferredMeasurementUnit,
-  PreferredWeightUnit,
-} from "../types/profile";
-
 type ProgressProps = {
-  weight: PreferredWeightUnit;
-  workout: PreferredWeightUnit;
-  measurement: PreferredMeasurementUnit;
+  profile: ProfileDB;
 };
 
-const Progress = ({ weight, workout, measurement }: ProgressProps) => {
+const Progress = ({ profile }: ProgressProps) => {
   const [progressType, setProgressType] = useState<
     "weight" | "measurements" | "exercises"
   >("weight");
@@ -51,11 +46,24 @@ const Progress = ({ weight, workout, measurement }: ProgressProps) => {
           </button>
         </div>
       </div>
-      {progressType === "weight" && <WeightProgress unit={weight} />}
-      {progressType === "measurements" && (
-        <MeasurementsProgress unit={measurement} />
+      {progressType === "weight" && (
+        <WeightProgress
+          unit={profile.preferred_weight_unit}
+          firstDayOfTheWeek={profile.first_day_of_week}
+        />
       )}
-      {progressType === "exercises" && <ExercisesProgress unit={workout} />}
+      {progressType === "measurements" && (
+        <MeasurementsProgress
+          unit={profile.preferred_measurement_unit}
+          firstDayOfTheWeek={profile.first_day_of_week}
+        />
+      )}
+      {progressType === "exercises" && (
+        <ExercisesProgress
+          unit={profile.preferred_workout_unit}
+          firstDayOfTheWeek={profile.first_day_of_week}
+        />
+      )}
     </div>
   );
 };

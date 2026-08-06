@@ -10,9 +10,10 @@ import type { ChartData } from "../types/chart";
 
 type WeightProgressProps = {
   unit: "kg" | "lb";
+  firstDayOfTheWeek: string;
 };
 
-const WeightProgress = ({ unit }: WeightProgressProps) => {
+const WeightProgress = ({ unit, firstDayOfTheWeek }: WeightProgressProps) => {
   const [weightData, setWeightData] = useState<ChartData[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -53,6 +54,7 @@ const WeightProgress = ({ unit }: WeightProgressProps) => {
         yPadding={5}
         label="Body Weight"
         unit={unit}
+        firstDayOfTheWeek={firstDayOfTheWeek}
       />
     </div>
   );

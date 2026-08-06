@@ -315,13 +315,7 @@ function App() {
 
                 <Route
                   path="/progress"
-                  element={
-                    <Progress
-                      weight={profile.preferred_weight_unit}
-                      workout={profile.preferred_workout_unit}
-                      measurement={profile.preferred_measurement_unit}
-                    />
-                  }
+                  element={<Progress profile={profile} />}
                 />
               </Route>
             )

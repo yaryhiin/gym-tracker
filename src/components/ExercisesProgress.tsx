@@ -10,9 +10,13 @@ import type { ExerciseDB, ExerciseLogDB } from "../types/exercise";
 
 type ExercisesProgressProps = {
   unit: "lb" | "kg";
+  firstDayOfTheWeek: string;
 };
 
-const ExercisesProgress = ({ unit }: ExercisesProgressProps) => {
+const ExercisesProgress = ({
+  unit,
+  firstDayOfTheWeek,
+}: ExercisesProgressProps) => {
   const [exerciseLogs, setExerciseLogs] = useState<ExerciseLogDB[]>();
   const [exercises, setExercises] = useState<ExerciseDB[]>();
   const [label, setLabel] = useState("");
@@ -200,7 +204,13 @@ const ExercisesProgress = ({ unit }: ExercisesProgressProps) => {
           </select>
         </div>
       </div>
-      <Chart chartData={filteredData} yPadding={2} label={label} unit={unit} />
+      <Chart
+        chartData={filteredData}
+        yPadding={2}
+        label={label}
+        unit={unit}
+        firstDayOfTheWeek={firstDayOfTheWeek}
+      />
     </div>
   );
 };

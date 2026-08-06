@@ -16,9 +16,13 @@ import type { ChartData } from "../types/chart";
 
 type MeasurementsProgressProps = {
   unit: "cm" | "in";
+  firstDayOfTheWeek: string;
 };
 
-const MeasurementsProgress = ({ unit }: MeasurementsProgressProps) => {
+const MeasurementsProgress = ({
+  unit,
+  firstDayOfTheWeek,
+}: MeasurementsProgressProps) => {
   const [measurementsData, setMeasurementsData] = useState<MeasurementLogDB[]>(
     [],
   );
@@ -103,6 +107,7 @@ const MeasurementsProgress = ({ unit }: MeasurementsProgressProps) => {
         yPadding={2}
         label={chosenType?.name ?? "Measurement"}
         unit={unit}
+        firstDayOfTheWeek={firstDayOfTheWeek}
       />
     </div>
   );

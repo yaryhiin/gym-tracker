@@ -12,6 +12,16 @@ import styles from "../styles/modules/Chart.module.scss";
 
 import type { ChartBriefInfo, ChartData } from "../types/chart";
 
+const days = [
+  "sunday",
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+];
+
 function parseDate(value: string): Date {
   if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
     const [year, month, day] = value.split("-").map(Number);
@@ -21,16 +31,36 @@ function parseDate(value: string): Date {
   return new Date(value);
 }
 
+function getCalendarDayTimestamp(date: Date): number {
+  return Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+function getDifferenceInDays(firstDate: Date, secondDate: Date): number {
+  const millisecondsPerDay = 1000 * 60 * 60 * 24;
+
+  return (
+    (getCalendarDayTimestamp(secondDate) - getCalendarDayTimestamp(firstDate)) /
+    millisecondsPerDay
+  );
+}
+
 type ChartProps = {
   chartData: ChartData[];
   yPadding: number;
   label: string;
   unit: string;
+  firstDayOfTheWeek: string;
 };
 
 type Range = "1w" | "1m" | "3m" | "all";
 
-const Chart = ({ chartData, yPadding, label, unit }: ChartProps) => {
+const Chart = ({
+  chartData,
+  yPadding,
+  label,
+  unit,
+  firstDayOfTheWeek,
+}: ChartProps) => {
   const [range, setRange] = useState<Range>("all");
   const [filteredData, setFilteredData] = useState<ChartData[]>();
   const [briefData, setBriefData] = useState<ChartBriefInfo>();
@@ -46,20 +76,73 @@ const Chart = ({ chartData, yPadding, label, unit }: ChartProps) => {
       return;
     }
     let formatted: ChartData[] = [];
-    if (range === "all" || range === "3m") {
-      formatted = chartData;
-    } else {
-      const today = new Date();
-
-      const days = range === "1w" ? 7 : range === "1m" ? 30 : 0;
-
-      const cutOffDate = new Date();
-      cutOffDate.setDate(today.getDate() - days);
-
-      formatted = chartData.filter((entry) => {
-        const entryDate = parseDate(entry.date);
-        return entryDate >= cutOffDate;
+    if (label.includes("Weight") && (range === "all" || range === "3m")) {
+      label = "Average Weight";
+      const firstDayOfTheWeekIndex = days.indexOf(
+        firstDayOfTheWeek.toLowerCase(),
+      );
+      let count = 0;
+      let total = 0;
+      let i = 0;
+      let firstDate = new Date(chartData[0].date);
+      do {
+        total += chartData[i].value;
+        i++;
+        count++;
+      } while (
+        i < chartData.length &&
+        getDifferenceInDays(firstDate, new Date(chartData[i].date)) < 7 &&
+        new Date(chartData[i].date).getDay() !== firstDayOfTheWeekIndex
+      );
+      formatted.push({
+        date: firstDate.toISOString(),
+        value: Math.round((total / count) * 100) / 100,
       });
+      if (i < chartData.length) {
+        count = 0;
+        total = 0;
+        firstDate = new Date(chartData[i].date);
+        for (i; i < chartData.length; i++) {
+          if (i === chartData.length - 1) {
+            count++;
+            total += chartData[i].value;
+            formatted.push({
+              date: firstDate.toISOString(),
+              value: Math.round((total / count) * 100) / 100,
+            });
+            break;
+          }
+          if (getDifferenceInDays(firstDate, new Date(chartData[i].date)) > 6) {
+            formatted.push({
+              date: firstDate.toISOString(),
+              value: Math.round((total / count) * 100) / 100,
+            });
+            count = 1;
+            total = chartData[i].value;
+            firstDate = new Date(chartData[i].date);
+            continue;
+          }
+          count++;
+          total += chartData[i].value;
+        }
+      }
+    } else {
+      if (range === "all") {
+        formatted = chartData;
+      } else {
+        const today = new Date();
+
+        const days =
+          range === "1w" ? 7 : range === "1m" ? 30 : range === "3m" ? 90 : 0;
+
+        const cutOffDate = new Date();
+        cutOffDate.setDate(today.getDate() - days);
+
+        formatted = chartData.filter((entry) => {
+          const entryDate = parseDate(entry.date);
+          return entryDate >= cutOffDate;
+        });
+      }
     }
     setFilteredData(formatted);
 
