@@ -141,21 +141,7 @@ export async function deleteExercise(exercise_id: string) {
   return true;
 }
 
-let defaultExercisesPromise: Promise<Exercise[] | null> | null = null;
-
-export function createDefaultExercises() {
-  if (defaultExercisesPromise) {
-    return defaultExercisesPromise;
-  }
-
-  defaultExercisesPromise = createDefaultExercisesInternal().finally(() => {
-    defaultExercisesPromise = null;
-  });
-
-  return defaultExercisesPromise;
-}
-
-async function createDefaultExercisesInternal() {
+export async function createDefaultExercises() {
   const exercises = await getExercises();
 
   if (exercises.length > 0) {
@@ -169,7 +155,7 @@ async function createDefaultExercisesInternal() {
     user_id: userId,
   }));
 
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("exercises")
     .insert(updatedList)
     .select();
@@ -177,6 +163,4 @@ async function createDefaultExercisesInternal() {
   if (error) {
     throw error;
   }
-
-  return data;
 }
