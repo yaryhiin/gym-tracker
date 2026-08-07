@@ -709,10 +709,18 @@ const WorkoutForm = ({
                         true,
                       );
                       const newSet = {
-                        set_number: selectedSet.set_number + 1,
-                        weight: selectedSet.weight,
-                        reps: 0,
-                        rest_seconds: 0,
+                        set_number:
+                          selectedExercise.sets[selectedSet.set_number]
+                            ?.set_number || selectedSet.set_number + 1,
+                        weight:
+                          selectedExercise.sets[selectedSet.set_number]
+                            ?.weight || 0,
+                        reps:
+                          selectedExercise.sets[selectedSet.set_number]?.reps ||
+                          0,
+                        rest_seconds:
+                          selectedExercise.sets[selectedSet.set_number]
+                            ?.rest_seconds || 0,
                         done: false,
                       };
                       setSelectedSet(newSet ? newSet : null);
