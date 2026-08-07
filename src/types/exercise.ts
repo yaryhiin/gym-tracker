@@ -20,6 +20,7 @@ export type ExerciseLogDB = {
     set_number: number;
     weight: number;
     reps: number;
+    rest_seconds: number;
     done: boolean;
   }[];
 };

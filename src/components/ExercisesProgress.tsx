@@ -149,6 +149,33 @@ const ExercisesProgress = ({
         })
         .filter((entry) => entry !== null);
       setLabel("Best weight");
+    } else if (filterCriteria === "average-rest-time") {
+      filtered = exerciseLogs
+        .filter((entry) => entry.exercise_id === chosenExercise.id)
+        .map((entry) => {
+          const completedSets = entry.sets.filter((set) => set.done);
+
+          if (completedSets.length === 0) return null;
+
+          let totalRest = 0;
+          let count = 0;
+          for (let set of completedSets) {
+            if (set.rest_seconds > 5) {
+              totalRest += set.rest_seconds;
+              count++;
+            }
+          }
+
+          if (totalRest < 1 || count < 1) return null;
+
+          return {
+            date: entry.date.split("T")[0],
+            value: Math.round(totalRest / count),
+          };
+        })
+        .filter((entry) => entry !== null);
+
+      setLabel("Average Rest Time");
     } else {
       return;
     }
@@ -201,6 +228,7 @@ const ExercisesProgress = ({
             <option value="best-set-volume">Best set volume</option>
             <option value="total-volume">Total volume</option>
             <option value="best-weight">Best weight used</option>
+            <option value="average-rest-time">Average rest time</option>
           </select>
         </div>
       </div>
@@ -208,7 +236,7 @@ const ExercisesProgress = ({
         chartData={filteredData}
         yPadding={2}
         label={label}
-        unit={unit}
+        unit={filterCriteria === "average-rest-time" ? "seconds" : unit}
         firstDayOfTheWeek={firstDayOfTheWeek}
       />
     </div>

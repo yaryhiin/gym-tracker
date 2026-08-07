@@ -12,6 +12,8 @@ import styles from "../styles/modules/Chart.module.scss";
 
 import type { ChartBriefInfo, ChartData } from "../types/chart";
 
+import { formatTime } from "../services/utils";
+
 const days = [
   "sunday",
   "monday",
@@ -64,6 +66,7 @@ const Chart = ({
   const [range, setRange] = useState<Range>("all");
   const [filteredData, setFilteredData] = useState<ChartData[]>();
   const [briefData, setBriefData] = useState<ChartBriefInfo>();
+  const [newLabel, setNewLabel] = useState(label);
 
   useEffect(() => {
     if (chartData.length === 0) {
@@ -77,7 +80,7 @@ const Chart = ({
     }
     let formatted: ChartData[] = [];
     if (label.includes("Weight") && (range === "all" || range === "3m")) {
-      label = "Average Weight";
+      setNewLabel("Average Weight");
       const firstDayOfTheWeekIndex = days.indexOf(
         firstDayOfTheWeek.toLowerCase(),
       );
@@ -128,8 +131,10 @@ const Chart = ({
       }
     } else {
       if (range === "all") {
+        setNewLabel(label);
         formatted = chartData;
       } else {
+        setNewLabel(label);
         const today = new Date();
 
         const days =
@@ -208,7 +213,10 @@ const Chart = ({
                   year: "numeric",
                 })
               }
-              formatter={(value) => [`${value}${unit}`, label]}
+              formatter={(value) => [
+                `${unit === "seconds" ? formatTime(Number(value), "rest") : value}${unit !== "seconds" ? unit : ""}`,
+                newLabel,
+              ]}
             />
             <Line type="monotone" dataKey="value" />
           </LineChart>
