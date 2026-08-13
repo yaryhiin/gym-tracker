@@ -706,7 +706,7 @@ const WorkoutForm = ({
                             );
                           }}
                         >
-                          <Repeat2 size={15} /> Superset
+                          <Repeat2 size={17} /> Superset
                         </button>
                       ) : (
                         pageType === "active" &&
