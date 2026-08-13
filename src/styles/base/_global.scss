@@ -82,8 +82,8 @@ button {
 }
 
 button.active {
-  background-color: var(--accent);
-  color: var(--button-text);
+  background-color: rgb(var(--selected));
+  color: #f8fafc;
 }
 
 .error {

@@ -1,30 +1,59 @@
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1001;
-  text-align: center;
-}
-
 .modalContent {
   background-color: var(--bg);
   border: 1px solid var(--border);
-  padding: 15px 20px;
+  padding: 25px 20px;
   border-radius: 8px;
   min-width: 300px;
   max-width: 350px;
-  max-height: 90dvh;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  max-height: 95dvh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  gap: 15px;
+  gap: 10px;
   overflow-y: auto;
+  overflow-x: hidden;
+
+  .inputContainer:nth-last-child(2) {
+    margin-bottom: 30px;
+  }
+}
+
+.inputContainer {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &:first-of-type {
+    margin: 10px 0;
+  }
+}
+
+.heading {
+  margin: 0;
+}
+
+.message {
+  margin: 0;
+}
+
+input,
+select {
+  width: 70%;
+  height: 35px;
+  font-size: 16px;
+  background-color: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 5px;
+}
+
+.inputLabel {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+.continueBtn {
+  background-color: var(--accent);
+  color: var(--button-text);
 }

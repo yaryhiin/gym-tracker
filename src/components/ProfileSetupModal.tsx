@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import styles from "../styles/modules/Profile.module.scss";
+import styles from "../styles/modules/ProfileSetupModal.module.scss";
 
 import type {
   PreferredWeightUnit,
@@ -27,9 +27,9 @@ const ProfileSetupModal = ({ onCreate }: ProfileSetupModal) => {
 
   return (
     <div className="modal">
-      <div className="modalContent">
-        <h2 className="heading">Welcome</h2>
-        <p className={styles.message}>Please setup your profile</p>
+      <div className={styles.modalContent}>
+        <h2 className={styles.heading}>Welcome</h2>
+        <p className={styles.message}>Please set up your profile</p>
         <div className={styles.inputContainer}>
           <p className={styles.inputLabel}>Name:</p>
           <input
@@ -41,7 +41,7 @@ const ProfileSetupModal = ({ onCreate }: ProfileSetupModal) => {
           />
         </div>
         <div className={styles.inputContainer}>
-          <p className={styles.inputLabel}>Preferred weight unit</p>
+          <p className={styles.inputLabel}>Weight unit</p>
           <div className="toggle">
             <button
               type="button"
@@ -61,7 +61,7 @@ const ProfileSetupModal = ({ onCreate }: ProfileSetupModal) => {
           </div>
         </div>
         <div className={styles.inputContainer}>
-          <p className={styles.inputLabel}>Preferred measurement unit</p>
+          <p className={styles.inputLabel}>Measurement unit</p>
           <div className="toggle">
             <button
               type="button"
@@ -81,7 +81,7 @@ const ProfileSetupModal = ({ onCreate }: ProfileSetupModal) => {
           </div>
         </div>
         <div className={styles.inputContainer}>
-          <p className={styles.inputLabel}>Preferred workout weight unit</p>
+          <p className={styles.inputLabel}>Workout weight unit</p>
           <div className="toggle">
             <button
               type="button"
