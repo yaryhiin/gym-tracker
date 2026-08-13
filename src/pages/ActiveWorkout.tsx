@@ -27,6 +27,7 @@ const ACTIVE_WORKOUT_PREVIOUS_DATA_KEY = "activeWorkoutPreviousData";
 const WORKOUT_SELECTED_EXERCISE_KEY = "workoutSelectedExercise";
 const WORKOUT_SELECTED_SET_KEY = "workoutSelectedSet";
 const WORKOUT_REST_START_KEY = "workoutRestStart";
+const WORKOUT_SUPERSET = "workoutSuperset";
 
 const BACK_TEXT = `Are you sure you want to exit workout? \n The data will be lost`;
 const FINISH_TEXT = `Are you sure you want to finish this workout?`;
@@ -368,6 +369,7 @@ const ActiveWorkout = () => {
         localStorage.removeItem(WORKOUT_SELECTED_SET_KEY);
         localStorage.removeItem(WORKOUT_REST_START_KEY);
         localStorage.removeItem(ACTIVE_WORKOUT_ROUTINE_KEY);
+        localStorage.removeItem(WORKOUT_SUPERSET);
       }, 1000);
     } catch (error) {
       setShowFinishModal(false);
@@ -428,6 +430,7 @@ const ActiveWorkout = () => {
             localStorage.removeItem(WORKOUT_SELECTED_SET_KEY);
             localStorage.removeItem(WORKOUT_REST_START_KEY);
             localStorage.removeItem(ACTIVE_WORKOUT_ROUTINE_KEY);
+            localStorage.removeItem(WORKOUT_SUPERSET);
             navigate("/");
           }}
         />

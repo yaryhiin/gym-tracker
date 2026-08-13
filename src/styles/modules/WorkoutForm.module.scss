@@ -1,3 +1,40 @@
+.exerciseContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin-top: 20px;
+  margin-bottom: 80px;
+}
+
+.exerciseContainer.addTopMargin {
+  margin-top: 130px;
+}
+
+.workoutFormContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.exerciseSpace {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.supersetBtn {
+  width: fit-content;
+  padding: 15px;
+  font-size: 16px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  margin-top: 20px;
+  margin-bottom: 0;
+}
+
 .exerciseCard {
   background: var(--card);
   border: 1px solid var(--border);
@@ -72,25 +109,6 @@
   align-self: center;
 }
 
-.exerciseContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-top: 20px;
-  margin-bottom: 80px;
-}
-
-.exerciseContainer.addTopMargin {
-  margin-top: 130px;
-}
-
-.workoutFormContainer {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
 .exerciseNote {
   width: 100%;
   margin-top: 8px;
@@ -131,7 +149,7 @@
   font-weight: 600;
 
   height: 36px;
-  width: 92px;
+  width: fit-content;
 
   cursor: pointer;
   transition:
@@ -263,14 +281,13 @@ input[type="checkbox"] {
   gap: 30px;
 
   p {
+    width: fit-content;
     font-weight: bold;
     font-size: 18px;
     &:first-child {
-      overflow-wrap: break-word;
       display: -webkit-box;
       line-clamp: 1;
       -webkit-line-clamp: 1;
-      -webkit-box-orient: vertical;
       overflow: hidden;
     }
   }
@@ -321,6 +338,64 @@ input[type="checkbox"] {
   }
 }
 
+.exerciseCard.superset {
+  box-shadow: -3px 0px var(--superset);
+}
+
+.supersetBtn.superset {
+  color: var(--superset);
+}
+
 .saveBtn {
   border: 1px solid var(--accent);
+}
+
+.supersetContainer {
+  position: relative;
+}
+
+.supersetDivider {
+  position: relative;
+}
+
+.supersetMenu {
+  z-index: 998;
+  background-color: var(--bg);
+  box-shadow: 0px 8px 16px var(--bg-secondary);
+
+  position: absolute;
+  top: calc(100% - 46px);
+  right: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.15rem 0.6rem;
+    text-align: left;
+    border: 1px solid var(--border);
+    font-size: 12px;
+    width: 90px;
+    height: 25px;
+    border-radius: 8px;
+
+    &:hover {
+      background-color: var(--card);
+    }
+  }
+}
+
+.accessBtnSuperset {
+  position: absolute;
+  top: calc(100% - 36px);
+  right: -5px;
+  border: none;
+  width: 15px;
+  padding: 0;
+  height: 35px;
 }
