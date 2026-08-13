@@ -1079,7 +1079,7 @@ const WorkoutForm = ({
                                 prev
                                   ? [
                                       ...prev.map((e) =>
-                                        e.exercise1Id ===
+                                        e.exercise2Id ===
                                         selectedExercise.exercise_id
                                           ? {
                                               ...e,
