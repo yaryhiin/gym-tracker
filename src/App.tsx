@@ -247,7 +247,7 @@ function App() {
   if (authLoading || profileLoading)
     return (
       <div className="loading">
-        <LoaderCircle size={20} className="loading__spinner"/>
+        <LoaderCircle size={20} className="loading__spinner" />
         Loading...
       </div>
     );
@@ -305,7 +305,14 @@ function App() {
                   element={<RoutineBuilder />}
                 />
 
-                <Route path="/exercises" element={<Exercises />} />
+                <Route
+                  path="/exercises"
+                  element={
+                    <Exercises
+                      preferredUnit={profile.preferred_workout_unit ?? "kg"}
+                    />
+                  }
+                />
 
                 <Route
                   path="/profile"

@@ -68,7 +68,7 @@ const WorkoutForm = ({
 }: WorkoutFormProps) => {
   const [showChooseExerciseModal, setShowChooseExerciseModal] = useState(false);
   const [showRemoveExerciseModal, setShowRemoveExerciseModal] = useState(false);
-  const [showExerciseInfo, setShowExerciseInfoModal] = useState(false);
+  const [showExerciseInfoModal, setShowExerciseInfoModal] = useState(false);
   const exerciseMenuRef = useRef<HTMLDivElement>(null);
   const supersetMenuRef = useRef<HTMLDivElement>(null);
   const [chosenExerciseId, setChosenExerciseId] = useState("");
@@ -300,11 +300,13 @@ const WorkoutForm = ({
         !exerciseMenuRef.current.contains(event.target as Node)
       ) {
         setShowExerciseOptions(false);
+        setChosenExerciseId("");
       }
     }
 
     function handleScroll() {
       setShowExerciseOptions(false);
+      setChosenExerciseId("");
     }
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -627,7 +629,6 @@ const WorkoutForm = ({
                         <button
                           className={styles.editExerciseBtn}
                           onClick={() => {
-                            setChosenExerciseId(exercise.exercise_id);
                             setShowChooseExerciseModal(true);
                           }}
                         >
@@ -640,7 +641,6 @@ const WorkoutForm = ({
                           className={styles.deleteExerciseBtn}
                           onClick={() => {
                             setShowRemoveExerciseModal(true);
-                            setChosenExerciseId(exercise.exercise_id);
                           }}
                         >
                           <Trash2 size={15} />
@@ -650,7 +650,6 @@ const WorkoutForm = ({
                       <button
                         className={styles.exerciseHistoryBtn}
                         onClick={() => {
-                          setChosenExerciseId(exercise.exercise_id);
                           setShowExerciseInfoModal(true);
                         }}
                       >
@@ -1148,7 +1147,8 @@ const WorkoutForm = ({
                                     (exercise) =>
                                       exercise.exercise_id ===
                                       nextExercise.exercise_id,
-                                  )?.sets[nextExercise.sets.length-1].weight ?? 0,
+                                  )?.sets[nextExercise.sets.length - 1]
+                                    .weight ?? 0,
                                 reps: 0,
                                 rest_seconds: 0,
                                 done: false,
@@ -1160,7 +1160,7 @@ const WorkoutForm = ({
                                 ] ?? null,
                               );
                             }
-                            console.log(nextExercise)
+                            console.log(nextExercise);
                             setSelectedExercise(nextExercise);
                             setSuperset((prev) =>
                               prev
@@ -1252,7 +1252,7 @@ const WorkoutForm = ({
             </div>
           </div>
         )}
-      {showExerciseInfo && (
+      {showExerciseInfoModal && (
         <ExerciseHistoryModal
           exerciseId={chosenExerciseId}
           onClose={() => setShowExerciseInfoModal(false)}

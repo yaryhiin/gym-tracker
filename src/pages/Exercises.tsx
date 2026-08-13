@@ -1,5 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { EllipsisVertical, Pencil, Trash2, LoaderCircle } from "lucide-react";
+import {
+  EllipsisVertical,
+  Pencil,
+  Trash2,
+  LoaderCircle,
+  History,
+} from "lucide-react";
 
 import styles from "../styles/modules/Exercises.module.scss";
 
@@ -8,6 +14,7 @@ import type { ExerciseDB } from "../types/exercise";
 import ManageExerciseModal from "../components/ManageExerciseModal";
 import ExecuteModal from "../components/ExecuteModal";
 import InfoModal from "../components/InfoModal";
+import ExerciseHistoryModal from "../components/ExerciseHistoryModal";
 
 import {
   createExercise,
@@ -18,7 +25,11 @@ import {
 
 const MODAL_TEXT = `Are you sure you want to delete this exercise? \n It will be removed from your existing routines`;
 
-const Exercises = () => {
+type ExercisesProps = {
+  preferredUnit: string;
+};
+
+const Exercises = ({ preferredUnit }: ExercisesProps) => {
   const [exercises, setExercises] = useState<ExerciseDB[]>([]);
   const [chosenExercise, setChosenExercise] = useState<ExerciseDB>(
     exercises[0],
@@ -34,6 +45,7 @@ const Exercises = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showMessageModal, setShowMessageModal] = useState(false);
+  const [showExerciseInfoModal, setShowExerciseInfoModal] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -189,6 +201,15 @@ const Exercises = () => {
                         <Trash2 size={15} />
                         Delete
                       </button>
+                      <button
+                        className={styles.exerciseHistoryBtn}
+                        onClick={() => {
+                          setShowExerciseInfoModal(true);
+                        }}
+                      >
+                        <History size={15} />
+                        History
+                      </button>
                     </div>
                   ) : (
                     <button
@@ -208,6 +229,13 @@ const Exercises = () => {
           </div>
         ))}
       </div>
+      {showExerciseInfoModal && (
+        <ExerciseHistoryModal
+          exerciseId={chosenExercise.id}
+          onClose={() => setShowExerciseInfoModal(false)}
+          preferredUnit={preferredUnit ?? "kg"}
+        />
+      )}
       {showCreateModal && (
         <ManageExerciseModal
           onClose={() => setShowCreateModal(false)}
