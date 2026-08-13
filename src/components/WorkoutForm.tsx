@@ -1136,11 +1136,32 @@ const WorkoutForm = ({
                                     exercise.order_index
                                   : null,
                               ) ?? null;
+                            if (
+                              nextExercise &&
+                              nextExercise.sets?.length < selectedSet.set_number
+                            ) {
+                              addSet(nextExercise.id);
+                              setSelectedSet({
+                                set_number: selectedSet.set_number,
+                                weight:
+                                  workout.exercises.find(
+                                    (exercise) =>
+                                      exercise.exercise_id ===
+                                      nextExercise.exercise_id,
+                                  )?.sets[nextExercise.sets.length-1].weight ?? 0,
+                                reps: 0,
+                                rest_seconds: 0,
+                                done: false,
+                              });
+                            } else {
+                              setSelectedSet(
+                                nextExercise?.sets[
+                                  selectedSet.set_number - 1
+                                ] ?? null,
+                              );
+                            }
+                            console.log(nextExercise)
                             setSelectedExercise(nextExercise);
-                            setSelectedSet(
-                              nextExercise?.sets[selectedSet.set_number - 1] ??
-                                null,
-                            );
                             setSuperset((prev) =>
                               prev
                                 ? [
