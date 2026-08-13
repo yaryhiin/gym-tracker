@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import cn from "classnames";
+import { LoaderCircle } from "lucide-react";
 
 import styles from "../styles/modules/ActiveWorkout.module.scss";
 
@@ -382,9 +383,14 @@ const ActiveWorkout = () => {
     }
   }
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+  if (loading)
+    return (
+      <div className="loading">
+        <LoaderCircle size={20} className="loading__spinner" />
+        Loading...
+      </div>
+    );
+
   return (
     <div className={styles.workoutContainer}>
       <div className={styles.header}>

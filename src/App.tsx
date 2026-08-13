@@ -7,6 +7,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import type { Session } from "@supabase/supabase-js";
+import { LoaderCircle } from "lucide-react";
 
 import Home from "./pages/Home";
 import ActiveWorkout from "./pages/ActiveWorkout";
@@ -243,7 +244,13 @@ function App() {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   }
 
-  if (authLoading || profileLoading) return <div>Loading...</div>;
+  if (authLoading || profileLoading)
+    return (
+      <div className="loading">
+        <LoaderCircle size={20} className="loading__spinner"/>
+        Loading...
+      </div>
+    );
   return (
     <>
       <Router>

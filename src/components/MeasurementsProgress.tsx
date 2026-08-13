@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { LoaderCircle } from "lucide-react";
 
 import styles from "../styles/modules/ProgressComponents.module.scss";
 
@@ -72,7 +73,12 @@ const MeasurementsProgress = ({
   }, [chosenType]);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="loading">
+        <LoaderCircle size={20} className="loading__spinner" />
+        Loading...
+      </div>
+    );
   }
   return (
     <div className={styles.mainContainer}>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { LoaderCircle } from "lucide-react";
 
 import styles from "../styles/modules/Routines.module.scss";
 
@@ -61,7 +62,12 @@ const Routines = () => {
   }
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="loading">
+        <LoaderCircle size={20} className="loading__spinner" />
+        Loading...
+      </div>
+    );
   }
   return (
     <div className={styles.routinesContainer}>

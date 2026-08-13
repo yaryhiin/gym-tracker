@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { LoaderCircle } from "lucide-react";
 
 import styles from "../styles/modules/Home.module.scss";
 
@@ -45,7 +46,12 @@ const Home = ({ name }: HomeProps) => {
   }, []);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="loading">
+        <LoaderCircle size={20} className="loading__spinner" />
+        Loading...
+      </div>
+    );
   }
   return (
     <div className={styles.home}>

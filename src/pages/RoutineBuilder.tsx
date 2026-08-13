@@ -7,6 +7,7 @@ import {
   Trash2,
   ChevronUp,
   ChevronDown,
+  LoaderCircle,
 } from "lucide-react";
 
 import styles from "../styles/modules/RoutineBuilder.module.scss";
@@ -298,7 +299,12 @@ const RoutineBuilder = () => {
   }
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="loading">
+        <LoaderCircle size={20} className="loading__spinner" />
+        Loading...
+      </div>
+    );
   }
   return (
     <div className={styles.routineBuilderContainer}>

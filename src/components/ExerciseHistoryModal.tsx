@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { X } from "lucide-react";
+import { X, LoaderCircle } from "lucide-react";
 
 import styles from "../styles/modules/ExerciseHistoryModal.module.scss";
 
@@ -44,7 +44,12 @@ const ExerciseHistoryModal = ({
   if (loading) {
     return (
       <div className="modal">
-        <div className="modalContent">Loading</div>
+        <div className="modalContent">
+          <div className="loading">
+            <LoaderCircle size={20} className="loading__spinner" />
+            Loading...
+          </div>
+        </div>
       </div>
     );
   }

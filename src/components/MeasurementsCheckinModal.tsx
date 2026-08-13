@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { LoaderCircle } from "lucide-react";
 
 import styles from "../styles/modules/Modal.module.scss";
 
@@ -171,7 +172,12 @@ const MeasurementsCheckinModal = ({
   }
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="loading">
+        <LoaderCircle size={20} className="loading__spinner" />
+        Loading...
+      </div>
+    );
   }
   return (
     <div className="modal">

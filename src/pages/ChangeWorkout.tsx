@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { LoaderCircle } from "lucide-react";
 
 import styles from "../styles/modules/ActiveWorkout.module.scss";
 
@@ -219,7 +220,12 @@ const ChangeWorkout = () => {
   }
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="loading">
+        <LoaderCircle size={20} className="loading__spinner" />
+        Loading...
+      </div>
+    );
   }
   return (
     <div className={styles.workoutContainer}>

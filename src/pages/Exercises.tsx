@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { EllipsisVertical, Pencil, Trash2 } from "lucide-react";
+import { EllipsisVertical, Pencil, Trash2, LoaderCircle } from "lucide-react";
 
 import styles from "../styles/modules/Exercises.module.scss";
 
@@ -136,7 +136,12 @@ const Exercises = () => {
   }
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="loading">
+        <LoaderCircle size={20} className="loading__spinner" />
+        Loading...
+      </div>
+    );
   }
   return (
     <div className={styles.exercisesContainer}>
