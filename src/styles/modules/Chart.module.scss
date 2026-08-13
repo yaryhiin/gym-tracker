@@ -5,6 +5,8 @@
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .rangeButtons {

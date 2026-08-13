@@ -67,6 +67,7 @@ const Chart = ({
   const [filteredData, setFilteredData] = useState<ChartData[]>();
   const [briefData, setBriefData] = useState<ChartBriefInfo>();
   const [newLabel, setNewLabel] = useState(label);
+  const [chartWidth, setChartWidth] = useState(350);
 
   useEffect(() => {
     if (chartData.length === 0) {
@@ -150,6 +151,7 @@ const Chart = ({
       }
     }
     setFilteredData(formatted);
+    setChartWidth(Math.max(formatted.length * 30, 320));
 
     if (formatted.length === 0) {
       setBriefData({
@@ -178,7 +180,7 @@ const Chart = ({
   return (
     <div className={styles.chartContainer}>
       <div className={styles.chart}>
-        <ResponsiveContainer width="100%" height={260}>
+        <ResponsiveContainer width={chartWidth} height={260}>
           <LineChart data={filteredData}>
             <XAxis
               dataKey="date"
@@ -189,6 +191,7 @@ const Chart = ({
                 });
               }}
               minTickGap={25}
+              // interval={0}
             />
             <YAxis
               domain={[`dataMin - ${yPadding}`, `dataMax + ${yPadding}`]}
