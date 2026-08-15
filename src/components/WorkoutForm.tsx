@@ -88,10 +88,19 @@ const WorkoutForm = ({
 
   useEffect(() => {
     if (workout.exercises.length > 0) {
-      if (selectedExercise) return;
-      setSelectedExercise(workout.exercises[0] ?? null);
-      if (selectedSet) return;
-      setSelectedSet(workout.exercises[0]?.sets[0] ?? null);
+      if (!selectedExercise) {
+        for (let e of workout.exercises) {
+          for (let s of e.sets) {
+            if (!s.done) {
+              setSelectedExercise(e);
+              setSelectedSet(s);
+              return;
+            }
+          }
+        }
+        setSelectedExercise(null);
+        setSelectedSet(null);
+      }
     }
   }, [workout.exercises]);
 
@@ -434,7 +443,7 @@ const WorkoutForm = ({
   }
 
   function addSet(exerciseId: string) {
-    if (!setWorkout || pageType === "view" || !selectedExercise) return;
+    if (!setWorkout || pageType === "view") return;
 
     setWorkout((prev) => ({
       ...prev,
@@ -456,7 +465,7 @@ const WorkoutForm = ({
           : exercise,
       ),
     }));
-    if (selectedExercise.exercise_id === exerciseId) {
+    if (selectedExercise?.exercise_id === exerciseId) {
       setSelectedExercise((prev) =>
         prev
           ? {
