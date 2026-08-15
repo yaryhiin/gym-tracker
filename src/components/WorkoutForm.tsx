@@ -296,13 +296,11 @@ const WorkoutForm = ({
         !exerciseMenuRef.current.contains(event.target as Node)
       ) {
         setShowExerciseOptions(false);
-        setChosenExerciseId("");
       }
     }
 
     function handleScroll() {
       setShowExerciseOptions(false);
-      setChosenExerciseId("");
     }
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -542,7 +540,6 @@ const WorkoutForm = ({
 
   function chooseExercise(exercise: ExerciseDB) {
     if (!setWorkout || pageType === "view") return;
-
     if (chosenExerciseId !== "") {
       setWorkout((prev) => ({
         ...prev,
@@ -568,6 +565,85 @@ const WorkoutForm = ({
             : e,
         ),
       }));
+      if (selectedExercise?.exercise_id === chosenExerciseId) {
+        setSelectedExercise((prev) =>
+          prev
+            ? {
+                id: createLocalId(),
+                exercise_name: exercise.name,
+                exercise_id: exercise.id,
+                category: exercise.category,
+                order_index: prev.order_index,
+                notes: "",
+                sets: [
+                  {
+                    set_number: 1,
+                    weight: 0,
+                    reps: 0,
+                    rest_seconds: 0,
+                    done: false,
+                  },
+                ],
+              }
+            : null,
+        );
+      }
+      if (
+        superset?.some(
+          (e) =>
+            e.exercise0Id === chosenExerciseId ||
+            e.exercise1Id === chosenExerciseId ||
+            e.exercise2Id === chosenExerciseId,
+        )
+      ) {
+        for (let i of superset) {
+          if (i.exercise0Id === chosenExerciseId) {
+            setSuperset((prev) =>
+              prev
+                ? prev.map((e) =>
+                    e.exercise0Id === chosenExerciseId
+                      ? {
+                          ...e,
+                          exercise0Id: exercise.id,
+                        }
+                      : e,
+                  )
+                : null,
+            );
+            break;
+          } else if (i.exercise1Id === chosenExerciseId) {
+            setSuperset((prev) =>
+              prev
+                ? prev.map((e) =>
+                    e.exercise1Id === chosenExerciseId
+                      ? {
+                          ...e,
+                          exercise1Id: exercise.id,
+                          exercise1RestStart: "",
+                        }
+                      : e,
+                  )
+                : null,
+            );
+            break;
+          } else if (i.exercise2Id === chosenExerciseId) {
+            setSuperset((prev) =>
+              prev
+                ? prev.map((e) =>
+                    e.exercise2Id === chosenExerciseId
+                      ? {
+                          ...e,
+                          exercise2Id: exercise.id,
+                          exercise2RestStart: "",
+                        }
+                      : e,
+                  )
+                : null,
+            );
+            break;
+          }
+        }
+      }
     } else {
       setWorkout((prev) => ({
         ...prev,
@@ -617,7 +693,9 @@ const WorkoutForm = ({
     setWorkout((prev) => ({
       ...prev,
       exercises: prev.exercises.map((exercise) =>
-        exercise.exercise_id === exerciseId ? { ...exercise, notes: note } : exercise,
+        exercise.exercise_id === exerciseId
+          ? { ...exercise, notes: note }
+          : exercise,
       ),
     }));
   }
@@ -791,7 +869,10 @@ const WorkoutForm = ({
                   <button
                     className={styles.addNoteBtn}
                     onClick={() =>
-                      setShowNotes((prev) => ({ ...prev, [exercise.exercise_id]: true }))
+                      setShowNotes((prev) => ({
+                        ...prev,
+                        [exercise.exercise_id]: true,
+                      }))
                     }
                   >
                     <MessageSquarePlus size={15} />
@@ -912,7 +993,8 @@ const WorkoutForm = ({
                     ) + 1}
                   </p>
 
-                  {showSupersetOptions && chosenExerciseId === exercise.exercise_id ? (
+                  {showSupersetOptions &&
+                  chosenExerciseId === exercise.exercise_id ? (
                     <div ref={supersetMenuRef} className={styles.supersetMenu}>
                       <button
                         className={`${styles.supersetBtn} ${styles.superset}`}
@@ -948,7 +1030,10 @@ const WorkoutForm = ({
         {pageType !== "view" && (
           <button
             className={cn(styles.addExercise, styles.button)}
-            onClick={() => setShowChooseExerciseModal(true)}
+            onClick={() => {
+              setShowChooseExerciseModal(true);
+              setChosenExerciseId("");
+            }}
           >
             {t("workout.addExercise")}
           </button>
@@ -1186,7 +1271,6 @@ const WorkoutForm = ({
                                 ] ?? null,
                               );
                             }
-                            console.log(nextExercise);
                             setSelectedExercise(nextExercise);
                             setSuperset((prev) =>
                               prev
@@ -1301,7 +1385,6 @@ const WorkoutForm = ({
             new Set(workout.exercises.map((exercise) => exercise.exercise_id))
           }
           onClose={() => {
-            setChosenExerciseId("");
             setShowChooseExerciseModal(false);
           }}
           addExercise={addExercise}
