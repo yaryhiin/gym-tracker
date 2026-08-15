@@ -50,9 +50,9 @@
   },
   "navigation": {
     "home": "Головна",
-    "routines": "Програми",
+    "routines": "Програм.",
     "exercises": "Вправи",
-    "progress": "Прогрес"
+    "progress": "Стат."
   },
   "workout": {
     "custom": "Власне тренування",

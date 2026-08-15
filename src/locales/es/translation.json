@@ -50,8 +50,8 @@
   },
   "navigation": {
     "home": "Inicio",
-    "routines": "Rutinas",
-    "exercises": "Ejercicios",
+    "routines": "Planes",
+    "exercises": "Ejerc.",
     "progress": "Progreso"
   },
   "workout": {
