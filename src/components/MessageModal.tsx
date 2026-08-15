@@ -1,4 +1,5 @@
 import cn from "classnames";
+import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/Modal.module.scss";
 
@@ -9,6 +10,8 @@ type MessageModalProps = {
 };
 
 const MessageModal = ({ title, text, onClose }: MessageModalProps) => {
+  const { t } = useTranslation();
+
   return (
     <div className="modal">
       <div className="modalContent">
@@ -21,7 +24,7 @@ const MessageModal = ({ title, text, onClose }: MessageModalProps) => {
             className={cn(styles.backBtn, "button")}
             onClick={() => onClose()}
           >
-            Ok
+            {t("common.ok")}
           </button>
         </div>
       </div>

@@ -1,0 +1,290 @@
+{
+  "common": {
+    "save": "Guardar",
+    "saveChanges": "Guardar cambios",
+    "back": "Atrás",
+    "loading": "Cargando",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "history": "Historial",
+    "view": "Ver",
+    "replace": "Reemplazar",
+    "exit": "Salir",
+    "finish": "Finalizar",
+    "start": "Iniciar",
+    "add": "Añadir",
+    "yes": "Sí",
+    "skipToday": "Omitir hoy",
+    "skipNow": "Omitir por ahora",
+    "continue": "Continuar",
+    "ok": "Ok",
+    "unlink": "Desvincular",
+    "superset": "Superserie"
+  },
+  "units": {
+    "kg": "kg",
+    "lb": "lb",
+    "cm": "cm",
+    "in": "in",
+    "sec": "s"
+  },
+  "frequency": {
+    "daily": "Diario",
+    "weekly": "Semanal",
+    "biweekly": "2 semanas",
+    "monthly": "Mensual",
+    "off": "Desactivado",
+    "1w": "1 sem.",
+    "1m": "1 mes",
+    "3m": "3 meses",
+    "all": "Todo"
+  },
+  "days": {
+    "monday": "Lunes",
+    "tuesday": "Martes",
+    "wednesday": "Miércoles",
+    "thursday": "Jueves",
+    "friday": "Viernes",
+    "saturday": "Sábado",
+    "sunday": "Domingo"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "routines": "Rutinas",
+    "exercises": "Ejercicios",
+    "progress": "Progreso"
+  },
+  "workout": {
+    "custom": "Entrenamiento libre",
+    "set": "Serie",
+    "weight": "Peso",
+    "reps": "Reps",
+    "done": "Listo",
+    "rest": "Desc.",
+    "last": "Última vez:",
+    "note": {
+      "prev": "Nota anterior:",
+      "add": "Añadir nota",
+      "placeHolder": "Nota del ejercicio..."
+    },
+    "addSet": "Añadir serie",
+    "addExercise": "Añadir ejercicio",
+    "completeExercise": "Completar ejercicio",
+    "completeSet": "Completar serie"
+  },
+  "exercises": {
+    "title": "Ejercicios",
+    "description": "Gestiona tus ejercicios",
+    "emptyState": "Aún no tienes ejercicios \n Crea tu primer ejercicio",
+    "create": "+ Crear ejercicio"
+  },
+  "history": {
+    "date": "Fecha",
+    "workout": "Entrenamiento",
+    "duration": "Duración",
+    "actions": "Acciones"
+  },
+  "home": {
+    "greeting": {
+      "morning": "Buenos días",
+      "afternoon": "Buenas tardes",
+      "evening": "Buenas tardes",
+      "night": "Buenas noches"
+    },
+    "start": "Iniciar entrenamiento",
+    "recent": "Entrenamientos recientes",
+    "emptyState": {
+      "title": "No hay entrenamientos recientes.",
+      "description": "Completa tu primer entrenamiento"
+    },
+    "viewAll": "Ver todos"
+  },
+  "auth": {
+    "login": "Iniciar sesión",
+    "signup": "Registrarse",
+    "logout": "Cerrar sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "confirmPass": "Confirmar contraseña",
+    "error": "La contraseña debe tener al menos 6 caracteres"
+  },
+  "profile": {
+    "title": "Perfil",
+    "personal": "Datos personales",
+    "welcome": "Bienvenido",
+    "setup": "Configura tu perfil",
+    "name": {
+      "title": "Nombre",
+      "placeHolder": "Introduce tu nombre"
+    },
+    "birthday": "Fecha de nacimiento",
+    "preferences": {
+      "title": "Preferencias",
+      "weight": "Unidad de peso",
+      "measurements": "Unidad de medidas",
+      "workout": "Peso en entrenamientos",
+      "firstDay": "Primer día de la semana",
+      "theme": {
+        "title": "Tema",
+        "dark": "Oscuro",
+        "light": "Claro"
+      }
+    },
+    "reminders": {
+      "title": "Recordatorios",
+      "weight": "Control de peso",
+      "measurements": ""
+    }
+  },
+  "language": {
+    "title": "Idioma",
+    "en": "Inglés",
+    "uk": "Ucraniano",
+    "es": "Español",
+    "ru": "Ruso"
+  },
+  "progress": {
+    "title": "Progreso",
+    "description": "Elige qué quieres seguir",
+    "weight": "Peso",
+    "measurements": "Medidas",
+    "exercises": "Ejercicios"
+  },
+  "routine": {
+    "title": "Nombre de la rutina:",
+    "title2": "Rutinas",
+    "description": "Gestiona tus rutinas de entrenamiento",
+    "emptyState": "Aún no tienes rutinas \n Crea tu primera rutina",
+    "placeHolder": "Introduce un nombre",
+    "error": {
+      "name": "Debes introducir un nombre para la rutina",
+      "exercise": "Debes añadir al menos 1 ejercicio"
+    },
+    "add": "+ Añadir ejercicio",
+    "create": "+ Crear rutina"
+  },
+  "modal": {
+    "back": "¿Seguro que quieres salir? \n Se perderán todos los cambios no guardados.",
+    "delete": {
+      "exercise": "¿Seguro que quieres eliminar este ejercicio? \n Se eliminará de tus rutinas existentes",
+      "routine": "¿Seguro que quieres eliminar esta rutina?",
+      "routineBuilder": "¿Seguro que quieres eliminar este ejercicio de la rutina?",
+      "workout": "¿Seguro que quieres eliminar este entrenamiento? \n Esta acción no se puede deshacer.",
+      "exerciseWorkout": "¿Seguro que quieres eliminar este ejercicio del entrenamiento? \n Se perderán todas las series"
+    },
+    "finish": "¿Seguro que quieres finalizar este entrenamiento?",
+    "logout": "¿Seguro que quieres cerrar sesión?"
+  },
+  "welcomeScreen": {
+    "title": "Controla tus entrenamientos y tu progreso en un solo lugar.",
+    "description": "Crea ejercicios, prepara rutinas, registra series, consulta tu historial y sigue tu progreso. Simple, rápido y pensado para entrenar de verdad."
+  },
+  "chart": {
+    "current": "Actual:",
+    "change": "Cambio:",
+    "entries": "Registros:"
+  },
+  "chooseExercise": {
+    "replace": "Reemplazar ejercicio",
+    "choose": "Elegir ejercicio",
+    "filter": "Filtrar por categoría",
+    "emptyState": "No tienes ejercicios. Añade algunos primero",
+    "selected": "Ejercicio seleccionado:",
+    "selectedEmpty": "Pulsa un ejercicio arriba",
+    "create": "+ Crear ejercicio"
+  },
+  "chooseRoutine": {
+    "title": "Elegir rutina:",
+    "exercises": "ejercicios",
+    "emptyState": {
+      "title": "Entrenamiento libre",
+      "description": "Empezar sin rutina"
+    }
+  },
+  "execute": {
+    "title": "Confirmar acción"
+  },
+  "exereciseHistory": {
+    "emptyState": "Aún no tienes historial para este ejercicio"
+  },
+  "label": {
+    "avgRest": "Descanso medio",
+    "bestWeight": "Peso máximo",
+    "totalVol": "Volumen total",
+    "bestVol": "Mejor volumen por serie",
+    "bw": "Peso corporal",
+    "avgWeight": "Peso medio"
+  },
+  "exerciseProgress": {
+    "title": "Ejercicios",
+    "description": "Elige un ejercicio",
+    "emptyState": "Aún no tienes datos guardados",
+    "metric": "Elegir métrica"
+  },
+  "infoModal": {
+    "save": {
+      "title": "Guardando",
+      "text": "Guardando tus cambios..."
+    },
+    "delete": {
+      "title": "Eliminando",
+      "text": "Eliminando..."
+    },
+    "success": {
+      "title": "Completado",
+      "text": "Completado correctamente"
+    },
+    "error": {
+      "title": "Error",
+      "text": "Algo salió mal. Inténtalo de nuevo."
+    },
+    "info": {
+      "title": "Información",
+      "text": "Hay algo que deberías saber."
+    }
+  },
+  "manageExercise": {
+    "edit": "Editar ejercicio",
+    "create": "Crear ejercicio",
+    "placeHolder": "Nombre del ejercicio",
+    "category": "Categoría:",
+    "error": {
+      "name": "Debes introducir un nombre para el ejercicio",
+      "category": "Debes elegir una categoría"
+    }
+  },
+  "categories": {
+    "chest": "Pecho",
+    "back": "Espalda",
+    "legs": "Piernas",
+    "shoulders": "Hombros",
+    "arms": "Brazos",
+    "core": "Core",
+    "cardio": "Cardio",
+    "other": "Otros"
+  },
+  "measurementsCheckin": {
+    "title": "Medidas",
+    "message": "¿Cuáles son tus medidas hoy?",
+    "emptyState": "Aún no tienes medidas. Añade la primera para empezar a seguirlas.",
+    "error": "Introduce un nombre",
+    "placeHolder": "p. ej. Cuello, antebrazo",
+    "add": "+ Añadir medida",
+    "delete": {
+      "part1": "¿Seguro que quieres eliminar la medida",
+      "part2": "? \n Si solo quieres omitirla, deja el campo vacío"
+    }
+  },
+  "weightCheckin": {
+    "title": "Control de peso",
+    "message": "¿Cuál es tu peso hoy?",
+    "new": "Nuevo peso",
+    "error": "Introduce un nuevo peso"
+  },
+  "measurementsProgress": {
+    "title": "Medidas",
+    "description": "Elige una medida",
+    "emptyState": "Aún no tienes datos guardados",
+    "nameFallBack": "Medida"
+  }
+}

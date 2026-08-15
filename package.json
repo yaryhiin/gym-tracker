@@ -12,9 +12,11 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.105.4",
     "classnames": "^2.5.1",
+    "i18next": "^26.3.6",
     "lucide-react": "^1.24.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
+    "react-i18next": "^17.0.11",
     "react-router-dom": "^7.15.0",
     "recharts": "^3.8.1",
     "uuid": "^14.0.0"

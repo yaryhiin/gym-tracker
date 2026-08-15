@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { LoaderCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/ProgressComponents.module.scss";
 
@@ -15,6 +16,8 @@ type WeightProgressProps = {
 };
 
 const WeightProgress = ({ unit, firstDayOfTheWeek }: WeightProgressProps) => {
+  const { t } = useTranslation();
+
   const [weightData, setWeightData] = useState<ChartData[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -46,19 +49,19 @@ const WeightProgress = ({ unit, firstDayOfTheWeek }: WeightProgressProps) => {
     return (
       <div className="loading">
         <LoaderCircle size={20} className="loading__spinner" />
-        Loading...
+        {t("common.loading")}
       </div>
     );
   }
   return (
     <div className={styles.mainContainer}>
       <div className={styles.header}>
-        <h2 className={styles.title}>Body Weight</h2>
+        <h2 className={styles.title}>{t("label.bw")}</h2>
       </div>
       <Chart
         chartData={weightData}
         yPadding={5}
-        label="Body Weight"
+        label={t("label.bw")}
         unit={unit}
         firstDayOfTheWeek={firstDayOfTheWeek}
       />

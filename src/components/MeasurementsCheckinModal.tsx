@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { LoaderCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/Modal.module.scss";
 
@@ -27,6 +28,8 @@ const MeasurementsCheckinModal = ({
   name,
   onSkip,
 }: MeasurementsCheckinModalProps) => {
+  const { t } = useTranslation();
+
   const [newMeasurements, setNewMeasurements] = useState<MeasurementType[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -175,36 +178,36 @@ const MeasurementsCheckinModal = ({
     return (
       <div className="loading">
         <LoaderCircle size={20} className="loading__spinner" />
-        Loading...
+        {t("common.laoding")}
       </div>
     );
   }
   return (
     <div className="modal">
       <div className="modalContent">
-        <h1 className="heading">Measurements {<br></br>} check-in</h1>
+        <h1 className="heading">{t("measurementsCheckin.title")}</h1>
         <div className={styles.message}>
           <p className={styles.messageContainer}>
             {new Date().getHours()
-              ? "Good morning"
+              ? t("home.greeting.morning")
               : new Date().getHours() < 18
-                ? "Good afternoon"
-                : "Good evening"}
+                ? t("home.greeting.afternoon")
+                : t("home.greeting.evening")}
             {", "}
             {name}
           </p>
-          <p className={styles.message}>What`s your measurements today?</p>
+          <p className={styles.message}>{t("measurementsCheckin.message")}</p>
         </div>
         {newMeasurements.length === 0 && !loading && (
           <p className={styles.emptyText}>
-            No measurements yet. Add your first measurement to start tracking.
+            {t("measurementsCheckin.emptyState")}
           </p>
         )}
         <div className={styles.measurements}>
           {newMeasurements.map((measurement) => (
             <div key={measurement.id} className={styles.inputContainer}>
               <p className={styles.inputLabel}>
-                {`${measurement.name} (${unit}):`}
+                {`${measurement.name} (${t(`units.${unit}`)}):`}
               </p>
 
               <div className={styles.inputBox}>
@@ -236,11 +239,13 @@ const MeasurementsCheckinModal = ({
               <input
                 className={error ? "error" : ""}
                 type="text"
-                placeholder="e.g. Neck, Forearm"
+                placeholder={t("measurementsCheckin.placeHolder")}
                 value={newMeasurementName}
                 onChange={(e) => setNewMeasurementName(e.target.value)}
               ></input>
-              {error && <p className="errorMessage">Please enter a name</p>}
+              {error && (
+                <p className="errorMessage">{t("measurementsCheckin.error")}</p>
+              )}
 
               <button
                 className={styles.addTypeBtn}
@@ -262,14 +267,14 @@ const MeasurementsCheckinModal = ({
               type="button"
               onClick={() => setIsAddingMeasurement(true)}
             >
-              + Add measurement
+              {t("measurementsCheckin.add")}
             </button>
           )}
         </div>
         {showModal && (
           <ExecuteModal
-            text={`"You sure you want to delete type ${chosenType?.name}? \n If you just want to skip it, you can leave it empty"`}
-            btnText="Yes"
+            text={`${t("measurementsCheckin.delete.part1")} ${chosenType?.name}${t("measurementsCheckin.delete.part2")}`}
+            btnText={t("common.yes")}
             onClose={() => setShowModal(false)}
             onDelete={handleDeleteType}
           />
@@ -279,10 +284,10 @@ const MeasurementsCheckinModal = ({
             className={styles.continueBtn}
             onClick={handleCreateMeasurementLog}
           >
-            Save
+            {t("common.save")}
           </button>
           <button className={styles.skipBtn} onClick={onSkip}>
-            Skip for today
+            {t("common.skipToday")}
           </button>
         </div>
       </div>

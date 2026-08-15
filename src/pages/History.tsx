@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { LoaderCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/History.module.scss";
 
@@ -20,6 +21,7 @@ type SortConfig = {
 
 const History = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [workouts, setWorkouts] = useState<WorkoutDB[]>([]);
   const [loading, setLoading] = useState(true);
@@ -80,7 +82,7 @@ const History = () => {
     return (
       <div className="loading">
         <LoaderCircle size={20} className="loading__spinner" />
-        Loading...
+        {t("common.loading")}
       </div>
     );
   }
@@ -92,21 +94,23 @@ const History = () => {
             <tr>
               <th onClick={() => handleSort("finished_at")}>
                 <span className={styles.tableHeaderContent}>
-                  Date <span>{sortConfig.key === "finished_at" && arrow}</span>
+                  {t("history.date")}{" "}
+                  <span>{sortConfig.key === "finished_at" && arrow}</span>
                 </span>
               </th>
               <th onClick={() => handleSort("name")}>
                 <span className={styles.tableHeaderContent}>
-                  Workout <span>{sortConfig.key === "name" && arrow}</span>
+                  {t("history.workout")}{" "}
+                  <span>{sortConfig.key === "name" && arrow}</span>
                 </span>
               </th>
               <th onClick={() => handleSort("duration_seconds")}>
                 <span className={styles.tableHeaderContent}>
-                  Duration{" "}
+                  {t("history.duration")}{" "}
                   <span>{sortConfig.key === "duration_seconds" && arrow}</span>
                 </span>
               </th>
-              <th>Actions</th>
+              <th>{t("history.actions")}</th>
             </tr>
           </thead>
           <tbody>
@@ -118,12 +122,12 @@ const History = () => {
                 <td>
                   <div className={styles.actions}>
                     <button onClick={() => navigate(`/history/${workout.id}`)}>
-                      View
+                      {t("common.view")}
                     </button>
                     <button
                       onClick={() => navigate(`/history/${workout.id}/edit`)}
                     >
-                      Change
+                      {t("common.edit")}
                     </button>
                   </div>
                 </td>
@@ -134,7 +138,7 @@ const History = () => {
       </div>
       <div className={styles.buttonContainer}>
         <button className={styles.backBtn} onClick={() => navigate("/")}>
-          Back
+          {t("common.back")}
         </button>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import cn from "classnames";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/ChooseExerciseModal.module.scss";
 
@@ -27,6 +28,7 @@ const ChooseExerciseModal = ({
   const categories = [
     ...new Set(exercises.map((exercise) => exercise.category)),
   ];
+  const { t } = useTranslation();
   const [chosenExerciseCategory, setChosenExerciseCategory] = useState("");
   const [chosenExercise, setChosenExercise] = useState<ExerciseDB>();
   const availableExercises = exercises.filter(
@@ -45,17 +47,19 @@ const ChooseExerciseModal = ({
     <div className="modal">
       <div className="modalContent">
         <h2 className="heading">
-          {initialSelectedExerciseId ? "Replace Exercise" : "Choose Exercise"}
+          {initialSelectedExerciseId
+            ? t("chooseExercise.replace")
+            : t("chooseExercise.choose")}
         </h2>
         <div className={styles.categoryContainer}>
-          <p>Filter by Category</p>
+          <p>{t("chooseExercise.filter")}</p>
           <div className={styles.categories}>
             <button
               type="button"
               className={`${styles.categoryBtn} ${chosenExerciseCategory === "" && "active"}`}
               onClick={() => setChosenExerciseCategory("")}
             >
-              All
+              {t("frequency.all")}
             </button>
             {categories.map((category) => (
               <button
@@ -64,7 +68,7 @@ const ChooseExerciseModal = ({
                 className={`${styles.categoryBtn} ${chosenExerciseCategory === category ? "active" : ""}`}
                 onClick={() => setChosenExerciseCategory(category)}
               >
-                {category}
+                {t(`categories.${category.toLowerCase()}`)}
               </button>
             ))}
           </div>
@@ -72,7 +76,7 @@ const ChooseExerciseModal = ({
         <div className={styles.exerciseContainer}>
           <div className={styles.exerciseList}>
             {availableExercises.length === 0 ? (
-              <p>You dont have any exercises, add some first</p>
+              <p>{t("chooseExercise.emptyState")}</p>
             ) : (
               availableExercises
                 .filter((exercise) => {
@@ -91,14 +95,14 @@ const ChooseExerciseModal = ({
                   >
                     <span>{exercise.name}</span>{" "}
                     <span className={styles.exerciseCategory}>
-                      {exercise.category}
+                      {t(`categories.${exercise.category.toLowerCase()}`)}
                     </span>
                   </button>
                 ))
             )}
           </div>
           <div className={styles.hint}>
-            <p className={styles.hint}>Selected exercise:</p>
+            <p className={styles.hint}>{t("chooseExercise.selected")}</p>
             <p
               className={
                 chosenExercise
@@ -106,7 +110,9 @@ const ChooseExerciseModal = ({
                   : styles.selectedExerciseEmpty
               }
             >
-              {chosenExercise ? chosenExercise.name : "Tap an exercise above"}
+              {chosenExercise
+                ? chosenExercise.name
+                : t("chooseExercise.selectedEmpty")}
             </p>
           </div>
         </div>
@@ -114,7 +120,7 @@ const ChooseExerciseModal = ({
           className={styles.createExerciseBtn}
           onClick={() => setShowModal(true)}
         >
-          + Create Exercise
+          {t("chooseExercise.create")}
         </button>
         <div className="buttonContainer">
           <button
@@ -123,10 +129,10 @@ const ChooseExerciseModal = ({
               if (chosenExercise) chooseExercise(chosenExercise);
             }}
           >
-            {initialSelectedExerciseId ? "Replace" : "Add"}
+            {initialSelectedExerciseId ? t("common.replace") : t("common.add")}
           </button>
           <button className={cn(styles.backBtn, "button")} onClick={onClose}>
-            Back
+            {t("common.back")}
           </button>
         </div>
         {showModal && (

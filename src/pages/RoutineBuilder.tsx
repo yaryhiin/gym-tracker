@@ -9,6 +9,7 @@ import {
   ChevronDown,
   LoaderCircle,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/RoutineBuilder.module.scss";
 
@@ -26,9 +27,6 @@ import {
   updateRoutine,
 } from "../services/routines";
 import { getExercises, createExercise } from "../services/exercises";
-
-const BACK_TEXT = `Are you sure you want to exit? \n All unsaved progress will be lost.`;
-const MODAL_TEXT = `Are you sure you want to delete this exercise from your Routine?`;
 
 function getInitialRoutine(draftKey: string) {
   const savedDraft = localStorage.getItem(draftKey);
@@ -50,6 +48,7 @@ function getInitialRoutine(draftKey: string) {
 const RoutineBuilder = () => {
   const navigate = useNavigate();
   const { routineId } = useParams();
+  const { t } = useTranslation();
 
   const draftKey = routineId ? `routineDraft:${routineId}` : "routineDraft:new";
 
@@ -302,14 +301,14 @@ const RoutineBuilder = () => {
     return (
       <div className="loading">
         <LoaderCircle size={20} className="loading__spinner" />
-        Loading...
+        {t("common.loading")}
       </div>
     );
   }
   return (
     <div className={styles.routineBuilderContainer}>
       <div className={styles.header}>
-        <h2 className={styles.title}>Routine Name: </h2>
+        <h2 className={styles.title}>{t("routine.title")}</h2>
         <div className={styles.input}>
           <input
             className={cn(styles.input, errors.name && "error")}
@@ -318,10 +317,10 @@ const RoutineBuilder = () => {
             onChange={(e) =>
               setRoutineDraft((prev) => ({ ...prev, name: e.target.value }))
             }
-            placeholder="Enter name"
+            placeholder={t("routine.placeHolder")}
           />
           {errors.name && (
-            <p className="errorMessage">You need to enter routine name</p>
+            <p className="errorMessage">{t("routine.error.name")}</p>
           )}
         </div>
       </div>
@@ -361,7 +360,7 @@ const RoutineBuilder = () => {
                         }}
                       >
                         <Pencil size={15} />
-                        Replace
+                        {t("common.replace")}
                       </button>
                       <button
                         className={styles.deleteExerciseBtn}
@@ -371,7 +370,7 @@ const RoutineBuilder = () => {
                         }}
                       >
                         <Trash2 size={15} />
-                        Delete
+                        {t("common.delete")}
                       </button>
                     </div>
                   ) : (
@@ -395,10 +394,10 @@ const RoutineBuilder = () => {
           className={cn(styles.addExerciseBtn, errors.exercises && "error")}
           onClick={() => setShowChooseExerciseModal(true)}
         >
-          + Add Exercise
+          {t("routine.add")}
         </button>
         {errors.exercises && (
-          <p className="errorMessage">You need to add at least 1 exercise</p>
+          <p className="errorMessage">{t("routine.error.exercise")}</p>
         )}
       </div>
 
@@ -426,19 +425,19 @@ const RoutineBuilder = () => {
             }
           }}
         >
-          Save Routine
+          {t("common.save")}
         </button>
         <button
           className={styles.backBtn}
           onClick={() => setShowBackModal(true)}
         >
-          Back
+          {t("common.back")}
         </button>
       </div>
       {showDeleteModal && (
         <ExecuteModal
-          text={MODAL_TEXT}
-          btnText="Delete"
+          text={t("modal.delete.routineBuilder")}
+          btnText={t("common.delete")}
           onClose={() => {
             setChosenExerciseId("");
             setShowDeleteModal(false);
@@ -465,8 +464,8 @@ const RoutineBuilder = () => {
       )}
       {showBackModal && (
         <ExecuteModal
-          text={BACK_TEXT}
-          btnText="Exit"
+          text={t("modal.back")}
+          btnText={t("common.exit")}
           onClose={() => setShowBackModal(false)}
           onDelete={() => {
             setShowBackModal(false);

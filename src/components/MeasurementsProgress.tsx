@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { LoaderCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/ProgressComponents.module.scss";
 
@@ -24,6 +25,8 @@ const MeasurementsProgress = ({
   unit,
   firstDayOfTheWeek,
 }: MeasurementsProgressProps) => {
+  const { t } = useTranslation();
+
   const [measurementsData, setMeasurementsData] = useState<MeasurementLogDB[]>(
     [],
   );
@@ -76,16 +79,16 @@ const MeasurementsProgress = ({
     return (
       <div className="loading">
         <LoaderCircle size={20} className="loading__spinner" />
-        Loading...
+        {t("common.loading")}
       </div>
     );
   }
   return (
     <div className={styles.mainContainer}>
       <div className={styles.header}>
-        <h2 className={styles.title}>Measurements</h2>
+        <h2 className={styles.title}>{t("measurementsProgress.title")}</h2>
         <div className={styles.selectGroup}>
-          <label>Choose measurement</label>
+          <label>{t("measurementsProgress.description")}</label>
           {measurementTypes && measurementTypes.length > 0 ? (
             <select
               value={chosenType?.id}
@@ -104,14 +107,14 @@ const MeasurementsProgress = ({
               ))}
             </select>
           ) : (
-            <p>You dont have any data saved</p>
+            <p>{t("measurementsProgress.emptyState")}</p>
           )}
         </div>
       </div>
       <Chart
         chartData={filteredData}
         yPadding={2}
-        label={chosenType?.name ?? "Measurement"}
+        label={chosenType?.name ?? t("measurementsProgress.nameFallBack")}
         unit={unit}
         firstDayOfTheWeek={firstDayOfTheWeek}
       />

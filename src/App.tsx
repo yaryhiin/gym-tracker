@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import type { Session } from "@supabase/supabase-js";
 import { LoaderCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import Home from "./pages/Home";
 import ActiveWorkout from "./pages/ActiveWorkout";
@@ -58,6 +59,8 @@ function getInitialProfile(): ProfileDB | null {
 }
 
 function App() {
+  const { i18n } = useTranslation();
+
   const [session, setSession] = useState<Session | null>();
   const [authLoading, setAuthLoading] = useState(true);
   const [profileLoading, setProfileLoading] = useState(true);
@@ -75,6 +78,16 @@ function App() {
       window.matchMedia("(prefers-color-scheme: dark)").matches
       ? "dark"
       : "light";
+  });
+
+  const [language, setLanguage] = useState(() => {
+    const saved = localStorage.getItem("language");
+    if (saved) {
+      i18n.changeLanguage(saved);
+      return saved;
+    }
+    i18n.changeLanguage("en");
+    return "en";
   });
 
   useEffect(() => {
@@ -213,6 +226,11 @@ function App() {
     localStorage.setItem("theme", theme);
   }, [theme]);
 
+  useEffect(() => {
+    document.documentElement.setAttribute("language", language);
+    localStorage.setItem("language", language);
+  }, [language]);
+
   async function handleCreateProfile(
     name: string,
     preferredWeightUnit: PreferredWeightUnit,
@@ -262,6 +280,8 @@ function App() {
                   toggleTheme={toggleTheme}
                   theme={theme}
                   session={false}
+                  language={language}
+                  setLanguage={setLanguage}
                 />
               }
             >
@@ -281,6 +301,8 @@ function App() {
                     session={true}
                     toggleTheme={toggleTheme}
                     theme={theme}
+                    language={language}
+                    setLanguage={setLanguage}
                   />
                 }
               >
@@ -320,6 +342,8 @@ function App() {
                     <ProfilePage
                       toggleTheme={toggleTheme}
                       theme={theme}
+                      language={language}
+                      setLanguage={setLanguage}
                       profile={profile}
                       handleUpdateProfile={handleUpdateProfile}
                     />

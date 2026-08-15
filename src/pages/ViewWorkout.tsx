@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { LoaderCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/ActiveWorkout.module.scss";
 
@@ -16,9 +17,10 @@ import { getProfile } from "../services/profiles";
 const ChangeWorkout = () => {
   const { workoutId } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [workout, setWorkout] = useState<Workout>({
-    name: "Custom Workout",
+    name: t("workout.custom"),
     started_at: Date.now().toString(),
     finished_at: "",
     duration_seconds: 0,
@@ -82,7 +84,7 @@ const ChangeWorkout = () => {
     return (
       <div className="loading">
         <LoaderCircle size={20} className="loading__spinner" />
-        Loading...
+        {t("common.loading")}
       </div>
     );
   }
@@ -93,7 +95,7 @@ const ChangeWorkout = () => {
           className={styles.editBtn}
           onClick={() => navigate(`/history/${workoutId}/edit`)}
         >
-          Edit
+          {t("common.edit")}
         </button>
         <div>
           <h3 className={styles.title}>{workout?.name}</h3>

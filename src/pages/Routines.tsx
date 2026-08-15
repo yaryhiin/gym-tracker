@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LoaderCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/Routines.module.scss";
 
@@ -11,10 +12,9 @@ import InfoModal from "../components/InfoModal";
 
 import { getRoutines, deleteRoutine } from "../services/routines";
 
-const MODAL_TEXT = `Are you sure you want to delete this routine?`;
-
 const Routines = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [routines, setRoutines] = useState<RoutineDB[]>([]);
   const [chosenRoutineId, setChosenRoutineId] = useState("");
@@ -72,13 +72,12 @@ const Routines = () => {
   return (
     <div className={styles.routinesContainer}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Routines</h1>
+        <h1 className={styles.title}>{t("routine.title2")}</h1>
         {routines.length > 0 ? (
-          <p>Manage your workout routines</p>
+          <p>{t("routine.description")}</p>
         ) : (
           <div className="emptyState">
-            <p>No routines yet</p>
-            <p>Create your first routine</p>
+            <p>{t("routine.emptyState")}</p>
           </div>
         )}
       </div>
@@ -95,13 +94,13 @@ const Routines = () => {
                 className={styles.startRoutineBtn}
                 onClick={() => navigate(`/workout/routine/${routine.id}`)}
               >
-                Start
+                {t("common.start")}
               </button>
               <button
                 className={styles.editRoutineBtn}
                 onClick={() => navigate(`/routines/${routine.id}/edit`)}
               >
-                Edit
+                {t("common.edit")}
               </button>
               <button
                 className={styles.deleteRoutineBtn}
@@ -110,7 +109,7 @@ const Routines = () => {
                   setChosenRoutineId(routine.id);
                 }}
               >
-                Delete
+                {t("common.delete")}
               </button>
             </div>
           </div>
@@ -121,13 +120,13 @@ const Routines = () => {
           className={styles.createRoutineBtn}
           onClick={() => navigate("/routines/new")}
         >
-          + Create Routine
+          {t("routine.create")}
         </button>
       </div>
       {showMessageModal && (
         <ExecuteModal
-          text={MODAL_TEXT}
-          btnText="Delete"
+          text={t("modal.delete.routine")}
+          btnText={t("common.delete")}
           onClose={() => setShowMessageModal(false)}
           onDelete={() => {
             handleDeleteRoutine(chosenRoutineId);

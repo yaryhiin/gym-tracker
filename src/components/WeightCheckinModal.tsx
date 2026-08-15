@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/Modal.module.scss";
 
@@ -20,6 +21,8 @@ const WeightCheckinModal = ({
   name,
   onSkip,
 }: WeightCheckinModalProps) => {
+  const { t } = useTranslation();
+
   const [newWeight, setNewWeight] = useState("");
   const [errors, setErrors] = useState<WeightCheckinErrors>({
     weight: false,
@@ -74,30 +77,30 @@ const WeightCheckinModal = ({
   return (
     <div className="modal">
       <div className="modalContent">
-        <h1 className="heading">Weight check-in</h1>
+        <h1 className="heading">{t("weightCheckin.title")}</h1>
         <div className={styles.message}>
           <p className={styles.messageContainer}>
             {new Date().getHours()
-              ? "Good morning"
+              ? t("home.greeting.morning")
               : new Date().getHours() < 18
-                ? "Good afternoon"
-                : "Good evening"}
+                ? t("home.greeting.afternoon")
+                : t("home.greeting.evening")}
             {", "}
             {name}
           </p>
-          <p className={styles.message}>What`s your weight today?</p>
+          <p className={styles.message}>{t("weightCheckin.message")}</p>
         </div>
         {previousData && (
           <p className={styles.previous}>
             {unit === "lb"
               ? Math.round(Number(previousData.weight) * 2.20462262 * 10) / 10
               : previousData.weight}
-            {unit} - {formatDate(previousData.date)}
+            {t(`units.${unit}`)} - {formatDate(previousData.date)}
           </p>
         )}
 
         <div className={styles.weightContainer}>
-          <p className={styles.inputLabel}>New weight</p>
+          <p className={styles.inputLabel}>{t("weightCheckin.new")}</p>
           <div>
             <input
               className={`${styles.input} ${errors.weight && "error"}`}
@@ -112,7 +115,7 @@ const WeightCheckinModal = ({
           </div>
           {errors.weight && (
             <p className={`errorMessage ${styles.fullWidth}`}>
-              Please put in new weight
+              {t("weightCheckin.error")}
             </p>
           )}
         </div>
@@ -121,10 +124,10 @@ const WeightCheckinModal = ({
             className={styles.continueBtn}
             onClick={handleCreateWeightLog}
           >
-            Save
+            {t("common.save")}
           </button>
           <button className={styles.skipBtn} onClick={onSkip}>
-            Skip for today
+            {t("common.skipToday")}
           </button>
         </div>
       </div>

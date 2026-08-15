@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { LoaderCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/ActiveWorkout.module.scss";
 
@@ -26,8 +27,6 @@ const CHANGE_WORKOUT_KEY = "changeWorkout";
 const WORKOUT_SELECTED_EXERCISE_KEY = "workoutSelectedExercise";
 const WORKOUT_SELECTED_SET_KEY = "workoutSelectedSet";
 const WORKOUT_REST_START_KEY = "workoutRestStart";
-
-const MODAL_TEXT = `Are you sure you want to delete this workout? \n This action cannot be undone.`;
 
 function createEmptyWorkout(): Workout {
   return {
@@ -56,6 +55,7 @@ function getInitialWorkout() {
 const ChangeWorkout = () => {
   const { workoutId } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [workout, setWorkout] = useState<Workout>(getInitialWorkout);
   const [exercises, setExercises] = useState<ExerciseDB[]>([]);
@@ -223,7 +223,7 @@ const ChangeWorkout = () => {
     return (
       <div className="loading">
         <LoaderCircle size={20} className="loading__spinner" />
-        Loading...
+        {t("common.loading")}
       </div>
     );
   }
@@ -242,7 +242,7 @@ const ChangeWorkout = () => {
               localStorage.removeItem(WORKOUT_REST_START_KEY);
             }}
           >
-            Back
+            {t("common.back")}
           </button>
           <p className={styles.stopwatch}>
             {formatTime(workout?.duration_seconds, "workout")}
@@ -251,7 +251,7 @@ const ChangeWorkout = () => {
             className={styles.deleteBtn}
             onClick={() => setShowModal(true)}
           >
-            Delete
+            {t("common.delete")}
           </button>
         </div>
       </div>
@@ -267,8 +267,8 @@ const ChangeWorkout = () => {
       />
       {showModal && (
         <ExecuteModal
-          text={MODAL_TEXT}
-          btnText="Delete"
+          text={t("modal.delete.workout")}
+          btnText={t("common.delete")}
           onClose={() => {
             setShowModal(false);
           }}

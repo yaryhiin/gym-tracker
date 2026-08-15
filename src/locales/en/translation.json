@@ -1,0 +1,290 @@
+{
+  "common": {
+    "save": "Save",
+    "saveChanges": "Save Changes",
+    "back": "Back",
+    "loading": "Loading",
+    "delete": "Delete",
+    "edit": "Edit",
+    "history": "History",
+    "view": "View",
+    "replace": "Replace",
+    "exit": "Exit",
+    "finish": "Finish",
+    "start": "Start",
+    "add": "Add",
+    "yes": "Yes",
+    "skipToday": "Skip for Today",
+    "skipNow": "Skip for now",
+    "continue": "Continue",
+    "ok": "Ok",
+    "unlink": "Unlink",
+    "superset": "Superset"
+  },
+  "units": {
+    "kg": "kg",
+    "lb": "lb",
+    "cm": "cm",
+    "in": "in",
+    "sec": "seconds"
+  },
+  "frequency": {
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "biweekly": "2 weeks",
+    "monthly": "Monthly",
+    "off": "Off",
+    "1w": "1w",
+    "1m": "1m",
+    "3m": "3m",
+    "all": "All"
+  },
+  "days": {
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday"
+  },
+  "navigation": {
+    "home": "Home",
+    "routines": "Routines",
+    "exercises": "Exercises",
+    "progress": "Progress"
+  },
+  "workout": {
+    "custom": "Custom Workout",
+    "set": "Set",
+    "weight": "Weight",
+    "reps": "Reps",
+    "done": "Done",
+    "rest": "Rest",
+    "last": "Last time:",
+    "note": {
+      "prev": "Previous note:",
+      "add": "Add note",
+      "placeHolder": "Exercise note..."
+    },
+    "addSet": "Add Set",
+    "addExercise": "Add Exercise",
+    "completeExercise": "Complete Exercise",
+    "completeSet": "Complete Set"
+  },
+  "exercises": {
+    "title": "Exercises",
+    "description": "Manage your exercises",
+    "emptyState": "No exercises yet \n Create your first exercise",
+    "create": "+ Create Exercise"
+  },
+  "history": {
+    "date": "Date",
+    "workout": "Workout",
+    "duration": "Duration",
+    "actions": "Actions"
+  },
+  "home": {
+    "greeting": {
+      "morning": "Good morning",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening",
+      "night": "Good night"
+    },
+    "start": "Start Workout",
+    "recent": "Recent workouts",
+    "emptyState": {
+      "title": "No recent workouts.",
+      "description": "Finish yuor first workout"
+    },
+    "viewAll": "View All"
+  },
+  "auth": {
+    "login": "Log In",
+    "signup": "Sign Up",
+    "logout": "Log Out",
+    "email": "Email",
+    "password": "Password",
+    "confirmPass": "Confirm Password",
+    "error": "Password must be at least 6 characters"
+  },
+  "profile": {
+    "title": "Profile",
+    "personal": "Personal",
+    "welcome": "Welcome",
+    "setup": "Please set up your profile",
+    "name": {
+      "title": "Name",
+      "placeHolder": "Enter your name"
+    },
+    "birthday": "Birthday",
+    "preferences": {
+      "title": "Preferences",
+      "weight": "Weight unit",
+      "measurements": "Measurements unit",
+      "workout": "Workout weight unit",
+      "firstDay": "First day of the week",
+      "theme": {
+        "title": "Theme",
+        "dark": "Dark",
+        "light": "Light"
+      }
+    },
+    "reminders": {
+      "title": "Reminders",
+      "weight": "Weight check-in",
+      "measurements": ""
+    }
+  },
+  "language": {
+    "title": "Language",
+    "en": "English",
+    "uk": "Ukrainian",
+    "es": "Spanish",
+    "ru": "Russian"
+  },
+  "progress": {
+    "title": "Progress",
+    "description": "Choose what you want to track",
+    "weight": "Weight",
+    "measurements": "Measurements",
+    "exercises": "Exercises"
+  },
+  "routine": {
+    "title": "Routine Name:",
+    "title2": "Routines",
+    "description": "Manage your workout routines",
+    "emptyState": "No routines yet \n Create your first routine",
+    "placeHolder": "Enter name",
+    "error": {
+      "name": "You need to enter routine name",
+      "exercise": "You need to add at least 1 exercise"
+    },
+    "add": "+ Add Exercise",
+    "create": "+ Create Routine"
+  },
+  "modal": {
+    "back": "Are you sure you want to exit? \n All unsaved progress will be lost.",
+    "delete": {
+      "exercise": "Are you sure you want to delete this exercise? \n It will be removed from your existing routines",
+      "routine": "Are you sure you want to delete this routine?",
+      "routineBuilder": "Are you sure you want to delete this exercise from your Routine?",
+      "workout": "Are you sure you want to delete this workout? \n This action cannot be undone.",
+      "exerciseWorkout": "You sure you want to delete this exercise from workout \n All sets will be lost"
+    },
+    "finish": "Are you sure you want to finish this workout?",
+    "logout": "You sure you want to Log Out?"
+  },
+  "welcomeScreen": {
+    "title": "Track your workouts and progress in one place.",
+    "description": "Create exercises, build routines, log sets, view history, and follow your progress over time. Simple, fast, and made for real gym sessions."
+  },
+  "chart": {
+    "current": "Current:",
+    "change": "Change:",
+    "entries": "Entries:"
+  },
+  "chooseExercise": {
+    "replace": "Replace Exercise",
+    "choose": "Choose Exercise",
+    "filter": "Filter by Category",
+    "emptyState": "You dont have any exercises, add some first",
+    "selected": "Selected exercise:",
+    "selectedEmpty": "Tap an exercise above",
+    "create": "+ Create Exercise"
+  },
+  "chooseRoutine": {
+    "title": "Choose Routine:",
+    "exercises": "exercises",
+    "emptyState": {
+      "title": "Custom Workout",
+      "description": "Start without a routine"
+    }
+  },
+  "execute": {
+    "title": "Confirm Action"
+  },
+  "exereciseHistory": {
+    "emptyState": "You dont have any history for this exercise"
+  },
+  "label": {
+    "avgRest": "Average Rest Time",
+    "bestWeight": "Best weight used",
+    "totalVol": "Total volume",
+    "bestVol": "Best set volume",
+    "bw": "Body Weight",
+    "avgWeight": "Average Weight"
+  },
+  "exerciseProgress": {
+    "title": "Exercises",
+    "description": "Choose exercise",
+    "emptyState": "You don`t have any data saved",
+    "metric": "Choose metric"
+  },
+  "infoModal": {
+    "save": {
+      "title": "Saving",
+      "text": "Saving your changes..."
+    },
+    "delete": {
+      "title": "Deleting",
+      "text": "Deleting item..."
+    },
+    "success": {
+      "title": "Success",
+      "text": "Completed successfully"
+    },
+    "error": {
+      "title": "Error",
+      "text": "Something went wrong. Please try again."
+    },
+    "info": {
+      "title": "Information",
+      "text": "Here is something you should know."
+    }
+  },
+  "manageExercise": {
+    "edit": "Edit Exercise",
+    "create": "Create New Exercise",
+    "placeHolder": "Exercise name",
+    "category": "Category:",
+    "error": {
+      "name": "You need to enter exercise name",
+      "category": "You need to choose exercise category"
+    }
+  },
+  "categories": {
+    "chest": "Chest",
+    "back": "Back",
+    "legs": "Legs",
+    "shoulders": "Shoulders",
+    "arms": "Arms",
+    "core": "Core",
+    "cardio": "Cardio",
+    "other": "Other"
+  },
+  "measurementsCheckin": {
+    "title": "Measurements check-in",
+    "message": "What`s your measurements today?",
+    "emptyState": "No measurements yet. Add your first measurement to start tracking.",
+    "error": "Please enter a name",
+    "placeHolder": "e.g. Neck, Forearm",
+    "add": "+ Add measurement",
+    "delete": {
+      "part1": "You sure you want to delete type",
+      "part2": "? \n If you just want to skip it, you can leave it empty"
+    }
+  },
+  "weightCheckin": {
+    "title": "Weight check-in",
+    "message": "What`s your weight today?",
+    "new": "New weight",
+    "error": "Please put in a new weight"
+  },
+  "measurementsProgress": {
+    "title": "Measurements",
+    "description": "Choose measurement",
+    "emptyState": "You don`t have any data saved",
+    "nameFallBack": "Measurement"
+  }
+}

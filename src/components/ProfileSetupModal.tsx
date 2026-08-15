@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/ProfileSetupModal.module.scss";
 
@@ -17,6 +18,8 @@ type ProfileSetupModal = {
 };
 
 const ProfileSetupModal = ({ onCreate }: ProfileSetupModal) => {
+  const { t } = useTranslation();
+
   const [name, setName] = useState("");
   const [preferredWeightUnit, setPreferredWeightUnit] =
     useState<PreferredWeightUnit>("kg");
@@ -28,27 +31,27 @@ const ProfileSetupModal = ({ onCreate }: ProfileSetupModal) => {
   return (
     <div className="modal">
       <div className={styles.modalContent}>
-        <h2 className={styles.heading}>Welcome</h2>
-        <p className={styles.message}>Please set up your profile</p>
+        <h2 className={styles.heading}>{t("profile.welcome")}</h2>
+        <p className={styles.message}>{t("profile.setup")}</p>
         <div className={styles.inputContainer}>
-          <p className={styles.inputLabel}>Name:</p>
+          <p className={styles.inputLabel}>{t("profile.name.title")}:</p>
           <input
             className={styles.input}
             type="text"
-            placeholder="Enter your name"
+            placeholder={t("profile.name.placeHolder")}
             onChange={(e) => setName(e.target.value.trim())}
             value={name}
           />
         </div>
         <div className={styles.inputContainer}>
-          <p className={styles.inputLabel}>Weight unit</p>
+          <p className={styles.inputLabel}>{t("profile.preferences.weight")}</p>
           <div className="toggle">
             <button
               type="button"
               className={preferredWeightUnit === "kg" ? "active" : ""}
               onClick={() => setPreferredWeightUnit("kg")}
             >
-              kg
+              {t("units.kg")}
             </button>
 
             <button
@@ -56,19 +59,21 @@ const ProfileSetupModal = ({ onCreate }: ProfileSetupModal) => {
               className={preferredWeightUnit === "lb" ? "active" : ""}
               onClick={() => setPreferredWeightUnit("lb")}
             >
-              lb
+              {t("units.lb")}
             </button>
           </div>
         </div>
         <div className={styles.inputContainer}>
-          <p className={styles.inputLabel}>Measurement unit</p>
+          <p className={styles.inputLabel}>
+            {t("profile.preferences.measurements")}
+          </p>
           <div className="toggle">
             <button
               type="button"
               className={preferredMeasurementUnit === "cm" ? "active" : ""}
               onClick={() => setPreferredMeasurementUnit("cm")}
             >
-              cm
+              {t("units.cm")}
             </button>
 
             <button
@@ -76,19 +81,21 @@ const ProfileSetupModal = ({ onCreate }: ProfileSetupModal) => {
               className={preferredMeasurementUnit === "in" ? "active" : ""}
               onClick={() => setPreferredMeasurementUnit("in")}
             >
-              in
+              {t("units.in")}
             </button>
           </div>
         </div>
         <div className={styles.inputContainer}>
-          <p className={styles.inputLabel}>Workout weight unit</p>
+          <p className={styles.inputLabel}>
+            {t("profile.preferences.workout")}
+          </p>
           <div className="toggle">
             <button
               type="button"
               className={preferredWorkoutUnit === "kg" ? "active" : ""}
               onClick={() => setPreferredWorkoutUnit("kg")}
             >
-              kg
+              {t("units.kg")}
             </button>
 
             <button
@@ -96,7 +103,7 @@ const ProfileSetupModal = ({ onCreate }: ProfileSetupModal) => {
               className={preferredWorkoutUnit === "lb" ? "active" : ""}
               onClick={() => setPreferredWorkoutUnit("lb")}
             >
-              lb
+              {t("units.lb")}
             </button>
           </div>
         </div>
@@ -112,7 +119,7 @@ const ProfileSetupModal = ({ onCreate }: ProfileSetupModal) => {
               )
             }
           >
-            Skip for now
+            {t("common.skipNow")}
           </button>
           <button
             className={styles.continueBtn}
@@ -125,7 +132,7 @@ const ProfileSetupModal = ({ onCreate }: ProfileSetupModal) => {
               )
             }
           >
-            Continue
+            {t("common.continue")}
           </button>
         </div>
       </div>

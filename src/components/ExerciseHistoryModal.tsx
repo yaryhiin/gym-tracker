@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { X, LoaderCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/ExerciseHistoryModal.module.scss";
 
@@ -20,6 +21,8 @@ const ExerciseHistoryModal = ({
   onClose,
   preferredUnit,
 }: ExerciseHistoryModalProps) => {
+  const { t } = useTranslation();
+
   const [exerciseHistory, setExerciseHistory] = useState<ExerciseHistory[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -47,7 +50,7 @@ const ExerciseHistoryModal = ({
         <div className="modalContent">
           <div className="loading">
             <LoaderCircle size={20} className="loading__spinner" />
-            Loading...
+            {t("common.loading")}
           </div>
         </div>
       </div>
@@ -82,11 +85,13 @@ const ExerciseHistoryModal = ({
                 <table className={styles.sets}>
                   <thead>
                     <tr>
-                      <th>Set</th>
-                      <th>Weight ({preferredUnit})</th>
-                      <th>Reps</th>
-                      <th>Done</th>
-                      <th>Rest</th>
+                      <th>{t("workout.set")}</th>
+                      <th>
+                        {t("workout.weight")} ({t(`units.${preferredUnit}`)})
+                      </th>
+                      <th>{t("workout.reps")}</th>
+                      <th>{t("workout.done")}</th>
+                      <th>{t("workout.rest")}</th>
                     </tr>
                   </thead>
 
@@ -116,7 +121,7 @@ const ExerciseHistoryModal = ({
             ))}
           </div>
         ) : (
-          <p>You dont have any history for this exercise</p>
+          <p>{t("exerciseHistory.emptyState")}</p>
         )}
         <div className="buttonContainer"></div>
       </div>

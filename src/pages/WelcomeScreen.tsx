@@ -1,32 +1,29 @@
 import { useNavigate } from "react-router-dom";
 import cn from "classnames";
+import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/WelcomeScreen.module.scss";
 
 const WelcomeScreen = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <div className={styles.content}>
-      <h1 className={styles.title}>
-        Track your workouts and progress in one place.
-      </h1>
-      <h3 className={styles.description}>
-        Create exercises, build routines, log sets, view history, and follow
-        your progress over time. Simple, fast, and made for real gym sessions.
-      </h3>
+      <h1 className={styles.title}>{t("welcomeScreen.title")}</h1>
+      <h3 className={styles.description}>{t("welcomeScreen.description")}</h3>
       <div className={styles.sessionBox}>
         <button
           onClick={() => navigate("/login")}
           className={cn("button", styles.logIn)}
         >
-          Log In
+          {t("auth.login")}
         </button>
         <button
           onClick={() => navigate("/signup")}
           className={cn("button", styles.signUp)}
         >
-          Sign Up
+          {t("auth.signup")}
         </button>
       </div>
     </div>

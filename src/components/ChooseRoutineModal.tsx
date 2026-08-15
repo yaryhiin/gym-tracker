@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/Home.module.scss";
 import type { RoutineDB } from "../types/routine";
@@ -10,11 +11,12 @@ type ChooseRoutineModal = {
 
 const ChooseRoutineModal = ({ routines, onClose }: ChooseRoutineModal) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <div className="modal">
       <div className="modalContent">
-        <h2 className="heading">Choose Routine:</h2>
+        <h2 className="heading">{t("chooseRoutine.title")}</h2>
         <div className={styles.routinesList}>
           {routines.map((routine) => (
             <button
@@ -24,7 +26,7 @@ const ChooseRoutineModal = ({ routines, onClose }: ChooseRoutineModal) => {
             >
               <span className={styles.routineName}>{routine.name}</span>
               <span className={styles.routineMeta}>
-                {routine.exercises_count} exercises
+                {routine.exercises_count} {t("chooseRoutine.exercises")}
               </span>
             </button>
           ))}
@@ -33,8 +35,12 @@ const ChooseRoutineModal = ({ routines, onClose }: ChooseRoutineModal) => {
             className={`${styles.routineElement} ${styles.customWorkout}`}
             onClick={() => navigate("/workout")}
           >
-            <span className={styles.routineName}>Custom Workout</span>
-            <span className={styles.routineMeta}>Start without a routine</span>
+            <span className={styles.routineName}>
+              {t("chooseRoutine.emptyState.title")}
+            </span>
+            <span className={styles.routineMeta}>
+              {t("chooseRoutine.emptyState.description")}
+            </span>
           </button>
         </div>
         <div className="buttonContainer">
@@ -42,7 +48,7 @@ const ChooseRoutineModal = ({ routines, onClose }: ChooseRoutineModal) => {
             className={`${styles.backBtn} button`}
             onClick={() => onClose()}
           >
-            Close
+            {t("common.back")}
           </button>
         </div>
       </div>

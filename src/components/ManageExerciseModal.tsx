@@ -1,5 +1,6 @@
 import { useState } from "react";
 import cn from "classnames";
+import { useTranslation } from "react-i18next";
 
 import styles from "../styles//modules/Modal.module.scss";
 
@@ -17,6 +18,8 @@ const ManageExerciseModal = ({
   onClose,
   onAddExercise,
 }: CreateExerciseModalProps) => {
+  const { t } = useTranslation();
+
   const [newExerciseName, setNewExerciseName] = useState(exercise?.name || "");
   const [newExerciseCategory, setNewExerciseCategory] = useState(
     exercise?.category || "",
@@ -52,7 +55,7 @@ const ManageExerciseModal = ({
     <div className="modal">
       <div className="modalContent">
         <h2 className="heading">
-          {exercise ? "Edit Exercise" : "Create New Exercise"}
+          {exercise ? t("manageExercise.edit") : t("manageExercise.create")}
         </h2>
         <div className={styles.inputContainer}>
           <input
@@ -60,14 +63,14 @@ const ManageExerciseModal = ({
             type="text"
             value={newExerciseName}
             onChange={(e) => setNewExerciseName(e.target.value)}
-            placeholder="Exercise name"
+            placeholder={t("manageExercise.placeHolder")}
           />
           {errors.name && (
-            <p className="errorMessage">You need to enter exercise name</p>
+            <p className="errorMessage">{t("manageExercise.error.name")}</p>
           )}
         </div>
         <div className={styles.categoryContainer}>
-          <h2 className={styles.label}>Category:</h2>
+          <h2 className={styles.label}>{t("manageExercise.category")}</h2>
           <div className={styles.categories}>
             {categories.map((category) => (
               <button
@@ -80,12 +83,12 @@ const ManageExerciseModal = ({
                 )}
                 onClick={() => setNewExerciseCategory(category)}
               >
-                {category}
+                {t(`categories.${category.toLowerCase()}`)}
               </button>
             ))}
             {errors.category && (
               <p className="errorMessage">
-                You need to choose exercise category
+                {t("manageExercise.error.category")}
               </p>
             )}
           </div>
@@ -95,10 +98,10 @@ const ManageExerciseModal = ({
             className={cn(styles.addBtn, "button")}
             onClick={handleSubmit}
           >
-            Save
+            {t("common.save")}
           </button>
           <button className={cn(styles.backBtn, "button")} onClick={onClose}>
-            Back
+            {t("common.back")}
           </button>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { Outlet, useLocation, matchPath, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 
 import Header from "./Header";
 import NavButtons from "./NavButtons";
@@ -22,9 +23,17 @@ type LayoutProps = {
   toggleTheme: () => void;
   theme: string;
   session: boolean;
+  language: string;
+  setLanguage: Dispatch<SetStateAction<string>>;
 };
 
-export default function Layout({ toggleTheme, theme, session }: LayoutProps) {
+export default function Layout({
+  toggleTheme,
+  theme,
+  session,
+  language,
+  setLanguage,
+}: LayoutProps) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -50,7 +59,13 @@ export default function Layout({ toggleTheme, theme, session }: LayoutProps) {
   return (
     <div className={"appShell"}>
       {!isActiveWorkout && (
-        <Header toggleTheme={toggleTheme} theme={theme} session={session} />
+        <Header
+          toggleTheme={toggleTheme}
+          theme={theme}
+          session={session}
+          language={language}
+          setLanguage={setLanguage}
+        />
       )}
       <main className="container">
         <Outlet />

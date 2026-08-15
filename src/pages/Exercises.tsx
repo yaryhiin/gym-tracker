@@ -6,6 +6,7 @@ import {
   LoaderCircle,
   History,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/Exercises.module.scss";
 
@@ -23,13 +24,13 @@ import {
   updateExercise,
 } from "../services/exercises";
 
-const MODAL_TEXT = `Are you sure you want to delete this exercise? \n It will be removed from your existing routines`;
-
 type ExercisesProps = {
   preferredUnit: string;
 };
 
 const Exercises = ({ preferredUnit }: ExercisesProps) => {
+  const { t } = useTranslation();
+
   const [exercises, setExercises] = useState<ExerciseDB[]>([]);
   const [chosenExercise, setChosenExercise] = useState<ExerciseDB>(
     exercises[0],
@@ -151,27 +152,26 @@ const Exercises = ({ preferredUnit }: ExercisesProps) => {
     return (
       <div className="loading">
         <LoaderCircle size={20} className="loading__spinner" />
-        Loading...
+        {t("common.loading")}
       </div>
     );
   }
   return (
     <div className={styles.exercisesContainer}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Exercises</h1>
+        <h1 className={styles.title}>{t("exercises.title")}</h1>
         {exercises.length > 0 ? (
-          <p>Manage your exercises</p>
+          <p>{t("exercises.description")}</p>
         ) : (
           <div className="emptyState">
-            <p>No exercises yet</p>
-            <p>Create your first exercise</p>
+            <p>{t("exercises.emptyState")}</p>
           </div>
         )}
         <button
           className={styles.createExerciseBtn}
           onClick={() => setShowCreateModal(true)}
         >
-          + Create Exercise
+          {t("exercises.create")}
         </button>
       </div>
       <div className={styles.exercisesList}>
@@ -190,7 +190,7 @@ const Exercises = ({ preferredUnit }: ExercisesProps) => {
                         }}
                       >
                         <Pencil size={15} />
-                        Edit
+                        {t("common.edit")}
                       </button>
                       <button
                         className={styles.deleteExerciseBtn}
@@ -199,7 +199,7 @@ const Exercises = ({ preferredUnit }: ExercisesProps) => {
                         }}
                       >
                         <Trash2 size={15} />
-                        Delete
+                        {t("common.delete")}
                       </button>
                       <button
                         className={styles.exerciseHistoryBtn}
@@ -208,7 +208,7 @@ const Exercises = ({ preferredUnit }: ExercisesProps) => {
                         }}
                       >
                         <History size={15} />
-                        History
+                        {t("common.history")}
                       </button>
                     </div>
                   ) : (
@@ -224,7 +224,7 @@ const Exercises = ({ preferredUnit }: ExercisesProps) => {
                   )}
                 </div>
               </div>
-              <p>{exercise.category}</p>
+              <p>{t(`categories.${exercise.category.toLowerCase()}`)}</p>
             </div>
           </div>
         ))}
@@ -251,8 +251,8 @@ const Exercises = ({ preferredUnit }: ExercisesProps) => {
       )}
       {showMessageModal && (
         <ExecuteModal
-          text={MODAL_TEXT}
-          btnText="Delete"
+          text={t("modal.delete.exercise")}
+          btnText={t("common.delete")}
           onClose={() => setShowMessageModal(false)}
           onDelete={() => {
             handleDeleteExercise(chosenExercise);

@@ -7,6 +7,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/Chart.module.scss";
 
@@ -63,6 +64,8 @@ const Chart = ({
   unit,
   firstDayOfTheWeek,
 }: ChartProps) => {
+  const { t } = useTranslation();
+
   const [range, setRange] = useState<Range>("all");
   const [filteredData, setFilteredData] = useState<ChartData[]>();
   const [briefData, setBriefData] = useState<ChartBriefInfo>();
@@ -80,8 +83,8 @@ const Chart = ({
       return;
     }
     let formatted: ChartData[] = [];
-    if (label.includes("Weight") && (range === "all" || range === "3m")) {
-      setNewLabel("Average Weight");
+    if (label.includes(t("label.bw")) && (range === "all" || range === "3m")) {
+      setNewLabel(t("label.avgWeight"));
       const firstDayOfTheWeekIndex = days.indexOf(
         firstDayOfTheWeek.toLowerCase(),
       );
@@ -191,7 +194,6 @@ const Chart = ({
                 });
               }}
               minTickGap={25}
-              // interval={0}
             />
             <YAxis
               domain={[`dataMin - ${yPadding}`, `dataMax + ${yPadding}`]}
@@ -230,13 +232,13 @@ const Chart = ({
           className={`${styles.rangeBtn} ${range === "1w" && styles.active}`}
           onClick={() => setRange("1w")}
         >
-          1W
+          {t("frequency.1w")}
         </button>
         <button
           className={`${styles.rangeBtn} ${range === "1m" && styles.active}`}
           onClick={() => setRange("1m")}
         >
-          1M
+          {t("frequency.1m")}
         </button>
         <button
           className={`${styles.rangeBtn} ${range === "3m" && styles.active}`}
@@ -244,33 +246,33 @@ const Chart = ({
             setRange("3m");
           }}
         >
-          3M
+          {t("frequency.3m")}
         </button>
         <button
           className={`${styles.rangeBtn} ${range === "all" && styles.active}`}
           onClick={() => setRange("all")}
         >
-          All
+          {t("frequency.all")}
         </button>
       </div>
       <div className={styles.briefInfo}>
         <div>
-          <p>Current:</p>
+          <p>{t("chart.current")}</p>
           <p>
             {briefData?.current}
-            {unit}
+            {t(`units.${unit}`)}
           </p>
         </div>
         <div>
-          <p>Change:</p>
+          <p>{t("chart.change")}</p>
           <p>
             {briefData && briefData.change >= 0 && "+"}
             {briefData?.change}
-            {unit}
+            {t(`units.${unit}`)}
           </p>
         </div>
         <div>
-          <p>Entries:</p>
+          <p>{t("chart.entries")}</p>
           <p>{briefData?.entries}</p>
         </div>
       </div>

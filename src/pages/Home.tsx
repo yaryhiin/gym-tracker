@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { LoaderCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/Home.module.scss";
 
@@ -20,6 +21,7 @@ type HomeProps = {
 
 const Home = ({ name }: HomeProps) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [workouts, setWorkouts] = useState<WorkoutDB[]>([]);
   const [routines, setRoutines] = useState<RoutineDB[]>([]);
@@ -49,7 +51,7 @@ const Home = ({ name }: HomeProps) => {
     return (
       <div className="loading">
         <LoaderCircle size={20} className="loading__spinner" />
-        Loading...
+        {t("common.loading")}
       </div>
     );
   }
@@ -57,19 +59,19 @@ const Home = ({ name }: HomeProps) => {
     <div className={styles.home}>
       <h1 className={styles.title}>
         {new Date().getHours() < 4
-          ? "Good night"
+          ? t("home.greeting.night")
           : new Date().getHours() < 12
-            ? "Good morning"
+            ? t("home.greeting.morning")
             : new Date().getHours() < 18
-              ? "Good afternoon"
-              : "Good evening"}
+              ? t("home.greeting.afternoon")
+              : t("home.greeting.evening")}
         , {name}
       </h1>
       <button
         className={styles.startBtn}
         onClick={() => setShowChooseRoutineModal(true)}
       >
-        Start Workout
+        {t("home.start")}
       </button>
       {showChooseRoutineModal && (
         <ChooseRoutineModal
@@ -78,7 +80,7 @@ const Home = ({ name }: HomeProps) => {
         />
       )}
       <div className={styles.history}>
-        <h2 className={styles.title}>Recent workouts</h2>
+        <h2 className={styles.title}>{t("home.recent")}</h2>
 
         {workouts.length > 0 ? (
           workouts
@@ -98,14 +100,17 @@ const Home = ({ name }: HomeProps) => {
                   {workout.name} - {formatDate(workout.started_at)}
                 </p>
                 <div className={styles.descWorkout}>
-                  <p>Duration: {formatDuration(workout.duration_seconds)}</p>
+                  <p>
+                    {t("history.duration")}{": "}
+                    {formatDuration(workout.duration_seconds)}
+                  </p>
                 </div>
               </div>
             ))
         ) : (
           <div className={styles.emptyText}>
-            <h3>No recent workouts.</h3>
-            <p>Finish your first workout to see it here.</p>
+            <h3>{t("home.emptyState.title")}</h3>
+            <p>{t("home.emptyState.description")}</p>
           </div>
         )}
 
@@ -114,7 +119,7 @@ const Home = ({ name }: HomeProps) => {
             className={styles.viewAllBtn}
             onClick={() => navigate("/history")}
           >
-            View All
+            {t("home.viewAll")}
           </button>
         )}
       </div>

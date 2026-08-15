@@ -1,4 +1,5 @@
 import cn from "classnames";
+import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/Modal.module.scss";
 
@@ -15,10 +16,12 @@ const ExecuteModal = ({
   onDelete,
   btnText,
 }: ExecuteModalProps) => {
+  const { t } = useTranslation();
+
   return (
     <div className="modal">
       <div className="modalContent">
-        <h2 className="heading">Confirm Action</h2>
+        <h2 className="heading">{t("execute.title")}</h2>
         <p style={{ whiteSpace: "pre-line" }} className={styles.message}>
           {text}
         </p>
@@ -33,7 +36,7 @@ const ExecuteModal = ({
             className={cn(styles.backBtn, "button")}
             onClick={() => onClose()}
           >
-            Back
+            {t("common.back")}
           </button>
         </div>
       </div>

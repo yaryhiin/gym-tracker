@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/Progress.module.scss";
 
@@ -13,6 +14,8 @@ type ProgressProps = {
 };
 
 const Progress = ({ profile }: ProgressProps) => {
+  const { t } = useTranslation();
+
   const [progressType, setProgressType] = useState<
     "weight" | "measurements" | "exercises"
   >("weight");
@@ -20,29 +23,29 @@ const Progress = ({ profile }: ProgressProps) => {
   return (
     <div className={styles.progressContainer}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Progress</h1>
-        <p className={styles.description}>Choose what you want to track</p>
+        <h1 className={styles.title}>{t("progress.title")}</h1>
+        <p className={styles.description}>{t("progress.description")}</p>
         <div className="toggle">
           <button
             type="button"
             className={progressType === "weight" ? "active" : ""}
             onClick={() => setProgressType("weight")}
           >
-            Weight
+            {t("progress.weight")}
           </button>
           <button
             type="button"
             className={progressType === "measurements" ? "active" : ""}
             onClick={() => setProgressType("measurements")}
           >
-            Measurements
+            {t("progress.measurements")}
           </button>
           <button
             type="button"
             className={progressType === "exercises" ? "active" : ""}
             onClick={() => setProgressType("exercises")}
           >
-            Exercises
+            {t("progress.exercises")}
           </button>
         </div>
       </div>

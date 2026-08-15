@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { LoaderCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/ProgressComponents.module.scss";
 
@@ -18,6 +19,8 @@ const ExercisesProgress = ({
   unit,
   firstDayOfTheWeek,
 }: ExercisesProgressProps) => {
+  const { t } = useTranslation();
+
   const [exerciseLogs, setExerciseLogs] = useState<ExerciseLogDB[]>();
   const [exercises, setExercises] = useState<ExerciseDB[]>();
   const [label, setLabel] = useState("");
@@ -95,7 +98,7 @@ const ExercisesProgress = ({
           };
         })
         .filter((entry) => entry !== null);
-      setLabel("Best volume");
+      setLabel(t("label.bestVol"));
     } else if (filterCriteria === "total-volume") {
       filtered = exerciseLogs
         .filter((entry) => entry.exercise_id === chosenExercise.id)
@@ -125,7 +128,7 @@ const ExercisesProgress = ({
           };
         })
         .filter((entry) => entry !== null);
-      setLabel("Total volume");
+      setLabel(t("label.totalVol"));
     } else if (filterCriteria === "best-weight") {
       filtered = exerciseLogs
         .filter((entry) => entry.exercise_id === chosenExercise.id)
@@ -149,7 +152,7 @@ const ExercisesProgress = ({
           };
         })
         .filter((entry) => entry !== null);
-      setLabel("Best weight");
+      setLabel(t("label.bestWeight"));
     } else if (filterCriteria === "average-rest-time") {
       filtered = exerciseLogs
         .filter((entry) => entry.exercise_id === chosenExercise.id)
@@ -176,7 +179,7 @@ const ExercisesProgress = ({
         })
         .filter((entry) => entry !== null);
 
-      setLabel("Average Rest Time");
+      setLabel(t("label.avgRest"));
     } else {
       return;
     }
@@ -192,16 +195,16 @@ const ExercisesProgress = ({
     return (
       <div className="loading">
         <LoaderCircle size={20} className="loading__spinner" />
-        Loading...
+        {t("common.loading")}
       </div>
     );
   }
   return (
     <div className={styles.mainContainer}>
       <div className={styles.header}>
-        <h2 className={styles.title}>Exercises</h2>
+        <h2 className={styles.title}>{t("exerciseProgress.title")}</h2>
         <div className={styles.selectGroup}>
-          <label>Choose exercise</label>
+          <label>{t("exerciseProgress.description")}</label>
           {exercises && exercises.length > 0 ? (
             <select
               value={chosenExercise?.id}
@@ -220,21 +223,21 @@ const ExercisesProgress = ({
               ))}
             </select>
           ) : (
-            <p>You dont have any data saved</p>
+            <p>{t("exerciseProgress.emptyState")}</p>
           )}
         </div>
         <div className={styles.selectGroup}>
-          <label>Choose metric</label>
+          <label>{t("exerciseProgress.metric")}</label>
           <select
             value={filterCriteria}
             onChange={(e) => {
               setFilterCriteria(e.target.value.trim());
             }}
           >
-            <option value="best-set-volume">Best set volume</option>
-            <option value="total-volume">Total volume</option>
-            <option value="best-weight">Best weight used</option>
-            <option value="average-rest-time">Average rest time</option>
+            <option value="best-set-volume">{t("label.bestVol")}</option>
+            <option value="total-volume">{t("label.totalVol")}</option>
+            <option value="best-weight">{t("label.bestWeight")}</option>
+            <option value="average-rest-time">{t("label.avgRest")}</option>
           </select>
         </div>
       </div>
@@ -242,7 +245,7 @@ const ExercisesProgress = ({
         chartData={filteredData}
         yPadding={2}
         label={label}
-        unit={filterCriteria === "average-rest-time" ? "seconds" : unit}
+        unit={filterCriteria === "average-rest-time" ? t("units.sec") : unit}
         firstDayOfTheWeek={firstDayOfTheWeek}
       />
     </div>

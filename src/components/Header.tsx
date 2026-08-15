@@ -1,5 +1,7 @@
 import cn from "classnames";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import type { Dispatch, SetStateAction } from "react";
 
 import { UserRound } from "lucide-react";
 
@@ -9,10 +11,19 @@ type HeaderProps = {
   session: boolean;
   toggleTheme: () => void;
   theme: string;
+  language: string;
+  setLanguage: Dispatch<SetStateAction<string>>;
 };
 
-const Header = ({ toggleTheme, theme, session }: HeaderProps) => {
+const Header = ({
+  toggleTheme,
+  theme,
+  session,
+  language,
+  setLanguage,
+}: HeaderProps) => {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
 
   return (
     <header className={cn("header", styles.header)}>
@@ -39,14 +50,31 @@ const Header = ({ toggleTheme, theme, session }: HeaderProps) => {
               aria-pressed={theme === "dark"}
               title={theme === "dark" ? "Switch to light" : "Switch to dark"}
             >
-              {theme === "dark" ? "🌙 Dark" : "☀️ Light"}
+              {theme === "dark"
+                ? `🌙 ${t("profile.preferences.theme.dark")}`
+                : `☀️ ${t("profile.preferences.theme.light")}`}
             </button>
           </div>
+
           <h2 className={styles.appName}>
             <span className={styles.mainLetter}>S</span>
             <span className={styles.restLetters}>etwise</span>
           </h2>
-          <div></div>
+          <div className={styles.langaugeSelect}>
+            <select
+              value={language}
+              onChange={(e) => {
+                i18n.changeLanguage(e.target.value);
+                setLanguage(e.target.value);
+              }}
+              className={styles.input}
+            >
+              <option value="en">{t("language.en")}</option>
+              <option value="uk">{t("language.uk")}</option>
+              <option value="es">{t("language.es")}</option>
+              <option value="ru">{t("language.ru")}</option>
+            </select>
+          </div>
         </div>
       )}
     </header>

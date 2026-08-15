@@ -9,6 +9,7 @@ import {
   Unlink,
   Repeat2,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/WorkoutForm.module.scss";
 
@@ -23,9 +24,6 @@ import ChooseExerciseModal from "../components/ChooseExerciseModal";
 import { createLocalId } from "../services/utils";
 import { formatTime } from "../services/utils";
 import ExerciseHistoryModal from "./ExerciseHistoryModal";
-
-const MODAL_TEXT =
-  "You sure you want to delete this exercise from workout \n All sets will be lost";
 
 const WORKOUT_SELECTED_EXERCISE_KEY = "workoutSelectedExercise";
 const WORKOUT_SELECTED_SET_KEY = "workoutSelectedSet";
@@ -66,6 +64,8 @@ const WorkoutForm = ({
   preferredUnit,
   handleUpdate,
 }: WorkoutFormProps) => {
+  const { t } = useTranslation();
+
   const [showChooseExerciseModal, setShowChooseExerciseModal] = useState(false);
   const [showRemoveExerciseModal, setShowRemoveExerciseModal] = useState(false);
   const [showExerciseInfoModal, setShowExerciseInfoModal] = useState(false);
@@ -431,7 +431,7 @@ const WorkoutForm = ({
     return [...grouped.entries()]
       .map(([weight, reps]) => {
         if (weight === 0) {
-          return `BW × ${reps.join(", ")}`;
+          return `${t("label.bw")} × ${reps.join(", ")}`;
         }
 
         return `${preferredUnit === "lb" ? Math.round(weight * 2.20462262 * 10) / 10 : weight}${preferredUnit} x ${reps.join(", ")}`;
@@ -633,7 +633,7 @@ const WorkoutForm = ({
                           }}
                         >
                           <Pencil size={15} />
-                          Replace
+                          {t("common.replace")}
                         </button>
                       )}
                       {pageType !== "view" && (
@@ -644,7 +644,7 @@ const WorkoutForm = ({
                           }}
                         >
                           <Trash2 size={15} />
-                          Delete
+                          {t("common.delete")}
                         </button>
                       )}
                       <button
@@ -654,7 +654,7 @@ const WorkoutForm = ({
                         }}
                       >
                         <History size={15} />
-                        History
+                        {t("common.history")}
                       </button>
                       {exercise.order_index < workout.exercises.length &&
                       pageType === "active" &&
@@ -705,7 +705,7 @@ const WorkoutForm = ({
                             );
                           }}
                         >
-                          <Repeat2 size={17} /> Superset
+                          <Repeat2 size={17} /> {t("common.superset")}
                         </button>
                       ) : (
                         pageType === "active" &&
@@ -728,7 +728,7 @@ const WorkoutForm = ({
                             }}
                           >
                             <Unlink size={15} />
-                            Unlink
+                            {t("common.unlink")}
                           </button>
                         )
                       )}
@@ -748,13 +748,14 @@ const WorkoutForm = ({
               </div>
               {previousData?.[exercise.exercise_id] && (
                 <p className={styles.exercisePrev}>
-                  Last time:{" "}
+                  {t("workout.last")}{" "}
                   {formatPreviousSets(previousData[exercise.exercise_id])}
                 </p>
               )}
               {previousData?.[exercise.exercise_id]?.notes && (
                 <p className={styles.exercisePrev}>
-                  Previous note: {previousData[exercise.exercise_id].notes}
+                  {t("workout.note.prev")}{" "}
+                  {previousData[exercise.exercise_id].notes}
                 </p>
               )}
               {showNotes[exercise.id] || exercise.notes ? (
@@ -762,7 +763,7 @@ const WorkoutForm = ({
                   className={styles.exerciseNote}
                   type="text"
                   maxLength={60}
-                  placeholder="Exercise note..."
+                  placeholder={t("workout.note.placeHolder")}
                   readOnly={pageType === "view"}
                   value={exercise.notes}
                   onChange={(e) =>
@@ -778,7 +779,7 @@ const WorkoutForm = ({
                     }
                   >
                     <MessageSquarePlus size={15} />
-                    Add note
+                    {t("workout.note.add")}
                   </button>
                 )
               )}
@@ -786,11 +787,15 @@ const WorkoutForm = ({
                 <table className={styles.sets}>
                   <thead>
                     <tr>
-                      <th>Set</th>
-                      <th>Weight ({preferredUnit})</th>
-                      <th>Reps</th>
-                      <th className={styles.actionsTitle}>Done</th>
-                      <th>Rest</th>
+                      <th>{t("workout.set")}</th>
+                      <th>
+                        {t("workout.weight")} ({t(`units.${preferredUnit}`)})
+                      </th>
+                      <th>{t("workout.reps")}</th>
+                      <th className={styles.actionsTitle}>
+                        {t("workout.done")}
+                      </th>
+                      <th>{t("workout.rest")}</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -874,7 +879,7 @@ const WorkoutForm = ({
                       className={styles.addSet}
                       onClick={() => addSet(exercise.id)}
                     >
-                      Add Set
+                      {t("workout.addSet")}
                     </button>
                   </div>
                 )}
@@ -906,7 +911,7 @@ const WorkoutForm = ({
                         }}
                       >
                         <Unlink size={15} />
-                        Unlink
+                        {t("common.unlink")}
                       </button>
                     </div>
                   ) : (
@@ -929,7 +934,7 @@ const WorkoutForm = ({
             className={cn(styles.addExercise, styles.button)}
             onClick={() => setShowChooseExerciseModal(true)}
           >
-            Add Exercise
+            {t("workout.addExercise")}
           </button>
         )}
       </div>
@@ -941,12 +946,17 @@ const WorkoutForm = ({
           <div className={styles.buttonContainer}>
             <div className={styles.barHeader}>
               <p>{selectedExercise.exercise_name}</p>
-              <p>Set {selectedSet.set_number}</p>
+              <p>
+                {t("workout.set")} {selectedSet.set_number}
+              </p>
             </div>
-            <p>Rest: {formatTime(selectedSet.rest_seconds, "rest")}</p>
+            <p>
+              {t("workout.rest")}:{" "}
+              {formatTime(selectedSet.rest_seconds, "rest")}
+            </p>
             <div className={styles.barInputs}>
               <label>
-                Weight ({preferredUnit})
+                {t("workout.weight")} ({t(`units.${preferredUnit}`)})
                 <input
                   type="number"
                   step="0.01"
@@ -965,7 +975,7 @@ const WorkoutForm = ({
                 />
               </label>
               <label>
-                Reps
+                {t("workout.reps")}
                 <input
                   type="number"
                   step="1"
@@ -1105,7 +1115,7 @@ const WorkoutForm = ({
                       }
                     }}
                   >
-                    Complete Exercise
+                    {t("workout.completeExercise")}
                   </button>
                 ) : (
                   <button
@@ -1241,12 +1251,12 @@ const WorkoutForm = ({
                       }
                     }}
                   >
-                    Complete Set
+                    {t("workout.completeSet")}
                   </button>
                 ))}
               {pageType === "change" && (
                 <button className={styles.saveBtn} onClick={handleUpdate}>
-                  Save Changes
+                  {t("common.saveChanges")}
                 </button>
               )}
             </div>
@@ -1261,8 +1271,8 @@ const WorkoutForm = ({
       )}
       {showRemoveExerciseModal && (
         <ExecuteModal
-          text={MODAL_TEXT}
-          btnText="Delete"
+          text={t("modal.selete.exerciseWorkout")}
+          btnText={t("common.delete")}
           onClose={() => setShowRemoveExerciseModal(false)}
           onDelete={removeExercise}
         />

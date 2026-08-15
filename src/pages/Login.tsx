@@ -1,6 +1,7 @@
 import { supabase } from "../supabase";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import cn from "classnames";
 
@@ -10,6 +11,7 @@ import type { AuthErrors } from "../types/errors";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -66,10 +68,10 @@ const Login = () => {
   return (
     <div className="container">
       <div className={styles.formContainer}>
-        <h1 className={styles.heading}>Log In</h1>
+        <h1 className={styles.heading}>{t("auth.login")}</h1>
         <div className={styles.inputBox}>
           <div className={styles.inputContainer}>
-            <p className={styles.inputText}>Email</p>
+            <p className={styles.inputText}>{t("auth.email")}</p>
             <input
               className={cn(styles.input, errors.email && "error")}
               type="email"
@@ -84,7 +86,7 @@ const Login = () => {
             )}
           </div>
           <div className={styles.inputContainer}>
-            <p className={styles.inputText}>Password</p>
+            <p className={styles.inputText}>{t("auth.password")}</p>
             <input
               className={cn(styles.input, errors.password && "error")}
               type="password"
@@ -101,13 +103,13 @@ const Login = () => {
         </div>
         <div className={styles.buttonContainer}>
           <button className="backBtn button" onClick={onBack}>
-            Back
+            {t("common.back")}
           </button>
           <button
             className={cn(styles.saveBtn, "button")}
             onClick={handleLogin}
           >
-            Log In
+            {t("auth.login")}
           </button>
         </div>
       </div>

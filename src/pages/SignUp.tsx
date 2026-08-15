@@ -1,6 +1,7 @@
 import { supabase } from "../supabase";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import cn from "classnames";
 
@@ -16,6 +17,7 @@ const MODAL_TEXT =
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -53,7 +55,7 @@ const SignUp = () => {
       newErrors.email = true;
     if (!password) newErrors.password = true;
     if (password.length < 6) {
-      setAuthError("Password must be at least 6 characters");
+      setAuthError(t("auth.error"));
       newErrors.password = true;
       newErrors.confirmPassword = true;
       console.log(newErrors.password);
@@ -96,10 +98,10 @@ const SignUp = () => {
     <>
       <div className="container">
         <div className={styles.formContainer}>
-          <h1 className={styles.heading}>Sign Up</h1>
+          <h1 className={styles.heading}>{t("auth.signup")}</h1>
           <div className={styles.inputBox}>
             <div className={styles.inputContainer}>
-              <p className={styles.inputText}>Email</p>
+              <p className={styles.inputText}>{t("auth.email")}</p>
               <input
                 className={cn(styles.input, errors.email && "error")}
                 type="email"
@@ -109,7 +111,7 @@ const SignUp = () => {
               />
             </div>
             <div className={styles.inputContainer}>
-              <p className={styles.inputText}>Password</p>
+              <p className={styles.inputText}>{t("auth.password")}</p>
               <input
                 className={cn(styles.input, errors.password && "error")}
                 type="password"
@@ -120,7 +122,7 @@ const SignUp = () => {
               {authError && <p className="errorMessage">{authError}</p>}
             </div>
             <div className={cn(styles.inputContainer, styles.fullWidth)}>
-              <p className={styles.inputText}>Confirm Password</p>
+              <p className={styles.inputText}>{t("auth.confirmPass")}</p>
               <input
                 className={cn(styles.input, errors.confirmPassword && "error")}
                 type="password"
@@ -143,13 +145,13 @@ const SignUp = () => {
           </div>
           <div className={styles.buttonContainer}>
             <button className="backBtn button" onClick={onBack}>
-              Back
+              {t("common.back")}
             </button>
             <button
               className={cn(styles.saveBtn, "button")}
               onClick={handleSignUp}
             >
-              Sign Up
+              {t("auth.signup")}
             </button>
           </div>
         </div>

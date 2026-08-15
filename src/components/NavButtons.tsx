@@ -1,5 +1,6 @@
 import cn from "classnames";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import {
   House,
@@ -13,6 +14,7 @@ import styles from "../styles/modules/NavButtons.module.scss";
 const NavButtons = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
 
   const isActive = (path: string) => {
     return location.pathname === path;
@@ -28,7 +30,7 @@ const NavButtons = () => {
           onClick={() => navigate("/")}
         >
           <House size={18} />
-          Home
+          {t("navigation.home")}
         </button>
         <button
           className={cn(styles.routines, styles.navButton, {
@@ -37,7 +39,7 @@ const NavButtons = () => {
           onClick={() => navigate("/routines")}
         >
           <ListChecks size={18} />
-          Routines
+          {t("navigation.routines")}
         </button>
         <button
           className={cn(styles.progress, styles.navButton, {
@@ -46,7 +48,7 @@ const NavButtons = () => {
           onClick={() => navigate("/exercises")}
         >
           <Dumbbell size={18} />
-          Exercises
+          {t("navigation.exercises")}
         </button>
         <button
           className={cn(styles.history, styles.navButton, {
@@ -55,7 +57,7 @@ const NavButtons = () => {
           onClick={() => navigate("/progress")}
         >
           <ChartNoAxesColumnIncreasing size={18} />
-          Progress
+          {t("navigation.progress")}
         </button>
       </div>
     </div>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import cn from "classnames";
 import { LoaderCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/ActiveWorkout.module.scss";
 
@@ -29,9 +30,6 @@ const WORKOUT_SELECTED_EXERCISE_KEY = "workoutSelectedExercise";
 const WORKOUT_SELECTED_SET_KEY = "workoutSelectedSet";
 const WORKOUT_REST_START_KEY = "workoutRestStart";
 const WORKOUT_SUPERSET = "workoutSuperset";
-
-const BACK_TEXT = `Are you sure you want to exit workout? \n The data will be lost`;
-const FINISH_TEXT = `Are you sure you want to finish this workout?`;
 
 function createEmptyWorkout(): Workout {
   return {
@@ -104,6 +102,7 @@ function getInitialPreferredUnit(): "kg" | "lb" | null {
 const ActiveWorkout = () => {
   const navigate = useNavigate();
   const { routineId } = useParams();
+  const { t } = useTranslation();
 
   const [workout, setWorkout] = useState<Workout>(getInitialWorkout);
   const [seconds, setSeconds] = useState(getInitialSeconds);
@@ -263,7 +262,7 @@ const ActiveWorkout = () => {
       getDetails();
     } else {
       setWorkout({
-        name: "Custom Workout",
+        name: t("workout.custom"),
         started_at: new Date().toISOString(),
         finished_at: "",
         duration_seconds: seconds,
@@ -387,7 +386,7 @@ const ActiveWorkout = () => {
     return (
       <div className="loading">
         <LoaderCircle size={20} className="loading__spinner" />
-        Loading...
+        {t("common.loading")}
       </div>
     );
 
@@ -400,14 +399,14 @@ const ActiveWorkout = () => {
             className={cn(styles.backBtn, styles.button)}
             onClick={() => setShowBackModal(true)}
           >
-            Exit
+            {t("common.exit")}
           </button>
           <p className={styles.stopwatch}>{formatTime(seconds, "workout")}</p>
           <button
             className={cn(styles.button, styles.finishBtn)}
             onClick={() => setShowFinishModal(true)}
           >
-            Finish
+            {t("common.finish")}
           </button>
         </div>
       </div>
@@ -422,8 +421,8 @@ const ActiveWorkout = () => {
       />
       {showBackModal && (
         <ExecuteModal
-          text={BACK_TEXT}
-          btnText="Exit"
+          text={t("modal.back")}
+          btnText={t("common.exit")}
           onClose={() => setShowBackModal(false)}
           onDelete={() => {
             setShowBackModal(false);
@@ -443,8 +442,8 @@ const ActiveWorkout = () => {
       )}
       {showFinishModal && (
         <ExecuteModal
-          text={FINISH_TEXT}
-          btnText="Finish"
+          text={t("modal.finish")}
+          btnText={t("common.finish")}
           onDelete={finishWorkout}
           onClose={() => {
             setShowFinishModal(false);
