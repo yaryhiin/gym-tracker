@@ -6,6 +6,14 @@
   justify-content: center;
 }
 
+.inputNameContainer {
+  margin: 5px;
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  justify-content: center;
+}
+
 .weightContainer {
   display: flex;
   flex-direction: column;
@@ -45,7 +53,8 @@
   width: 160px;
 }
 
-.addTypeBtn, .cancelBtn {
+.addTypeBtn,
+.cancelBtn {
   width: 45px;
   height: 35px;
   margin: 0 2px;
@@ -98,8 +107,6 @@
   // margin-top: 13px;
 }
 
-
-
 .addBtn,
 .backBtn,
 .deleteBtn {
@@ -147,6 +154,3 @@
   color: var(--text-secondary);
   font-weight: 600;
 }
-
-
-

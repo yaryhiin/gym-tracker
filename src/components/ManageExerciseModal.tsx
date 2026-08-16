@@ -57,7 +57,7 @@ const ManageExerciseModal = ({
         <h2 className="heading">
           {exercise ? t("manageExercise.edit") : t("manageExercise.create")}
         </h2>
-        <div className={styles.inputContainer}>
+        <div className={styles.inputNameContainer}>
           <input
             className={cn(styles.input, errors.name && "error")}
             type="text"
@@ -86,12 +86,10 @@ const ManageExerciseModal = ({
                 {t(`categories.${category.toLowerCase()}`)}
               </button>
             ))}
-            {errors.category && (
-              <p className="errorMessage">
-                {t("manageExercise.error.category")}
-              </p>
-            )}
           </div>
+          {errors.category && (
+            <p className="errorMessage">{t("manageExercise.error.category")}</p>
+          )}
         </div>
         <div className="buttonContainer">
           <button

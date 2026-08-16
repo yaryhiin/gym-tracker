@@ -86,13 +86,17 @@ button.active {
   color: #f8fafc;
 }
 
+button.error {
+  border: 1px solid var(--danger);
+}
+
 .error {
   border: 1px solid var(--danger);
 }
 
 .errorMessage {
   color: var(--danger);
-  margin: 3px;
+  margin: 5px;
 }
 
 .buttonContainer {
