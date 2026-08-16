@@ -28,6 +28,7 @@ export async function getExercisesLogs(exerciseId?: string) {
       name,
       created_at,
       finished_at,
+      started_at,
       workout_exercises!inner (
         id,
         notes,

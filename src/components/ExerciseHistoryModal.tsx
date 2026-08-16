@@ -74,7 +74,7 @@ const ExerciseHistoryModal = ({
                 <div className={styles.historyCardHeader}>
                   <h2 className={styles.historyCardName}>{workout.name}</h2>
                   <p className={styles.historyCardDate}>
-                    {formatDate(workout.created_at)}
+                    {formatDate(workout.started_at)}
                   </p>
                 </div>
                 {workout.workout_exercises[0].notes && (

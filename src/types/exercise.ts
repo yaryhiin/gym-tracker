@@ -30,6 +30,7 @@ export type ExerciseHistory = {
   name: string;
   created_at: string;
   finished_at: string | null;
+  started_at: string;
   workout_exercises: {
     id: string;
     notes: string;
