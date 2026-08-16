@@ -541,7 +541,7 @@ const WorkoutForm = ({
       ),
     }));
     if (
-      selectedExercise?.id === exerciseId &&
+      selectedExercise?.exercise_id === exerciseId &&
       selectedSet?.set_number === setNumber
     )
       setSelectedSet((prev) => (prev ? { ...prev, [field]: value } : null));
@@ -1104,7 +1104,7 @@ const WorkoutForm = ({
                 />
               </label>
               {pageType === "active" &&
-                (selectedSet.set_number === selectedExercise.sets.length ? (
+                (selectedSet.set_number >= selectedExercise.sets.length ? (
                   <button
                     className={styles.completeSet}
                     hidden={selectedSet.done}
