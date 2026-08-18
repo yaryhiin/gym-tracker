@@ -176,8 +176,23 @@
     "logout": "¿Seguro que quieres cerrar sesión?"
   },
   "welcomeScreen": {
-    "title": "Controla tus entrenamientos y tu progreso en un solo lugar.",
-    "description": "Crea ejercicios, prepara rutinas, registra series, consulta tu historial y sigue tu progreso. Simple, rápido y pensado para entrenar de verdad."
+    "title": {
+      "part1": "Entrena mejor.",
+      "part2": "Regístralo todo."
+    },
+    "description": "Crea rutinas, registra cada serie, sigue tu progreso y mantén todos tus entrenamientos organizados en un solo lugar.",
+    "signupBtn": "Empezar a entrenar",
+    "member": "¿Ya tienes una cuenta?",
+    "preview": {
+      "exerciseName": "Press de banca",
+      "title1": "Cada serie. Cada entrenamiento.",
+      "title2": "Sigue tu progreso",
+      "last": "La última serie estuvo cerca del fallo.",
+      "more": {
+        "title": "Más que un registro de entrenamientos",
+        "description": "Crea rutinas, registra tus medidas corporales, revisa tu historial, añade tus propios ejercicios, usa superseries y mucho más."
+      }
+    }
   },
   "chart": {
     "current": "Actual:",

@@ -4,18 +4,22 @@
   align-items: center;
 }
 
-.content {
+.welcomeScreenContainer {
   min-height: 70vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 0 16px;
+  width: 100%;
+  margin-bottom: 30px;
 }
 
 .title {
-  font-size: 30px;
+  h1 {
+    font-size: 30px;
+    margin: 5px;
+  }
   margin-bottom: 16px;
 }
 
@@ -28,23 +32,259 @@
 
 .sessionBox {
   display: flex;
-  flex-direction: row;
-  gap: 10px;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
 }
 
-.logIn,
 .signUp {
-  margin-top: 28px;
-  padding: 14px;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 600;
-  width: fit-content;
+  margin-top: 35px;
+  margin-bottom: 5px;
+  width: 200px;
   height: 50px;
+  color: var(--text);
+  background-color: var(--accent);
+  cursor: pointer;
+  border-radius: 8px;
+  gap: 20px;
+  font-size: 17px;
+  font-weight: bold;
+
+  &:last-child {
+    margin-top: 10px;
+  }
 }
+
+.loginContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  p {
+    margin: 0;
+    font-size: 15px;
+    background: none;
+  }
+
+  .logIn {
+    color: rgb(var(--selected));
+    font-weight: bold;
+  }
+}
+
+.preview {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 100%;
+}
+
+.sectionTitle {
+  margin-bottom: 30px;
+}
+
+.previewSection {
+  width: 100%;
+  // display: flex;
+  // flex-direction: column;
+  // align-items: center;
+  // overflow-x: auto;
+  // overflow-y: hidden;
+}
+
+.exerciseCard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 0 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  align-self: center;
+  scroll-margin-top: 130px;
+  box-shadow: 2px 2px 3px black;
+}
+
+.exerciseName {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  grid-column: 2;
+  width: fit-content;
+  max-width: 95%;
+  min-width: 200px;
+  text-align: center;
+}
+
+.exerciseCardHeader {
+  position: relative;
+  width: 90%;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  margin-top: 23px;
+  margin-bottom: 8px;
+}
+
+.exercisePrev {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 2px;
+  text-align: center;
+  overflow-wrap: break-word;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  max-width: 80%;
+}
+
+.exercises {
+  margin: 15px 0;
+}
+
+.sets {
+  width: 100%;
+  border: none;
+  border-collapse: collapse;
+  font-size: 14px;
+  text-align: center;
+  border-collapse: collapse;
+
+  th {
+    padding: 10px;
+  }
+
+  tr {
+    border-bottom: 1px solid var(--border);
+  }
+
+  td,
+  th {
+    padding: 7px 7px;
+  }
+}
+
+.sets * {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.exerciseNote {
+  width: 100%;
+  margin-top: 8px;
+  padding: 6px;
+
+  color: #d7e2f0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #3a4960;
+  font: inherit;
+  font-size: 16px;
+
+  &::placeholder {
+    color: #7f8da3;
+  }
+
+  &:focus {
+    outline: none;
+    border-bottom-color: #6b8cff;
+  }
+}
+
+.addNoteBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  margin-top: 10px;
+  padding: 5px 9px;
+
+  color: #aebbd0;
+  background: transparent;
+  border: 1px solid #3a4960;
+  border-radius: 7px;
+
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  height: 36px;
+  width: fit-content;
+
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+
+  &:hover {
+    color: #ffffff;
+    background: #263349;
+    border-color: #536681;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #6b8cff;
+    outline-offset: 2px;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.addSet {
+  margin-top: 12px;
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--border);
+  font-size: 13px;
+  width: 90px;
+  height: 45px;
+}
+
+.actionsTitle {
+  text-align: left;
+}
+
+.actionsColumn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.deleteSet {
+  border: none;
+  color: var(--danger);
+  font-size: 20px;
+  margin: 0;
+  width: 30px;
+  height: 36px;
+}
+
+.set.selected {
+  background-color: rgb(var(--selected) / 0.2);
+  td {
+    &:first-child {
+      border-left: 2px solid rgb(var(--selected));
+    }
+  }
+}
+
+// .logIn,
+// .signUp {
+//   margin-top: 28px;
+//   padding: 14px;
+//   color: white;
+//   border: none;
+//   border-radius: 8px;
+//   cursor: pointer;
+//   font-size: 16px;
+//   font-weight: 600;
+//   width: fit-content;
+//   height: 50px;
+// }
 
 .signUp {
   background-color: var(--button-bg);

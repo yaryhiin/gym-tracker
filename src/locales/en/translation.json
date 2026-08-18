@@ -176,8 +176,23 @@
     "logout": "You sure you want to Log Out?"
   },
   "welcomeScreen": {
-    "title": "Track your workouts and progress in one place.",
-    "description": "Create exercises, build routines, log sets, view history, and follow your progress over time. Simple, fast, and made for real gym sessions."
+    "title": {
+      "part1": "Train smarter.",
+      "part2": "Track everything."
+    },
+    "description": "Build routines, log every set, track your progress, and keep your training organized in one place.",
+    "signupBtn": "Start Training",
+    "member": "Already a member?",
+    "preview": {
+      "exerciseName": "Bench press",
+      "title1": "Track every set. Every workout.",
+      "title2": "See your progress",
+      "last": "Last set was close to failure.",
+      "more": {
+        "title": "More than a workout log",
+        "description": "Build routines, track body measurements, review workout history, create custom exercises, use supersets, and more."
+      }
+    }
   },
   "chart": {
     "current": "Current:",

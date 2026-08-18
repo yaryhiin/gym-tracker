@@ -46,6 +46,7 @@
   width: 100%;
   align-self: center;
   scroll-margin-top: 130px;
+  box-shadow: 2px 2px 3px black;
 }
 
 .exerciseName {
@@ -73,7 +74,7 @@
   font-size: 14px;
   color: var(--text-secondary);
   margin: 2px;
-  text-align: left;
+  text-align: center;
   overflow-wrap: break-word;
   line-clamp: 2;
   -webkit-line-clamp: 2;
@@ -98,6 +99,10 @@
 
   tr {
     border-bottom: 1px solid var(--border);
+  }
+
+  td, th {
+    padding: 7px 7px;
   }
 }
 

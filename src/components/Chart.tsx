@@ -153,6 +153,7 @@ const Chart = ({
         });
       }
     }
+    console.log(label);
     setFilteredData(formatted);
     setChartWidth(Math.max(formatted.length * 30, 320));
 
@@ -219,7 +220,7 @@ const Chart = ({
                 })
               }
               formatter={(value) => [
-                `${unit === "seconds" ? formatTime(Number(value), "rest") : value}${unit !== "seconds" ? unit : ""}`,
+                `${unit === "seconds" ? formatTime(Number(value), "rest") : value}${unit !== "seconds" ? t(`units.${unit}`) : ""}`,
                 newLabel,
               ]}
             />
