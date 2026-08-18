@@ -1,3 +1,5 @@
+import type { ChartData } from "../types/chart";
+
 export const DEFAULT_EXERCISES = [
   // Chest
   {
@@ -137,3 +139,30 @@ export const DEFAULT_EXERCISES = [
     category: "Arms",
   },
 ] as const;
+
+function getDateDaysAgo(daysAgo: number) {
+  const date = new Date();
+  date.setDate(date.getDate() - daysAgo);
+
+  return date.toISOString().split("T")[0];
+}
+
+export const exerciseData: ChartData[] = [
+  { date: getDateDaysAgo(120), value: 1020 },
+  { date: getDateDaysAgo(100), value: 1080 },
+  { date: getDateDaysAgo(80), value: 1150 },
+
+  { date: getDateDaysAgo(60), value: 1230 },
+  { date: getDateDaysAgo(45), value: 1310 },
+  { date: getDateDaysAgo(32), value: 1380 },
+
+  { date: getDateDaysAgo(22), value: 1450 },
+  { date: getDateDaysAgo(16), value: 1510 },
+  { date: getDateDaysAgo(12), value: 1480 },
+  { date: getDateDaysAgo(8), value: 1560 },
+
+  { date: getDateDaysAgo(6), value: 1600 },
+  { date: getDateDaysAgo(4), value: 1580 },
+  { date: getDateDaysAgo(2), value: 1640 },
+  { date: getDateDaysAgo(0), value: 1680 },
+];

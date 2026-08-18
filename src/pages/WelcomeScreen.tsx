@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import Chart from "../components/Chart";
+import { exerciseData } from "../services/defaults";
 
 import styles from "../styles/modules/WelcomeScreen.module.scss";
 
@@ -21,24 +22,6 @@ const WelcomeScreen = () => {
 
   const exerciseMenuRef = useRef<HTMLDivElement>(null);
   const [showExerciseOptions, setShowExerciseOptions] = useState(false);
-  const exerciseData = [
-    { date: "2026-04-18", value: 1020 },
-    { date: "2026-05-10", value: 1080 },
-    { date: "2026-05-31", value: 1150 },
-
-    { date: "2026-06-21", value: 1230 },
-    { date: "2026-07-06", value: 1310 },
-    { date: "2026-07-19", value: 1380 },
-
-    { date: "2026-07-27", value: 1450 },
-    { date: "2026-08-02", value: 1510 },
-    { date: "2026-08-06", value: 1480 },
-    { date: "2026-08-10", value: 1560 },
-    { date: "2026-08-13", value: 1600 },
-    { date: "2026-08-15", value: 1580 },
-    { date: "2026-08-17", value: 1640 },
-    { date: "2026-08-18", value: 1680 },
-  ];
 
   useEffect(() => {
     if (!showExerciseOptions) return;
