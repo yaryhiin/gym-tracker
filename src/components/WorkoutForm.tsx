@@ -543,8 +543,19 @@ const WorkoutForm = ({
     if (
       selectedExercise?.exercise_id === exerciseId &&
       selectedSet?.set_number === setNumber
-    )
+    ) {
       setSelectedSet((prev) => (prev ? { ...prev, [field]: value } : null));
+      setSelectedExercise((prev) =>
+        prev
+          ? {
+              ...prev,
+              sets: prev.sets.map((set) =>
+                set.set_number === setNumber ? { ...set, [field]: value } : set,
+              ),
+            }
+          : null,
+      );
+    }
   }
 
   function chooseExercise(exercise: ExerciseDB) {
