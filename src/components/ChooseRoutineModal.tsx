@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/Home.module.scss";
 import type { RoutineDB } from "../types/routine";
+import { X } from "lucide-react";
 
 type ChooseRoutineModal = {
   routines: RoutineDB[];
@@ -16,7 +17,12 @@ const ChooseRoutineModal = ({ routines, onClose }: ChooseRoutineModal) => {
   return (
     <div className="modal">
       <div className="modalContent">
-        <h2 className="heading">{t("chooseRoutine.title")}</h2>
+        <div className={styles.header}>
+          <h2 className="heading">{t("chooseRoutine.title")}</h2>
+          <button className={`backBtn button`} onClick={() => onClose()}>
+            <X size={23} />
+          </button>
+        </div>
         <div className={styles.routinesList}>
           {routines.map((routine) => (
             <button
@@ -41,14 +47,6 @@ const ChooseRoutineModal = ({ routines, onClose }: ChooseRoutineModal) => {
             <span className={styles.routineMeta}>
               {t("chooseRoutine.emptyState.description")}
             </span>
-          </button>
-        </div>
-        <div className="buttonContainer">
-          <button
-            className={`${styles.backBtn} button`}
-            onClick={() => onClose()}
-          >
-            {t("common.back")}
           </button>
         </div>
       </div>
