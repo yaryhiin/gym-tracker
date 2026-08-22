@@ -79,6 +79,7 @@
     "create": "+ Crear ejercicio"
   },
   "history": {
+    "title": "Historial de entrenamientos",
     "date": "Fecha",
     "workout": "Entreno",
     "duration": "Duración",

@@ -1,6 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { LoaderCircle } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import {
+  LoaderCircle,
+  ArrowLeft,
+  Eye,
+  Pencil,
+  EllipsisVertical,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/History.module.scss";
@@ -25,6 +31,10 @@ const History = () => {
 
   const [workouts, setWorkouts] = useState<WorkoutDB[]>([]);
   const [loading, setLoading] = useState(true);
+  const [chosenWorkoutId, setChosenWorkoutId] = useState("");
+
+  const menuRef = useRef<HTMLDivElement>(null);
+  const [showOptions, setShowOptions] = useState(false);
 
   const [sortConfig, setSortConfig] = useState<SortConfig>({
     key: "finished_at",
@@ -55,12 +65,29 @@ const History = () => {
     return 0;
   });
 
-  function handleSort(key: SortKey) {
-    setSortConfig((prev) => ({
-      key,
-      direction: prev.key === key && prev.direction === "asc" ? "desc" : "asc",
-    }));
-  }
+  useEffect(() => {
+    if (!showOptions) return;
+
+    function handleClickOutside(event: MouseEvent | TouchEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowOptions(false);
+      }
+    }
+
+    function handleScroll() {
+      setShowOptions(false);
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    window.addEventListener("scroll", handleScroll, true);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+      window.removeEventListener("scroll", handleScroll, true);
+    };
+  }, [showOptions]);
 
   useEffect(() => {
     async function loadData() {
@@ -78,6 +105,13 @@ const History = () => {
     loadData();
   }, []);
 
+  function handleSort(key: SortKey) {
+    setSortConfig((prev) => ({
+      key,
+      direction: prev.key === key && prev.direction === "asc" ? "desc" : "asc",
+    }));
+  }
+
   if (loading) {
     return (
       <div className="loading">
@@ -88,59 +122,83 @@ const History = () => {
   }
   return (
     <div className={styles.historyContainer}>
-      <div className={styles.tableWrapper}>
-        <table className={styles.workouts}>
-          <thead>
-            <tr>
-              <th onClick={() => handleSort("finished_at")}>
-                <span className={styles.tableHeaderContent}>
-                  {t("history.date")}{" "}
-                  <span>{sortConfig.key === "finished_at" && arrow}</span>
-                </span>
-              </th>
-              <th onClick={() => handleSort("name")}>
-                <span className={styles.tableHeaderContent}>
-                  {t("history.workout")}{" "}
-                  <span>{sortConfig.key === "name" && arrow}</span>
-                </span>
-              </th>
-              <th onClick={() => handleSort("duration_seconds")}>
-                <span className={styles.tableHeaderContent}>
-                  {t("history.duration")}{" "}
-                  <span>{sortConfig.key === "duration_seconds" && arrow}</span>
-                </span>
-              </th>
-              <th>{t("history.actions")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedWorkouts.map((workout) => (
-              <tr key={workout.id}>
-                <td>{formatDate(workout.started_at)}</td>
-                <td>{workout.name}</td>
-                <td>{formatDuration(workout.duration_seconds)} </td>
-                <td>
-                  <div className={styles.actions}>
-                    <button onClick={() => navigate(`/history/${workout.id}`)}>
-                      {t("common.view")}
-                    </button>
-                    <button
-                      onClick={() => navigate(`/history/${workout.id}/edit`)}
-                    >
-                      {t("common.edit")}
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div className={styles.buttonContainer}>
+      <div className={styles.header}>
         <button className={styles.backBtn} onClick={() => navigate("/")}>
-          {t("common.back")}
+          <ArrowLeft />
         </button>
+        <h2 className={styles.title}>{t("history.title")}</h2>
       </div>
+      <table className={styles.workouts}>
+        <thead>
+          <tr>
+            <th onClick={() => handleSort("finished_at")}>
+              <span className={styles.tableHeaderContent}>
+                {t("history.date")}{" "}
+                <span>{sortConfig.key === "finished_at" && arrow}</span>
+              </span>
+            </th>
+            <th onClick={() => handleSort("name")}>
+              <span className={styles.tableHeaderContent}>
+                {t("history.workout")}{" "}
+                <span>{sortConfig.key === "name" && arrow}</span>
+              </span>
+            </th>
+            <th onClick={() => handleSort("duration_seconds")}>
+              <span className={styles.tableHeaderContent}>
+                {t("history.duration")}{" "}
+                <span>{sortConfig.key === "duration_seconds" && arrow}</span>
+              </span>
+            </th>
+            <th>{t("history.actions")}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sortedWorkouts.map((workout) => (
+            <tr key={workout.id}>
+              <td>{formatDate(workout.started_at)}</td>
+              <td>{workout.name}</td>
+              <td>{formatDuration(workout.duration_seconds)} </td>
+              <td>
+                <div className="exerciseMenuWrapper">
+                  {showOptions && chosenWorkoutId === workout.id ? (
+                    <div ref={menuRef} className="exerciseMenu">
+                      <button
+                        onClick={() => {
+                          navigate(`/history/${workout.id}`);
+                          setChosenWorkoutId("");
+                        }}
+                      >
+                        <Eye size={15} />
+                        {t("common.view")}
+                      </button>
+                      <button
+                        onClick={() => {
+                          navigate(`/history/${workout.id}/edit`);
+                          setChosenWorkoutId("");
+                        }}
+                      >
+                        <Pencil size={15} />
+                        {t("common.edit")}
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      className="accessBtn"
+                      onClick={() => {
+                        setShowOptions(true);
+                        setChosenWorkoutId(workout.id);
+                      }}
+                    >
+                      <EllipsisVertical size={20} />
+                    </button>
+                  )}
+                </div>
+                <div className={styles.actions}></div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
