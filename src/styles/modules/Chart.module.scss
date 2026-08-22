@@ -37,9 +37,19 @@
     flex-direction: column;
     align-items: center;
     margin-top: 20px;
+    gap: 5px;
   }
   p {
     margin: 0;
     font-size: 18px;
   }
+}
+
+.entriesLink {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+  text-decoration: underline;
+  cursor: pointer;
 }

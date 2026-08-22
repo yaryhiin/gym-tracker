@@ -64,6 +64,7 @@ const WeightProgress = ({ unit, firstDayOfTheWeek }: WeightProgressProps) => {
         label={t("label.bw")}
         unit={unit}
         firstDayOfTheWeek={firstDayOfTheWeek}
+        entriesLink="/progress/weight"
       />
     </div>
   );

@@ -1,0 +1,75 @@
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  align-items: center;
+  width: 100%;
+}
+
+.title {
+  justify-self: center;
+}
+
+.addBtn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: fit-content;
+  padding: 10px 20px;
+  height: fit-content;
+  background-color: var(--accent);
+  justify-self: flex-end;
+}
+
+.backBtn {
+  justify-self: flex-start;
+  margin-left: 20px;
+}
+
+table {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-collapse: collapse;
+  font-size: 14px;
+  text-align: center;
+}
+
+thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: var(--card);
+  box-shadow: 0 2px 0 var(--border);
+}
+
+th,
+td {
+  font-size: 14px;
+  font-weight: normal;
+  top: 0;
+  z-index: 1;
+  background-color: var(--card-bg);
+  padding: 15px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  cursor: pointer;
+
+  &:last-child:hover {
+    background-color: var(--card-bg);
+    cursor: default;
+  }
+}
+
+th {
+  padding: 12px 16px;
+  width: fit-content;
+  font-weight: 600;
+}

@@ -4,15 +4,14 @@ import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/Modal.module.scss";
 
-import type { MeasurementType } from "../types/measurements";
+import { type MeasurementTypeDB } from "../types/measurements";
 
 import {
   createMeasurementType,
-  deleteMeasurementType,
+  archiveMeasurementType,
   getMeasurementTypes,
   createMeasurementLog,
 } from "../services/measurements";
-import { createLocalId } from "../services/utils";
 
 import ExecuteModal from "./ExecuteModal";
 import InfoModal from "../components/InfoModal";
@@ -23,6 +22,11 @@ type MeasurementsCheckinModalProps = {
   onSkip: () => void;
 };
 
+type NewLog = {
+  measurement_type_id: string;
+  value_cm: string;
+};
+
 const MeasurementsCheckinModal = ({
   unit,
   name,
@@ -30,14 +34,19 @@ const MeasurementsCheckinModal = ({
 }: MeasurementsCheckinModalProps) => {
   const { t } = useTranslation();
 
-  const [newMeasurements, setNewMeasurements] = useState<MeasurementType[]>([]);
+  const [measurementTypes, setMeasurementTypes] = useState<
+    MeasurementTypeDB[] | null
+  >(null);
+  const [newMeasurementData, setNewMeasurementData] = useState<NewLog[] | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [error, setError] = useState(false);
-  const [chosenType, setChosenType] = useState<MeasurementType>();
+  const [chosenType, setChosenType] = useState<MeasurementTypeDB | null>(null);
 
   const [isAddingMeasurement, setIsAddingMeasurement] = useState(false);
   const [newMeasurementName, setNewMeasurementName] = useState("");
@@ -51,13 +60,15 @@ const MeasurementsCheckinModal = ({
 
       try {
         const types = await getMeasurementTypes();
-        const formItems = types.map((type) => ({
-          id: createLocalId(),
-          measurement_type_id: type.id,
-          name: type.name,
-          value: "",
-        }));
-        setNewMeasurements(formItems);
+        if (types) {
+          setMeasurementTypes(types.filter((type) => type.is_active));
+          setNewMeasurementData(
+            types.map((type) => ({
+              measurement_type_id: type.id,
+              value_cm: "",
+            })),
+          );
+        }
       } catch (error) {
         console.error("Error loading measurement types:", error);
       } finally {
@@ -79,15 +90,9 @@ const MeasurementsCheckinModal = ({
     try {
       setAddingMeasurement(true);
       const createdType = await createMeasurementType(trimmedName);
-      setNewMeasurements((prev) => [
-        ...prev,
-        {
-          id: createLocalId(),
-          measurement_type_id: createdType.id,
-          name: createdType.name,
-          value: "",
-        },
-      ]);
+      setMeasurementTypes((prev) =>
+        prev ? [...prev, createdType] : [createdType],
+      );
       setShowSuccessModal(true);
       setTimeout(() => {
         setShowSuccessModal(false);
@@ -110,12 +115,10 @@ const MeasurementsCheckinModal = ({
     setDeleting(true);
     try {
       if (!chosenType) return;
-      const deletedType = await deleteMeasurementType(
-        chosenType.measurement_type_id,
-      );
+      const deletedType = await archiveMeasurementType(chosenType.id);
       if (!deletedType) return;
-      setNewMeasurements((prev) =>
-        prev.filter((measurement) => measurement.id != chosenType.id),
+      setMeasurementTypes((prev) =>
+        prev ? prev.filter((type) => type.id != chosenType.id) : null,
       );
       setShowSuccessModal(true);
       setTimeout(() => {
@@ -134,12 +137,12 @@ const MeasurementsCheckinModal = ({
   }
 
   async function handleCreateMeasurementLog() {
-    if (!newMeasurements) return;
+    if (!newMeasurementData) return;
 
-    const formatedMeasurements = newMeasurements
-      .filter((measurement) => measurement.value.trim() !== "")
+    const formatedMeasurements = newMeasurementData
+      .filter((measurement) => measurement.value_cm.trim() !== "")
       .map((measurement) => {
-        const value = Number(measurement.value);
+        const value = Number(measurement.value_cm);
         const formatedValue =
           unit === "in" ? Math.round(value * 2.54 * 100) / 100 : value;
         return {
@@ -166,14 +169,6 @@ const MeasurementsCheckinModal = ({
     }
   }
 
-  function updateMeasurements(id: string, value: string) {
-    setNewMeasurements((prev) =>
-      prev.map((measurement) =>
-        measurement.id === id ? { ...measurement, value: value } : measurement,
-      ),
-    );
-  }
-
   if (loading) {
     return (
       <div className="loading">
@@ -198,42 +193,57 @@ const MeasurementsCheckinModal = ({
           </p>
           <p className={styles.message}>{t("measurementsCheckin.message")}</p>
         </div>
-        {newMeasurements.length === 0 && !loading && (
-          <p className={styles.emptyText}>
-            {t("measurementsCheckin.emptyState")}
-          </p>
-        )}
         <div className={styles.measurements}>
-          {newMeasurements.map((measurement) => (
-            <div key={measurement.id} className={styles.inputContainer}>
-              <p className={styles.inputLabel}>
-                {`${measurement.name} (${t(`units.${unit}`)}):`}
-              </p>
+          {!measurementTypes ? (
+            <p className={styles.emptyText}>
+              {t("measurementsCheckin.emptyState")}
+            </p>
+          ) : (
+            measurementTypes
+              .filter((type) => type.is_active)
+              .map((type) => (
+                <div key={type.id} className={styles.inputContainer}>
+                  <p className={styles.inputLabel}>
+                    {`${type.name} (${t(`units.${unit}`)}):`}
+                  </p>
 
-              <div className={styles.inputBox}>
-                <input
-                  className={styles.input}
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  max="1000"
-                  onChange={(e) =>
-                    updateMeasurements(measurement.id, e.target.value)
-                  }
-                  value={measurement.value}
-                />
-                <button
-                  className={styles.deleteTypeBtn}
-                  onClick={() => {
-                    setChosenType(measurement);
-                    setShowModal(true);
-                  }}
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
-          ))}
+                  <div className={styles.inputBox}>
+                    <input
+                      className={styles.input}
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      max="1000"
+                      onChange={(e) =>
+                        setNewMeasurementData((prev) =>
+                          prev
+                            ? prev.map((log) =>
+                                log.measurement_type_id === type.id
+                                  ? { ...log, value_cm: e.target.value }
+                                  : log,
+                              )
+                            : null,
+                        )
+                      }
+                      value={
+                        newMeasurementData?.find(
+                          (log) => log.measurement_type_id === type.id,
+                        )?.value_cm ?? ""
+                      }
+                    />
+                    <button
+                      className={styles.deleteTypeBtn}
+                      onClick={() => {
+                        setChosenType(type);
+                        setShowModal(true);
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </div>
+              ))
+          )}
           {isAddingMeasurement ? (
             <div className={`${styles.addType} ${styles.inputContainer}`}>
               <input

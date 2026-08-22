@@ -8,12 +8,14 @@ import {
 } from "recharts";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import styles from "../styles/modules/Chart.module.scss";
 
 import type { ChartBriefInfo, ChartData } from "../types/chart";
 
 import { formatTime } from "../services/utils";
+import { ArrowRight } from "lucide-react";
 
 const days = [
   "sunday",
@@ -53,6 +55,7 @@ type ChartProps = {
   label: string;
   unit: string;
   firstDayOfTheWeek: string;
+  entriesLink?: string;
 };
 
 type Range = "1w" | "1m" | "3m" | "all";
@@ -63,8 +66,10 @@ const Chart = ({
   label,
   unit,
   firstDayOfTheWeek,
+  entriesLink,
 }: ChartProps) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const [range, setRange] = useState<Range>("all");
   const [filteredData, setFilteredData] = useState<ChartData[]>();
@@ -153,7 +158,6 @@ const Chart = ({
         });
       }
     }
-    console.log(label);
     setFilteredData(formatted);
     setChartWidth(Math.max(formatted.length * 30, 320));
 
@@ -273,8 +277,29 @@ const Chart = ({
           </p>
         </div>
         <div>
-          <p>{t("chart.entries")}</p>
-          <p>{briefData?.entries}</p>
+          <p
+            className={entriesLink ? styles.entriesLink : ""}
+            onClick={() => {
+              if (entriesLink) navigate(entriesLink);
+            }}
+          >
+            {t("chart.entries")}{" "}
+            {entriesLink && (
+              <ArrowRight
+                onClick={() => {
+                  if (entriesLink) navigate(entriesLink);
+                }}
+                size={15}
+              />
+            )}
+          </p>
+          <p
+            onClick={() => {
+              if (entriesLink) navigate(entriesLink);
+            }}
+          >
+            {briefData?.entries}
+          </p>
         </div>
       </div>
     </div>

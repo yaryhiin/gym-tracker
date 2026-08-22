@@ -119,7 +119,7 @@ export async function deleteRoutine(routine_id: string) {
     .eq("user_id", userId);
 
   if (error) {
-    console.error(`Error deleting exercise:`, error.message);
+    console.error(`Error deleting routine:`, error.message);
     return false;
   }
 

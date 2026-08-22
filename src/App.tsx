@@ -41,6 +41,8 @@ import { getLatestWeightLog } from "./services/weightLogs";
 import { getDaysSince, getTodayDateString } from "./services/utils";
 import { getLatestMeasurementLog } from "./services/measurements";
 import { createDefaultExercises } from "./services/exercises";
+import WeightHistory from "./pages/WeightHistory";
+import MeasurementsHistory from "./pages/MeasurementsHistory";
 
 const WEIGHT_CHECKIN_SKIPPED_DATE_KEY = "weightCheckinSkippedDate";
 const MEASUREMENTS_CHECKIN_SKIPPED_DATE_KEY = "measurementsCheckinSkippedDate";
@@ -353,6 +355,20 @@ function App() {
                 <Route
                   path="/progress"
                   element={<Progress profile={profile} />}
+                />
+                <Route
+                  path="/progress/weight"
+                  element={
+                    <WeightHistory unit={profile.preferred_weight_unit} />
+                  }
+                />
+                <Route
+                  path="/progress/measurements"
+                  element={
+                    <MeasurementsHistory
+                      unit={profile?.preferred_measurement_unit ?? "cm"}
+                    />
+                  }
                 />
               </Route>
             )

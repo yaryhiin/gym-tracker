@@ -117,6 +117,7 @@ const MeasurementsProgress = ({
         label={chosenType?.name ?? t("measurementsProgress.nameFallBack")}
         unit={unit}
         firstDayOfTheWeek={firstDayOfTheWeek}
+        entriesLink="/progress/measurements"
       />
     </div>
   );

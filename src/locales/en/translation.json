@@ -82,7 +82,15 @@
     "date": "Date",
     "workout": "Workout",
     "duration": "Duration",
-    "actions": "Actions"
+    "actions": "Actions",
+    "weight": "Weight",
+    "type": "Type",
+    "measurement": "Measur."
+  },
+  "manageLogModal": {
+    "change": "Edit Log",
+    "add": "Add Log",
+    "addType": " + Add Type"
   },
   "home": {
     "greeting": {
@@ -170,7 +178,9 @@
       "routine": "Are you sure you want to delete this routine?",
       "routineBuilder": "Are you sure you want to delete this exercise from your Routine?",
       "workout": "Are you sure you want to delete this workout? \n This action cannot be undone.",
-      "exerciseWorkout": "You sure you want to delete this exercise from workout \n All sets will be lost"
+      "exerciseWorkout": "You sure you want to delete this exercise from workout \n All sets will be lost",
+      "type": "Are you sure you want to delete this type? \n Existing history will be preserved.",
+      "log": "Are you sure you want to delete this log? \n This action cannot be undone."
     },
     "finish": "Are you sure you want to finish this workout?",
     "logout": "You sure you want to Log Out?"
@@ -228,7 +238,8 @@
     "totalVol": "Total volume",
     "bestVol": "Best set volume",
     "bw": "Body Weight",
-    "avgWeight": "Average Weight"
+    "avgWeight": "Average Weight",
+    "measurement": "Measurements"
   },
   "exerciseProgress": {
     "title": "Exercises",
@@ -293,8 +304,8 @@
   "weightCheckin": {
     "title": "Weight check-in",
     "message": "What`s your weight today?",
-    "new": "New weight",
-    "error": "Please put in a new weight"
+    "new": "Weight",
+    "error": "Please put in a weight"
   },
   "measurementsProgress": {
     "title": "Measurements",

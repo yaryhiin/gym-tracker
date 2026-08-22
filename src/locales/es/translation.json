@@ -80,9 +80,17 @@
   },
   "history": {
     "date": "Fecha",
-    "workout": "Entrenamiento",
+    "workout": "Entreno",
     "duration": "Duración",
-    "actions": "Acciones"
+    "actions": "Acciones",
+    "weight": "Peso",
+    "type": "Tipo",
+    "measurement": "Medida"
+  },
+  "manageLogModal": {
+    "change": "Editar registro",
+    "addType": "+ Añadir tipo",
+    "add": "Añadir registro"
   },
   "home": {
     "greeting": {
@@ -170,7 +178,10 @@
       "routine": "¿Seguro que quieres eliminar esta rutina?",
       "routineBuilder": "¿Seguro que quieres eliminar este ejercicio de la rutina?",
       "workout": "¿Seguro que quieres eliminar este entrenamiento? \n Esta acción no se puede deshacer.",
-      "exerciseWorkout": "¿Seguro que quieres eliminar este ejercicio del entrenamiento? \n Se perderán todas las series"
+      "exerciseWorkout": "¿Seguro que quieres eliminar este ejercicio del entrenamiento? \n Se perderán todas las series",
+      "type": "¿Seguro que quieres eliminar este tipo? \n El historial existente se conservará.",
+
+      "log": "¿Seguro que quieres eliminar este registro? \n Esta acción no se puede deshacer."
     },
     "finish": "¿Seguro que quieres finalizar este entrenamiento?",
     "logout": "¿Seguro que quieres cerrar sesión?"

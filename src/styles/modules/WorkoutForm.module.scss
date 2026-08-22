@@ -87,6 +87,7 @@
 
 .sets {
   width: 100%;
+  min-width: 300px;
   border: none;
   border-collapse: collapse;
   font-size: 14px;
@@ -101,8 +102,9 @@
     border-bottom: 1px solid var(--border);
   }
 
-  td, th {
-    padding: 7px 7px;
+  td,
+  th {
+    padding: 13px 7px;
   }
 }
 
@@ -331,7 +333,9 @@ input[type="checkbox"] {
 }
 
 .exerciseCard.selected {
-  box-shadow: -3px 0px rgb(var(--selected));
+  box-shadow:
+    -3px 0px rgb(var(--selected)),
+    2px 2px 3px black;
 }
 
 .set.selected {
@@ -344,7 +348,9 @@ input[type="checkbox"] {
 }
 
 .exerciseCard.superset {
-  box-shadow: -3px 0px var(--superset);
+  box-shadow:
+    -3px 0px var(--superset),
+    2px 2px 3px black;
 }
 
 .supersetBtn.superset {
