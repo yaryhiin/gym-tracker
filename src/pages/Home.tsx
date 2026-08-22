@@ -81,7 +81,6 @@ const Home = ({ name }: HomeProps) => {
       )}
       <div className={styles.history}>
         <h2 className={styles.title}>{t("home.recent")}</h2>
-
         {workouts.length > 0 ? (
           workouts
             .toSorted(
@@ -101,7 +100,8 @@ const Home = ({ name }: HomeProps) => {
                 </p>
                 <div className={styles.descWorkout}>
                   <p>
-                    {t("history.duration")}{": "}
+                    {t("history.duration")}
+                    {": "}
                     {formatDuration(workout.duration_seconds)}
                   </p>
                 </div>

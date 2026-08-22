@@ -104,7 +104,7 @@
     "recent": "Recent workouts",
     "emptyState": {
       "title": "No recent workouts.",
-      "description": "Finish yuor first workout"
+      "description": "Your completed workouts will appear here."
     },
     "viewAll": "View All"
   },
