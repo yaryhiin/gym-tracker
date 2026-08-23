@@ -240,7 +240,7 @@ function App() {
     preferredMeasurementUnit: PreferredMeasurementUnit,
   ) {
     try {
-      await createDefaultExercises();
+      await createDefaultExercises(language);
       const profileData = await createProfile(
         name,
         preferredWeightUnit,

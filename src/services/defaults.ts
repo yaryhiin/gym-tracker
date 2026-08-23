@@ -1,144 +1,146 @@
 import type { ChartData } from "../types/chart";
+import i18n from "../i18n";
 
-export const DEFAULT_EXERCISES = [
-  // Chest
-  {
-    name: "Barbell Bench Press",
-    category: "Chest",
-  },
-  {
-    name: "Incline Dumbbell Press",
-    category: "Chest",
-  },
-  {
-    name: "Machine Chest Press",
-    category: "Chest",
-  },
-  {
-    name: "Cable Fly",
-    category: "Chest",
-  },
-  {
-    name: "Dumbbell Fly",
-    category: "Chest",
-  },
+export const getDefaultExercises = () =>
+  [
+    // Chest
+    {
+      name: i18n.t("exercise.barbellBenchPress"),
+      category: "Chest",
+    },
+    {
+      name: i18n.t("exercise.inclineDumbbellPress"),
+      category: "Chest",
+    },
+    {
+      name: i18n.t("exercise.machineChestPress"),
+      category: "Chest",
+    },
+    {
+      name: i18n.t("exercise.cableFly"),
+      category: "Chest",
+    },
+    {
+      name: i18n.t("exercise.dumbbellFly"),
+      category: "Chest",
+    },
 
-  // Back
-  {
-    name: "Pull-Up",
-    category: "Back",
-  },
-  {
-    name: "Lat Pulldown",
-    category: "Back",
-  },
-  {
-    name: "Barbell Row",
-    category: "Back",
-  },
-  {
-    name: "Seated Cable Row",
-    category: "Back",
-  },
-  {
-    name: "Chest-Supported Row",
-    category: "Back",
-  },
-  {
-    name: "Deadlift",
-    category: "Back",
-  },
+    // Back
+    {
+      name: i18n.t("exercise.pullUp"),
+      category: "Back",
+    },
+    {
+      name: i18n.t("exercise.latPulldown"),
+      category: "Back",
+    },
+    {
+      name: i18n.t("exercise.barbellRow"),
+      category: "Back",
+    },
+    {
+      name: i18n.t("exercise.seatedCableRow"),
+      category: "Back",
+    },
+    {
+      name: i18n.t("exercise.chestSupportedRow"),
+      category: "Back",
+    },
+    {
+      name: i18n.t("exercise.deadlift"),
+      category: "Back",
+    },
 
-  // Legs
-  {
-    name: "Barbell Squat",
-    category: "Legs",
-  },
-  {
-    name: "Hack Squat",
-    category: "Legs",
-  },
-  {
-    name: "Leg Press",
-    category: "Legs",
-  },
-  {
-    name: "Bulgarian Split Squat",
-    category: "Legs",
-  },
-  {
-    name: "Leg Extension",
-    category: "Legs",
-  },
-  {
-    name: "Leg Curl",
-    category: "Legs",
-  },
-  {
-    name: "Romanian Deadlift",
-    category: "Legs",
-  },
-  {
-    name: "Hip Thrust",
-    category: "Legs",
-  },
-  {
-    name: "Standing Calf Raise",
-    category: "Legs",
-  },
-  {
-    name: "Seated Calf Raise",
-    category: "Legs",
-  },
+    // Legs
+    {
+      name: i18n.t("exercise.barbellSquat"),
+      category: "Legs",
+    },
+    {
+      name: i18n.t("exercise.hackSquat"),
+      category: "Legs",
+    },
+    {
+      name: i18n.t("exercise.legPress"),
+      category: "Legs",
+    },
+    {
+      name: i18n.t("exercise.bulgarianSplitSquat"),
+      category: "Legs",
+    },
+    {
+      name: i18n.t("exercise.legExtension"),
+      category: "Legs",
+    },
+    {
+      name: i18n.t("exercise.legCurl"),
+      category: "Legs",
+    },
+    {
+      name: i18n.t("exercise.romanianDeadlift"),
+      category: "Legs",
+    },
+    {
+      name: i18n.t("exercise.hipThrust"),
+      category: "Legs",
+    },
+    {
+      name: i18n.t("exercise.standingCalfRaise"),
+      category: "Legs",
+    },
+    {
+      name: i18n.t("exercise.seatedCalfRaise"),
+      category: "Legs",
+    },
 
-  // Shoulders
-  {
-    name: "Overhead Press",
-    category: "Shoulders",
-  },
-  {
-    name: "Dumbbell Shoulder Press",
-    category: "Shoulders",
-  },
-  {
-    name: "Lateral Raise",
-    category: "Shoulders",
-  },
-  {
-    name: "Rear Delt Fly",
-    category: "Shoulders",
-  },
-  {
-    name: "Face Pull",
-    category: "Shoulders",
-  },
+    // Shoulders
+    {
+      name: i18n.t("exercise.overheadPress"),
+      category: "Shoulders",
+    },
+    {
+      name: i18n.t("exercise.dumbbellShoulderPress"),
+      category: "Shoulders",
+    },
+    {
+      name: i18n.t("exercise.lateralRaise"),
+      category: "Shoulders",
+    },
+    {
+      name: i18n.t("exercise.rearDeltFly"),
+      category: "Shoulders",
+    },
+    {
+      name: i18n.t("exercise.facePull"),
+      category: "Shoulders",
+    },
 
-  // Arms
-  {
-    name: "Barbell Curl",
-    category: "Arms",
-  },
-  {
-    name: "Dumbbell Curl",
-    category: "Arms",
-  },
-  {
-    name: "Hammer Curl",
-    category: "Arms",
-  },
-  {
-    name: "Triceps Pushdown",
-    category: "Arms",
-  },
-  {
-    name: "Overhead Triceps Extension",
-    category: "Arms",
-  },
-  {
-    name: "Dips",
-    category: "Arms",
-  },
-] as const;
+    // Arms
+    {
+      name: i18n.t("exercise.barbellCurl"),
+      category: "Arms",
+    },
+    {
+      name: i18n.t("exercise.dumbbellCurl"),
+      category: "Arms",
+    },
+    {
+      name: i18n.t("exercise.hammerCurl"),
+      category: "Arms",
+    },
+    {
+      name: i18n.t("exercise.tricepsPushdown"),
+      category: "Arms",
+    },
+    {
+      name: i18n.t("exercise.overheadTricepsExtension"),
+      category: "Arms",
+    },
+    {
+      name: i18n.t("exercise.dips"),
+      category: "Arms",
+    },
+  ] as const;
 
 function getDateDaysAgo(daysAgo: number) {
   const date = new Date();
