@@ -98,8 +98,13 @@ const WorkoutForm = ({
             }
           }
         }
-        setSelectedExercise(null);
-        setSelectedSet(null);
+        if (pageType === "active") {
+          setSelectedExercise(null);
+          setSelectedSet(null);
+        } else {
+          setSelectedExercise(workout.exercises[0]);
+          setSelectedSet(workout.exercises[0].sets[0]);
+        }
       }
     }
   }, [workout.exercises]);

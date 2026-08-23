@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { LoaderCircle } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import { LoaderCircle, Eye, Pencil, EllipsisVertical } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import styles from "../styles/modules/Home.module.scss";
@@ -26,6 +26,10 @@ const Home = ({ name }: HomeProps) => {
   const [workouts, setWorkouts] = useState<WorkoutDB[]>([]);
   const [routines, setRoutines] = useState<RoutineDB[]>([]);
   const [loading, setLoading] = useState(true);
+  const [chosenWorkoutId, setChosenWorkoutId] = useState("");
+
+  const menuRef = useRef<HTMLDivElement>(null);
+  const [showOptions, setShowOptions] = useState(false);
 
   const [showChooseRoutineModal, setShowChooseRoutineModal] = useState(false);
 
@@ -46,6 +50,30 @@ const Home = ({ name }: HomeProps) => {
 
     loadData();
   }, []);
+
+  useEffect(() => {
+    if (!showOptions) return;
+
+    function handleClickOutside(event: MouseEvent | TouchEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowOptions(false);
+      }
+    }
+
+    function handleScroll() {
+      setShowOptions(false);
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    window.addEventListener("scroll", handleScroll, true);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+      window.removeEventListener("scroll", handleScroll, true);
+    };
+  }, [showOptions]);
 
   if (loading) {
     return (
@@ -90,14 +118,46 @@ const Home = ({ name }: HomeProps) => {
             )
             .slice(0, 3)
             .map((workout) => (
-              <div
-                className={styles.historyElement}
-                onClick={() => navigate(`/history/${workout.id}`)}
-                key={workout.id}
-              >
-                <p className={styles.descName}>
-                  {workout.name} - {formatDate(workout.started_at)}
-                </p>
+              <div className={styles.historyElement} key={workout.id}>
+                <div className={styles.descName}>
+                  <p>
+                    {workout.name} - {formatDate(workout.started_at)}
+                  </p>
+                  <div className="exerciseMenuWrapper">
+                    {showOptions && chosenWorkoutId === workout.id ? (
+                      <div ref={menuRef} className="exerciseMenu">
+                        <button
+                          onClick={() => {
+                            navigate(`/history/${workout.id}`);
+                            setChosenWorkoutId("");
+                          }}
+                        >
+                          <Eye size={15} />
+                          {t("common.view")}
+                        </button>
+                        <button
+                          onClick={() => {
+                            navigate(`/history/${workout.id}/edit`);
+                            setChosenWorkoutId("");
+                          }}
+                        >
+                          <Pencil size={15} />
+                          {t("common.edit")}
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        className="accessBtn"
+                        onClick={() => {
+                          setShowOptions(true);
+                          setChosenWorkoutId(workout.id);
+                        }}
+                      >
+                        <EllipsisVertical size={20} />
+                      </button>
+                    )}
+                  </div>
+                </div>
                 <div className={styles.descWorkout}>
                   <p>
                     {t("history.duration")}
