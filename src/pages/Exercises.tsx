@@ -167,6 +167,8 @@ const Exercises = ({ preferredUnit }: ExercisesProps) => {
             <p>{t("exercises.emptyState")}</p>
           </div>
         )}
+      </div>
+      <div className={styles.buttonContainer}>
         <button
           className={styles.createExerciseBtn}
           onClick={() => setShowCreateModal(true)}

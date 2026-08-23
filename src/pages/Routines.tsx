@@ -81,6 +81,14 @@ const Routines = () => {
           </div>
         )}
       </div>
+      <div className={styles.buttonContainer}>
+        <button
+          className={styles.createRoutineBtn}
+          onClick={() => navigate("/routines/new")}
+        >
+          {t("routine.create")}
+        </button>
+      </div>
       <div className={styles.routinesList}>
         {routines.map((routine) => (
           <div key={routine.id} className={styles.routineElement}>
@@ -114,14 +122,6 @@ const Routines = () => {
             </div>
           </div>
         ))}
-      </div>
-      <div className={styles.buttonContainer}>
-        <button
-          className={styles.createRoutineBtn}
-          onClick={() => navigate("/routines/new")}
-        >
-          {t("routine.create")}
-        </button>
       </div>
       {showMessageModal && (
         <ExecuteModal
