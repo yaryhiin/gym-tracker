@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import type { Dispatch, SetStateAction } from "react";
 
 import styles from "../styles/modules/ProfileSetupModal.module.scss";
 
@@ -15,10 +16,16 @@ type ProfileSetupModal = {
     preferredWorkoutUnit: PreferredWeightUnit,
     prefferedMeasurementUnit: PreferredMeasurementUnit,
   ) => void;
+  language: string;
+  setLanguage: Dispatch<SetStateAction<string>>;
 };
 
-const ProfileSetupModal = ({ onCreate }: ProfileSetupModal) => {
-  const { t } = useTranslation();
+const ProfileSetupModal = ({
+  onCreate,
+  language,
+  setLanguage,
+}: ProfileSetupModal) => {
+  const { t, i18n } = useTranslation();
 
   const [name, setName] = useState("");
   const [preferredWeightUnit, setPreferredWeightUnit] =
@@ -106,6 +113,22 @@ const ProfileSetupModal = ({ onCreate }: ProfileSetupModal) => {
               {t("units.lb")}
             </button>
           </div>
+        </div>
+        <div className={styles.inputContainer}>
+          <p className={styles.inputLabel}>{t("language.title")}</p>
+          <select
+            value={language}
+            onChange={(e) => {
+              i18n.changeLanguage(e.target.value);
+              setLanguage(e.target.value);
+            }}
+            className={styles.langaugeSelect}
+          >
+            <option value="en">{t("language.en")}</option>
+            <option value="uk">{t("language.uk")}</option>
+            <option value="es">{t("language.es")}</option>
+            <option value="ru">{t("language.ru")}</option>
+          </select>
         </div>
         <div className="buttonContainer">
           <button

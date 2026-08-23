@@ -375,7 +375,13 @@ function App() {
           )}
         </Routes>
       </Router>
-      {showProfileSetup && <ProfileSetupModal onCreate={handleCreateProfile} />}
+      {showProfileSetup && (
+        <ProfileSetupModal
+          onCreate={handleCreateProfile}
+          language={language}
+          setLanguage={setLanguage}
+        />
+      )}
       {showWeightCheckinModal && profile && (
         <WeightCheckinModal
           name={profile.name}
