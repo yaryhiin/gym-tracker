@@ -8,6 +8,33 @@ Build routines, log every set, track rest times, review previous performance, cr
 
 ---
 
+## Screenshots
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="./screenshots/home.png" width="280" /><br />
+      <b>Home</b>
+    </td>
+    <td align="center">
+      <img src="./screenshots/active-workout.png" width="280" /><br />
+      <b>Active Workout</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="./screenshots/progress.png" width="280" /><br />
+      <b>Progress</b>
+    </td>
+    <td align="center">
+      <img src="./screenshots/routines.png" width="280" /><br />
+      <b>Routines</b>
+    </td>
+  </tr>
+</table>
+
+---
+
 ## Features
 
 ### Workout Tracking
@@ -249,33 +276,6 @@ npm run preview
 ```
 
 Serves the production build locally for previewing.
-
----
-
-## Screenshots
-
-<table>
-  <tr>
-    <td align="center">
-      <img src="./screenshots/home.png" width="280" /><br />
-      <b>Home</b>
-    </td>
-    <td align="center">
-      <img src="./screenshots/active-workout.png" width="280" /><br />
-      <b>Active Workout</b>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="./screenshots/progress.png" width="280" /><br />
-      <b>Progress</b>
-    </td>
-    <td align="center">
-      <img src="./screenshots/routines.png" width="280" /><br />
-      <b>Routines</b>
-    </td>
-  </tr>
-</table>
 
 ---
 
