@@ -964,9 +964,7 @@ const WorkoutForm = ({
                         <td>{set.set_number}</td>
                         <td>{set.weight}</td>
                         <td>{set.reps}</td>
-                        <td>
-                          <p>{set.done && "✅"}</p>
-                        </td>
+                        <td>{set.done && "✅"}</td>
                         <td>{formatTime(set.rest_seconds, "rest")}</td>
                         <td>
                           <button

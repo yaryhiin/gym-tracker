@@ -184,7 +184,7 @@ const ManageLogModal = ({
               <div className={`${styles.addType} ${styles.inputContainer}`}>
                 <p className={styles.inputLabel}>{t("history.type")}</p>
                 <input
-                  className={errors.name ? "error" : ""}
+                  className={`${styles.input} ${errors.name ? "error" : ""}`}
                   type="text"
                   placeholder={t("measurementsCheckin.placeHolder")}
                   value={newTypeName}
@@ -228,6 +228,7 @@ const ManageLogModal = ({
               <div className={styles.typeContainer}>
                 <p className={styles.inputLabel}>{t("history.type")}</p>
                 <select
+                  className={styles.select}
                   value={typeId}
                   onChange={(e) => setTypeId(e.target.value)}
                 >
