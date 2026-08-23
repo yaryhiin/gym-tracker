@@ -347,5 +347,16 @@
     "tricepsPushdown": "Розгинання рук на блоці",
     "overheadTricepsExtension": "Розгинання рук над головою",
     "dips": "Віджимання на брусах"
+  },
+  "measurementType": {
+    "waist": "Талія",
+    "chest": "Груди",
+    "hips": "Стегна",
+    "neck": "Шия",
+    "shoulders": "Плечі",
+    "biceps": "Біцепс",
+    "forearm": "Передпліччя",
+    "thigh": "Стегно",
+    "calf": "Литка"
   }
 }

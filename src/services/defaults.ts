@@ -142,6 +142,36 @@ export const getDefaultExercises = () =>
     },
   ] as const;
 
+export const getDefaultMeasurementTypes = () =>
+  [
+    {
+      name: i18n.t("measurementType.waist"),
+    },
+    {
+      name: i18n.t("measurementType.chest"),
+    },
+    {
+      name: i18n.t("measurementType.hips"),
+    },
+    {
+      name: i18n.t("measurementType.neck"),
+    },
+    {
+      name: i18n.t("measurementType.shoulders"),
+    },
+    {
+      name: i18n.t("measurementType.biceps"),
+    },
+    {
+      name: i18n.t("measurementType.forearm"),
+    },
+    {
+      name: i18n.t("measurementType.thigh"),
+    },
+    {
+      name: i18n.t("measurementType.calf"),
+    },
+  ] as const;
 function getDateDaysAgo(daysAgo: number) {
   const date = new Date();
   date.setDate(date.getDate() - daysAgo);

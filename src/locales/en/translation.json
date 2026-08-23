@@ -347,5 +347,16 @@
     "tricepsPushdown": "Triceps Pushdown",
     "overheadTricepsExtension": "Overhead Triceps Extension",
     "dips": "Dips"
+  },
+  "measurementType": {
+    "waist": "Waist",
+    "chest": "Chest",
+    "hips": "Hips",
+    "neck": "Neck",
+    "shoulders": "Shoulders",
+    "biceps": "Biceps",
+    "forearm": "Forearm",
+    "thigh": "Thigh",
+    "calf": "Calf"
   }
 }

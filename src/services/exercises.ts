@@ -147,7 +147,7 @@ export async function createDefaultExercises(selectedLangauge: string) {
   const exercises = await getExercises();
 
   if (exercises.length > 0) {
-    return exercises;
+    return;
   }
 
   const userId = await getCurrentUserId();

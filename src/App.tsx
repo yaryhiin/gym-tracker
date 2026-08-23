@@ -39,7 +39,10 @@ import type {
 import { getProfile, createProfile, updateProfile } from "./services/profiles";
 import { getLatestWeightLog } from "./services/weightLogs";
 import { getDaysSince, getTodayDateString } from "./services/utils";
-import { getLatestMeasurementLog } from "./services/measurements";
+import {
+  getLatestMeasurementLog,
+  createDefaultMeasurementTypes,
+} from "./services/measurements";
 import { createDefaultExercises } from "./services/exercises";
 import WeightHistory from "./pages/WeightHistory";
 import MeasurementsHistory from "./pages/MeasurementsHistory";
@@ -241,6 +244,7 @@ function App() {
   ) {
     try {
       await createDefaultExercises(language);
+      await createDefaultMeasurementTypes(language);
       const profileData = await createProfile(
         name,
         preferredWeightUnit,

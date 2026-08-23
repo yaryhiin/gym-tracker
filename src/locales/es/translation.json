@@ -347,5 +347,16 @@
     "tricepsPushdown": "Extensión de tríceps en polea",
     "overheadTricepsExtension": "Extensión de tríceps sobre la cabeza",
     "dips": "Fondos"
+  },
+  "measurementType": {
+    "waist": "Cintura",
+    "chest": "Pecho",
+    "hips": "Caderas",
+    "neck": "Cuello",
+    "shoulders": "Hombros",
+    "biceps": "Bíceps",
+    "forearm": "Antebrazo",
+    "thigh": "Muslo",
+    "calf": "Pantorrilla"
   }
 }
