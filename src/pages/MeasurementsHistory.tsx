@@ -318,72 +318,79 @@ const MeasurementsHistory = ({ unit }: MeasurementsHistoryProps) => {
           <Plus />
         </button>
       </div>
-      <table className={styles.weightLogs}>
-        <thead>
-          <tr>
-            <th>{t("history.date")} </th>
-            <th>{t("history.type")} </th>
-            <th>{t("history.measurement")} </th>
-            <th>{t("history.actions")}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {measurementsData?.map((log) => (
-            <tr key={log.id}>
-              <td>{formatDate(log.measured_at)}</td>
-              <td>
-                {
-                  measurementsTypes?.find(
-                    (type) => type.id === log.measurement_type_id,
-                  )?.name
-                }
-              </td>
-              <td>
-                {unit === "in"
-                  ? Math.round(log.value_cm * 10 * 2.54) / 10
-                  : log.value_cm}{" "}
-                {t(`units.${unit}`)}
-              </td>
-              <td>
-                <div className="exerciseMenuWrapper">
-                  {showOptions && chosenLogId === log.id ? (
-                    <div ref={menuRef} className="exerciseMenu">
-                      <button
-                        onClick={() => {
-                          setShowEditModal(true);
-                          setChosenLogId(log.id);
-                        }}
-                      >
-                        <Pencil size={15} />
-                        {t("common.edit")}
-                      </button>
-                      <button
-                        onClick={() => {
-                          setShowDeleteModal(true);
-                          setChosenLogId(log.id);
-                        }}
-                      >
-                        <Trash2 size={15} />
-                        {t("common.delete")}
-                      </button>
-                    </div>
-                  ) : (
-                    <button
-                      className="accessBtn"
-                      onClick={() => {
-                        setShowOptions(true);
-                        setChosenLogId(log.id);
-                      }}
-                    >
-                      <EllipsisVertical size={20} />
-                    </button>
-                  )}
-                </div>
-              </td>
+      {measurementsData && measurementsData.length > 0 ? (
+        <table className={styles.weightLogs}>
+          <thead>
+            <tr>
+              <th>{t("history.date")} </th>
+              <th>{t("history.type")} </th>
+              <th>{t("history.measurement")} </th>
+              <th>{t("history.actions")}</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {measurementsData.map((log) => (
+              <tr key={log.id}>
+                <td>{formatDate(log.measured_at)}</td>
+                <td>
+                  {
+                    measurementsTypes?.find(
+                      (type) => type.id === log.measurement_type_id,
+                    )?.name
+                  }
+                </td>
+                <td>
+                  {unit === "in"
+                    ? Math.round(log.value_cm * 10 * 2.54) / 10
+                    : log.value_cm}{" "}
+                  {t(`units.${unit}`)}
+                </td>
+                <td>
+                  <div className="exerciseMenuWrapper">
+                    {showOptions && chosenLogId === log.id ? (
+                      <div ref={menuRef} className="exerciseMenu">
+                        <button
+                          onClick={() => {
+                            setShowEditModal(true);
+                            setChosenLogId(log.id);
+                          }}
+                        >
+                          <Pencil size={15} />
+                          {t("common.edit")}
+                        </button>
+                        <button
+                          onClick={() => {
+                            setShowDeleteModal(true);
+                            setChosenLogId(log.id);
+                          }}
+                        >
+                          <Trash2 size={15} />
+                          {t("common.delete")}
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        className="accessBtn"
+                        onClick={() => {
+                          setShowOptions(true);
+                          setChosenLogId(log.id);
+                        }}
+                      >
+                        <EllipsisVertical size={20} />
+                      </button>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <div className={styles.emptyState}>
+          <h3>{t("history.emptyState.title")}</h3>
+          <p>{t("history.emptyState.description")}</p>
+        </div>
+      )}
       {showDeleteModal && (
         <ExecuteModal
           text={t("modal.delete.log")}

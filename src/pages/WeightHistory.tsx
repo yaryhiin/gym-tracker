@@ -217,64 +217,71 @@ const WeightHistory = ({ unit }: WeightHistoryProps) => {
           <Plus />
         </button>
       </div>
-      <table className={styles.weightLogs}>
-        <thead>
-          <tr>
-            <th>{t("history.date")} </th>
-            <th>{t("history.weight")} </th>
-            <th>{t("history.actions")}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {weightData?.map((log) => (
-            <tr key={log.id}>
-              <td>{formatDate(log.measured_at)}</td>
-              <td>
-                {unit === "lb"
-                  ? Math.round(log.weight_kg * 10 * 2.20462262) / 10
-                  : log.weight_kg}{" "}
-                {t(`units.${unit}`)}
-              </td>
-              <td>
-                <div className="exerciseMenuWrapper">
-                  {showOptions && chosenLogId === log.id ? (
-                    <div ref={menuRef} className="exerciseMenu">
-                      <button
-                        onClick={() => {
-                          setShowEditModal(true);
-                          setChosenLogId(log.id);
-                        }}
-                      >
-                        <Pencil size={15} />
-                        {t("common.edit")}
-                      </button>
-                      <button
-                        onClick={() => {
-                          setShowDeleteModal(true);
-                          setChosenLogId(log.id);
-                        }}
-                      >
-                        <Trash2 size={15} />
-                        {t("common.delete")}
-                      </button>
-                    </div>
-                  ) : (
-                    <button
-                      className="accessBtn"
-                      onClick={() => {
-                        setShowOptions(true);
-                        setChosenLogId(log.id);
-                      }}
-                    >
-                      <EllipsisVertical size={20} />
-                    </button>
-                  )}
-                </div>
-              </td>
+      {weightData && weightData.length > 0 ? (
+        <table className={styles.weightLogs}>
+          <thead>
+            <tr>
+              <th>{t("history.date")} </th>
+              <th>{t("history.weight")} </th>
+              <th>{t("history.actions")}</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {weightData.map((log) => (
+              <tr key={log.id}>
+                <td>{formatDate(log.measured_at)}</td>
+                <td>
+                  {unit === "lb"
+                    ? Math.round(log.weight_kg * 10 * 2.20462262) / 10
+                    : log.weight_kg}{" "}
+                  {t(`units.${unit}`)}
+                </td>
+                <td>
+                  <div className="exerciseMenuWrapper">
+                    {showOptions && chosenLogId === log.id ? (
+                      <div ref={menuRef} className="exerciseMenu">
+                        <button
+                          onClick={() => {
+                            setShowEditModal(true);
+                            setChosenLogId(log.id);
+                          }}
+                        >
+                          <Pencil size={15} />
+                          {t("common.edit")}
+                        </button>
+                        <button
+                          onClick={() => {
+                            setShowDeleteModal(true);
+                            setChosenLogId(log.id);
+                          }}
+                        >
+                          <Trash2 size={15} />
+                          {t("common.delete")}
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        className="accessBtn"
+                        onClick={() => {
+                          setShowOptions(true);
+                          setChosenLogId(log.id);
+                        }}
+                      >
+                        <EllipsisVertical size={20} />
+                      </button>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <div className={styles.emptyState}>
+          <h3>{t("history.emptyState.title")}</h3>
+          <p>{t("history.emptyState.description")}</p>
+        </div>
+      )}
       {showDeleteModal && (
         <ExecuteModal
           text={t("modal.delete.log")}

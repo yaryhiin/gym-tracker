@@ -86,7 +86,11 @@
     "actions": "Дії",
     "weight": "Вага",
     "type": "Тип",
-    "measurement": "Вимір"
+    "measurement": "Вимір",
+    "emptyState": {
+      "title": "Aún no tienes datos guardados",
+      "description": "Añade tu primer registro y aparecerá aquí"
+    }
   },
   "manageLogModal": {
     "change": "Редагувати запис",
@@ -142,7 +146,7 @@
     "reminders": {
       "title": "Нагадування",
       "weight": "Зважування",
-      "measurements": ""
+      "measurements": "Вимірювання"
     }
   },
   "language": {
@@ -240,7 +244,8 @@
     "totalVol": "Загальний обсяг",
     "bestVol": "Найкращий обсяг підходу",
     "bw": "Вага тіла",
-    "avgWeight": "Середня вага"
+    "avgWeight": "Середня вага",
+    "measurement": "Виміри"
   },
   "exerciseProgress": {
     "title": "Вправи",

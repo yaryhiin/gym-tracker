@@ -128,77 +128,84 @@ const History = () => {
         </button>
         <h2 className={styles.title}>{t("history.title")}</h2>
       </div>
-      <table className={styles.workouts}>
-        <thead>
-          <tr>
-            <th onClick={() => handleSort("finished_at")}>
-              <span className={styles.tableHeaderContent}>
-                {t("history.date")}{" "}
-                <span>{sortConfig.key === "finished_at" && arrow}</span>
-              </span>
-            </th>
-            <th onClick={() => handleSort("name")}>
-              <span className={styles.tableHeaderContent}>
-                {t("history.workout")}{" "}
-                <span>{sortConfig.key === "name" && arrow}</span>
-              </span>
-            </th>
-            <th onClick={() => handleSort("duration_seconds")}>
-              <span className={styles.tableHeaderContent}>
-                {t("history.duration")}{" "}
-                <span>{sortConfig.key === "duration_seconds" && arrow}</span>
-              </span>
-            </th>
-            <th>{t("history.actions")}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedWorkouts.map((workout) => (
-            <tr key={workout.id}>
-              <td>{formatDate(workout.started_at)}</td>
-              <td>{workout.name}</td>
-              <td>{formatDuration(workout.duration_seconds)} </td>
-              <td>
-                <div className="exerciseMenuWrapper">
-                  {showOptions && chosenWorkoutId === workout.id ? (
-                    <div ref={menuRef} className="exerciseMenu">
-                      <button
-                        onClick={() => {
-                          navigate(`/history/${workout.id}`);
-                          setChosenWorkoutId("");
-                        }}
-                      >
-                        <Eye size={15} />
-                        {t("common.view")}
-                      </button>
-                      <button
-                        onClick={() => {
-                          navigate(`/history/${workout.id}/edit`);
-                          setChosenWorkoutId("");
-                        }}
-                      >
-                        <Pencil size={15} />
-                        {t("common.edit")}
-                      </button>
-                    </div>
-                  ) : (
-                    <button
-                      className="accessBtn"
-                      onClick={() => {
-                        setShowOptions(true);
-                        setChosenWorkoutId(workout.id);
-                      }}
-                    >
-                      <EllipsisVertical size={20} />
-                    </button>
-                  )}
-                </div>
-                <div className={styles.actions}></div>
-              </td>
+      {sortedWorkouts && sortedWorkouts.length > 0 ? (
+        <table className={styles.workouts}>
+          <thead>
+            <tr>
+              <th onClick={() => handleSort("finished_at")}>
+                <span className={styles.tableHeaderContent}>
+                  {t("history.date")}{" "}
+                  <span>{sortConfig.key === "finished_at" && arrow}</span>
+                </span>
+              </th>
+              <th onClick={() => handleSort("name")}>
+                <span className={styles.tableHeaderContent}>
+                  {t("history.workout")}{" "}
+                  <span>{sortConfig.key === "name" && arrow}</span>
+                </span>
+              </th>
+              <th onClick={() => handleSort("duration_seconds")}>
+                <span className={styles.tableHeaderContent}>
+                  {t("history.duration")}{" "}
+                  <span>{sortConfig.key === "duration_seconds" && arrow}</span>
+                </span>
+              </th>
+              <th>{t("history.actions")}</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {sortedWorkouts.map((workout) => (
+              <tr key={workout.id}>
+                <td>{formatDate(workout.started_at)}</td>
+                <td>{workout.name}</td>
+                <td>{formatDuration(workout.duration_seconds)} </td>
+                <td>
+                  <div className="exerciseMenuWrapper">
+                    {showOptions && chosenWorkoutId === workout.id ? (
+                      <div ref={menuRef} className="exerciseMenu">
+                        <button
+                          onClick={() => {
+                            navigate(`/history/${workout.id}`);
+                            setChosenWorkoutId("");
+                          }}
+                        >
+                          <Eye size={15} />
+                          {t("common.view")}
+                        </button>
+                        <button
+                          onClick={() => {
+                            navigate(`/history/${workout.id}/edit`);
+                            setChosenWorkoutId("");
+                          }}
+                        >
+                          <Pencil size={15} />
+                          {t("common.edit")}
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        className="accessBtn"
+                        onClick={() => {
+                          setShowOptions(true);
+                          setChosenWorkoutId(workout.id);
+                        }}
+                      >
+                        <EllipsisVertical size={20} />
+                      </button>
+                    )}
+                  </div>
+                  <div className={styles.actions}></div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <div className={styles.emptyText}>
+          <h3>{t("home.emptyState.title")}</h3>
+          <p>{t("home.emptyState.description")}</p>
+        </div>
+      )}
     </div>
   );
 };

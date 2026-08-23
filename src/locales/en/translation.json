@@ -86,7 +86,11 @@
     "actions": "Actions",
     "weight": "Weight",
     "type": "Type",
-    "measurement": "Measur."
+    "measurement": "Measur.",
+    "emptyState": {
+      "title": "You don`t have any data saved",
+      "description": "Add your first log and you`ll see it here"
+    }
   },
   "manageLogModal": {
     "change": "Edit Log",
@@ -142,7 +146,7 @@
     "reminders": {
       "title": "Reminders",
       "weight": "Weight check-in",
-      "measurements": ""
+      "measurements": "Measurements check-in"
     }
   },
   "language": {
