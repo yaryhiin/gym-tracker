@@ -144,7 +144,7 @@ const SignUp = () => {
             )}
           </div>
           <div className={styles.buttonContainer}>
-            <button className="backBtn button" onClick={onBack}>
+            <button className="button" onClick={onBack}>
               {t("common.back")}
             </button>
             <button

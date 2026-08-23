@@ -59,4 +59,8 @@
 .continueBtn {
   background-color: var(--accent);
   color: var(--button-text);
+
+  &:hover {
+    background-color: var(--accent-hover);
+  }
 }
