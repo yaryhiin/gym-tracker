@@ -95,7 +95,11 @@
   "manageLogModal": {
     "change": "Editar registro",
     "addType": "+ Añadir tipo",
-    "add": "Añadir registro"
+    "add": "Añadir registro",
+    "error": {
+      "date": "Por favor, introduce la fecha",
+      "type": "Por favor, elige el tipo de medida"
+    }
   },
   "home": {
     "greeting": {

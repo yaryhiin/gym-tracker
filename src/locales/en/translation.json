@@ -95,7 +95,11 @@
   "manageLogModal": {
     "change": "Edit Log",
     "add": "Add Log",
-    "addType": " + Add Type"
+    "addType": " + Add Type",
+    "error": {
+      "date": "Please put in date",
+      "type": "Please choose type of measurement"
+    }
   },
   "home": {
     "greeting": {

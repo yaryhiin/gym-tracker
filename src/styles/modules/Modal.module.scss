@@ -46,6 +46,11 @@
 
 .addType {
   margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  input {
+    width: 100%;
+  }
 }
 
 .addMeasurement {
@@ -55,7 +60,7 @@
 
 .addTypeBtn,
 .cancelBtn {
-  width: 45px;
+  width: 35px;
   height: 35px;
   margin: 0 2px;
 }

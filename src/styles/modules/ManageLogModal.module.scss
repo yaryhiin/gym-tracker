@@ -1,7 +1,18 @@
 .input {
   width: 210px;
-  margin-bottom: 15px;
+
   text-align: center;
+}
+
+.valueContainer,
+.typeContainer,
+.inputContainer,
+.dateContainer {
+  margin-bottom: 15px;
+
+  p {
+    margin: 5px;
+  }
 }
 
 .select {

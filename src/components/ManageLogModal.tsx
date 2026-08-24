@@ -92,29 +92,38 @@ const ManageLogModal = ({
   }, [showOptions]);
 
   function handleSubmit() {
+    let hasErrors = false;
     if (newLog.value <= 0) {
       setErrors((prev) => ({ ...prev, value: true }));
-      return;
+      hasErrors = true;
     }
+
     if (!newLog.date) {
       setErrors((prev) => ({ ...prev, date: true }));
-      return;
+      hasErrors = true;
     }
-    if (typeId)
-      onSave(
-        new Date(newLog.date).toISOString(),
-        unit === "lb"
-          ? Math.round((newLog.value / 2.20462262) * 100) / 100
-          : newLog.value,
-        typeId,
-      );
-    else
-      onSave(
-        new Date(newLog.date).toISOString(),
-        unit === "lb"
-          ? Math.round((newLog.value / 2.20462262) * 100) / 100
-          : newLog.value,
-      );
+
+    if (typeId === "add" || !typeId) {
+      setErrors((prev) => ({ ...prev, type: true }));
+      hasErrors = true;
+    }
+    if (hasErrors) return;
+    if (Object.values(errors))
+      if (typeId)
+        onSave(
+          new Date(newLog.date).toISOString(),
+          unit === "lb"
+            ? Math.round((newLog.value / 2.20462262) * 100) / 100
+            : newLog.value,
+          typeId,
+        );
+      else
+        onSave(
+          new Date(newLog.date).toISOString(),
+          unit === "lb"
+            ? Math.round((newLog.value / 2.20462262) * 100) / 100
+            : newLog.value,
+        );
   }
 
   function handleCreateMeasurementType() {
@@ -174,9 +183,7 @@ const ManageLogModal = ({
               value={newLog.value === 0 ? "" : newLog.value}
             />
             {errors.value && (
-              <p className={`errorMessage ${styles.fullWidth}`}>
-                {t("weightCheckin.error")}
-              </p>
+              <p className={`errorMessage`}>{t("weightCheckin.error")}</p>
             )}
           </div>
           {measurementTypes &&
@@ -184,17 +191,12 @@ const ManageLogModal = ({
               <div className={`${styles.addType} ${styles.inputContainer}`}>
                 <p className={styles.inputLabel}>{t("history.type")}</p>
                 <input
-                  className={`${styles.input} ${errors.name ? "error" : ""}`}
+                  className={`${styles.input} ${errors.name || errors.type ? "error" : ""}`}
                   type="text"
                   placeholder={t("measurementsCheckin.placeHolder")}
                   value={newTypeName}
                   onChange={(e) => setNewTypeName(e.target.value)}
                 ></input>
-                {errors.name && (
-                  <p className="errorMessage">
-                    {t("measurementsCheckin.error")}
-                  </p>
-                )}
 
                 <button
                   className={styles.addTypeBtn}
@@ -223,6 +225,16 @@ const ManageLogModal = ({
                 >
                   ✕
                 </button>
+                {errors.name && (
+                  <p className="errorMessage">
+                    {t("measurementsCheckin.error")}
+                  </p>
+                )}
+                {errors.type && (
+                  <p className="errorMessage">
+                    {t("manageLogModal.error.type")}
+                  </p>
+                )}
               </div>
             ) : (
               <div className={styles.typeContainer}>
@@ -285,7 +297,7 @@ const ManageLogModal = ({
           <div className={styles.dateContainer}>
             <p>{t("history.date")}</p>
             <input
-              className={`${styles.input} ${errors.value && "error"}`}
+              className={`${styles.input} ${errors.date && "error"}`}
               type="datetime-local"
               onChange={(e) => {
                 setNewLog((prev) => ({
@@ -295,10 +307,8 @@ const ManageLogModal = ({
               }}
               value={newLog.date}
             />
-            {errors.value && (
-              <p className={`errorMessage ${styles.fullWidth}`}>
-                {t("weightCheckin.error")}
-              </p>
+            {errors.date && (
+              <p className={`errorMessage`}>{t("manageLogModal.error.date")}</p>
             )}
           </div>
         </div>
