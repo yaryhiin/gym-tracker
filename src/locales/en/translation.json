@@ -181,6 +181,7 @@
     "create": "+ Create Routine"
   },
   "modal": {
+    "continueWorkout": "You still have an unfinished workout. \n Would you like to continue it or delete it and start fresh?",
     "back": "Are you sure you want to exit? \n All unsaved progress will be lost.",
     "delete": {
       "exercise": "Are you sure you want to delete this exercise? \n It will be removed from your existing routines",

@@ -1,13 +1,11 @@
 import { Outlet, useLocation, matchPath, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
+import { useTranslation } from "react-i18next";
 
 import Header from "./Header";
 import NavButtons from "./NavButtons";
 import ExecuteModal from "./ExecuteModal";
-
-const MODAL_TEXT =
-  "You still have an unfinished workout. \n Would you like to continue it or discard it and start fresh?";
 
 const ACTIVE_WORKOUT_ROUTINE_KEY = "activeWorkoutRoutine";
 const ACTIVE_WORKOUT_KEY = "activeWorkout";
@@ -34,6 +32,7 @@ export default function Layout({
   language,
   setLanguage,
 }: LayoutProps) {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -71,9 +70,17 @@ export default function Layout({
         <Outlet />
         {showModal && (
           <ExecuteModal
-            text={MODAL_TEXT}
-            btnText="Continue"
+            text={t("modal.continueWorkout")}
+            btnText={t("common.delete")}
             onClose={() => {
+              const routineId = localStorage.getItem(
+                ACTIVE_WORKOUT_ROUTINE_KEY,
+              );
+              if (routineId) navigate(`workout/routine/${routineId}`);
+              else navigate("workout");
+              setShowModal(false);
+            }}
+            onDelete={() => {
               setShowModal(false);
               localStorage.removeItem(ACTIVE_WORKOUT_KEY);
               localStorage.removeItem(ACTIVE_WORKOUT_SECONDS_KEY);
@@ -84,14 +91,6 @@ export default function Layout({
               localStorage.removeItem(WORKOUT_SELECTED_SET_KEY);
               localStorage.removeItem(WORKOUT_REST_START_KEY);
               localStorage.removeItem(ACTIVE_WORKOUT_ROUTINE_KEY);
-            }}
-            onDelete={() => {
-              const routineId = localStorage.getItem(
-                ACTIVE_WORKOUT_ROUTINE_KEY,
-              );
-              if (routineId) navigate(`workout/routine/${routineId}`);
-              else navigate("workout");
-              setShowModal(false);
             }}
           />
         )}

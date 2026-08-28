@@ -181,6 +181,7 @@
     "create": "+ Crear rutina"
   },
   "modal": {
+    "continueWorkout": "Todavía tienes un entrenamiento sin terminar. \n ¿Quieres continuarlo o eliminarlo y empezar de nuevo?",
     "back": "¿Seguro que quieres salir? \n Se perderán todos los cambios no guardados.",
     "delete": {
       "exercise": "¿Seguro que quieres eliminar este ejercicio? \n Se eliminará de tus rutinas existentes",
