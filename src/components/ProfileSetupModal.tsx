@@ -9,6 +9,8 @@ import type {
   PreferredMeasurementUnit,
 } from "../types/profile";
 
+import InfoModal from "../components/InfoModal";
+
 type ProfileSetupModal = {
   onCreate: (
     name: string,
@@ -34,6 +36,34 @@ const ProfileSetupModal = ({
     useState<PreferredWeightUnit>("kg");
   const [preferredMeasurementUnit, setPreferredMeasurementUnit] =
     useState<PreferredMeasurementUnit>("cm");
+
+  const [saving, setSaving] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  function onSubmit() {
+    try {
+      setSaving(true);
+      onCreate(
+        name,
+        preferredWeightUnit,
+        preferredWorkoutUnit,
+        preferredMeasurementUnit,
+      );
+      setShowSuccessModal(true);
+      setTimeout(() => {
+        setShowSuccessModal(false);
+      }, 1000);
+    } catch (error) {
+      console.error("Error creating profile", error);
+      setShowErrorModal(true);
+      setTimeout(() => {
+        setShowErrorModal(false);
+      }, 3000);
+    } finally {
+      setSaving(false);
+    }
+  }
 
   return (
     <div className="modal">
@@ -131,34 +161,17 @@ const ProfileSetupModal = ({
           </select>
         </div>
         <div className="buttonContainer">
-          <button
-            className={styles.skipBtn}
-            onClick={() =>
-              onCreate(
-                name,
-                preferredWeightUnit,
-                preferredWorkoutUnit,
-                preferredMeasurementUnit,
-              )
-            }
-          >
+          <button className={styles.skipBtn} onClick={onSubmit}>
             {t("common.skipNow")}
           </button>
-          <button
-            className={styles.continueBtn}
-            onClick={() =>
-              onCreate(
-                name,
-                preferredWeightUnit,
-                preferredWorkoutUnit,
-                preferredMeasurementUnit,
-              )
-            }
-          >
+          <button className={styles.continueBtn} onClick={onSubmit}>
             {t("common.continue")}
           </button>
         </div>
       </div>
+      {saving && <InfoModal type={"saving"} />}
+      {showErrorModal && <InfoModal type={"error"} />}
+      {showSuccessModal && <InfoModal type={"success"} />}
     </div>
   );
 };

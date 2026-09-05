@@ -25,6 +25,11 @@ const Login = () => {
   async function handleLogin(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     setAuthError("");
+    setErrors({
+      confirmPassword: false,
+      password: false,
+      email: false,
+    });
     const newErrors: AuthErrors = {
       confirmPassword: false,
       password: false,
@@ -37,6 +42,7 @@ const Login = () => {
 
     if (Object.values(newErrors).some(Boolean)) {
       setErrors(newErrors);
+      setAuthError("Invalid email or password");
       return;
     }
 
@@ -46,6 +52,8 @@ const Login = () => {
     });
 
     if (error) {
+      console.error("Error loggin in:", error);
+      setAuthError(error.message.split(":")[0]);
       setErrors((prev) => ({ ...prev, password: true, email: true }));
       return;
     }
@@ -77,7 +85,15 @@ const Login = () => {
               type="email"
               placeholder="Email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setErrors((prev) => ({
+                  ...prev,
+                  email: false,
+                  password: false,
+                }));
+                setAuthError("");
+              }}
             />
             {authError && (
               <p className={cn("errorMessage", styles.fullWidth)}>
@@ -92,7 +108,15 @@ const Login = () => {
               type="password"
               placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setErrors((prev) => ({
+                  ...prev,
+                  email: false,
+                  password: false,
+                }));
+                setAuthError("");
+              }}
             />
             {authError && (
               <p className={cn("errorMessage", styles.fullWidth)}>

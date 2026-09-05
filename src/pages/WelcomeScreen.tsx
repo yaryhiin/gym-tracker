@@ -211,6 +211,19 @@ const WelcomeScreen = () => {
           </button>
         </div>
       </div>
+      <footer className={styles.footer}>
+        <p>
+          Built by{" "}
+          <a
+            href="https://yaryhin.com"
+            target="_blank"
+            aria-label="Tim Yaryhin Portfolio"
+          >
+            Tim Yaryhin
+          </a>
+        </p>
+        <p>Setwise &copy; 2026</p>
+      </footer>
     </div>
   );
 };

@@ -12,7 +12,7 @@
   justify-content: center;
   text-align: center;
   width: 100%;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 
 .title {
@@ -86,11 +86,6 @@
 
 .previewSection {
   width: 100%;
-  // display: flex;
-  // flex-direction: column;
-  // align-items: center;
-  // overflow-x: auto;
-  // overflow-y: hidden;
 }
 
 .exerciseCard {
@@ -272,20 +267,6 @@
   }
 }
 
-// .logIn,
-// .signUp {
-//   margin-top: 28px;
-//   padding: 14px;
-//   color: white;
-//   border: none;
-//   border-radius: 8px;
-//   cursor: pointer;
-//   font-size: 16px;
-//   font-weight: 600;
-//   width: fit-content;
-//   height: 50px;
-// }
-
 .signUp {
   background-color: var(--button-bg);
 
@@ -299,5 +280,22 @@
 
   &:hover {
     background-color: var(--card-hover);
+  }
+}
+
+.footer {
+  margin-top: 30px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-muted);
+
+  p {
+    margin: 5px;
+  }
+
+  a,
+  a:active,
+  a:visited {
+    color: var(--text-secondary);
   }
 }

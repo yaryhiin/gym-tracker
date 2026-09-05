@@ -90,6 +90,12 @@ button.error {
   border: 1px solid var(--danger);
 }
 
+input.error,
+input.error:focus {
+  border: 1px solid var(--danger);
+  outline: none;
+}
+
 .error {
   border: 1px solid var(--danger);
 }

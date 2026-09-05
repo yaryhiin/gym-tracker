@@ -27,7 +27,7 @@ const SignUp = () => {
     password: false,
     email: false,
   });
-  const [authError, setAuthError] = useState("");
+  const [authError, setAuthError] = useState({ email: "", password: "" });
 
   const [showModal, setShowModal] = useState(false);
 
@@ -37,8 +37,19 @@ const SignUp = () => {
       password: false,
       email: false,
     };
-    if (confirmPassword !== password) newErrors.confirmPassword = true;
-    setErrors(newErrors);
+    if (confirmPassword !== password && confirmPassword) {
+      newErrors.confirmPassword = true;
+    } else {
+      newErrors.confirmPassword = false;
+    }
+    setErrors((prev) => ({
+      ...prev,
+      confirmPassword: newErrors.confirmPassword,
+    }));
+    setAuthError((prev) => ({
+      ...prev,
+      password: newErrors.confirmPassword ? "Passwords do not match" : "",
+    }));
   }, [confirmPassword, password]);
 
   async function handleSignUp(e: React.MouseEvent<HTMLButtonElement>) {
@@ -51,14 +62,15 @@ const SignUp = () => {
     };
     if (password !== confirmPassword || !confirmPassword)
       newErrors.confirmPassword = true;
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       newErrors.email = true;
+      setAuthError((prev) => ({ ...prev, email: "Invalid email" }));
+    }
     if (!password) newErrors.password = true;
     if (password.length < 6) {
-      setAuthError(t("auth.error"));
+      setAuthError((prev) => ({ ...prev, password: t("auth.error") }));
       newErrors.password = true;
       newErrors.confirmPassword = true;
-      console.log(newErrors.password);
     }
 
     if (Object.values(newErrors).some(Boolean)) {
@@ -107,8 +119,19 @@ const SignUp = () => {
                 type="email"
                 placeholder="Email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setErrors((prev) => ({
+                    ...prev,
+                    email: false,
+                    password: false,
+                  }));
+                  setAuthError({ email: "", password: "" });
+                }}
               />
+              {authError.email && (
+                <p className="errorMessage">{authError.email}</p>
+              )}
             </div>
             <div className={styles.inputContainer}>
               <p className={styles.inputText}>{t("auth.password")}</p>
@@ -117,9 +140,19 @@ const SignUp = () => {
                 type="password"
                 placeholder="Password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setErrors((prev) => ({
+                    ...prev,
+                    email: false,
+                    password: false,
+                  }));
+                  setAuthError({ email: "", password: "" });
+                }}
               />
-              {authError && <p className="errorMessage">{authError}</p>}
+              {authError.password && (
+                <p className="errorMessage">{authError.password}</p>
+              )}
             </div>
             <div className={cn(styles.inputContainer, styles.fullWidth)}>
               <p className={styles.inputText}>{t("auth.confirmPass")}</p>
@@ -128,9 +161,19 @@ const SignUp = () => {
                 type="password"
                 placeholder="Confirm Password"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  setErrors((prev) => ({
+                    ...prev,
+                    email: false,
+                    password: false,
+                  }));
+                  setAuthError({ email: "", password: "" });
+                }}
               />
-              {authError && <p className="errorMessage">{authError}</p>}
+              {authError.password && (
+                <p className="errorMessage">{authError.password}</p>
+              )}
             </div>
             {showModal && (
               <MessageModal
